@@ -1,0 +1,25 @@
+
+language: python
+python: 3.7
+
+# run all tests
+#script:
+#  - cp simlib/tests/test.py .
+#  - python -m coverage run test.py
+#  - rm test.py
+
+# after a successful test, update build with new version number
+after_success:
+  - bash _scripts/update_build.sh
+  - bash <(curl -s https://codecov.io/bash)
+
+# TODO re-run sphinx
+
+# deploy to pypi
+deploy:
+  - provider: pypi
+    user: "__token__"
+    password:
+      secure: FM++sM5XFAuElm52zrck9oiwutaam+J49+CDskLROdiCGkcfVOwwRHP5P5D9qiJpWXEit6YXGB/Vl0TNZQtGQWWf0XwVU1ABR7onMtlf/EMpYIoqLyF5uNuijnYjotlUr4uW5MSKmVGeLTgJvJDW68Vdk59zgEE5N6pMQnzXjcbTFRf3Rt0Jhix/x1XdXwqPP8fE/iAMzAIZkLZwY75HBeKorF0UE9NrKp0HY/1RHc+zIN530BIJPmH4/N7pOEu1tNqT84E0iiOGGDB9YpFyOKKNtTdTPQpm9W33MZlh8eyiM89xtyFz/lNV6U3KrVXzv52aGUnMPGaItMsu/5UUcQysXCWUwBTp0SfrsyIwxN2x+chFvuCTl5Dpjmv5pqq7jzftDwnwdkycdQfNx5dByWApHq+KcOxSPh9urV46Mf3XOR9PTG2YfRf6k7zaLON/4amjYWo+bj+DpV6FuKPPDCvX1q5t7zyoQcLOTcaVbtVM9wjB/yAWxR6Z9S1Su0Mggo35/Kw2d9L53BUsnIOHwUyyy7q/gDW14OnTip6If3FKUAEb6IN2Gc8DpqqT8F7VqRCbp3IptcngqlWoBCqSSCgfH/hHqs6uP4rH7iD/pyhhK5Kbn6TzNbAZ+6A0mAd1eZZlcSlFd8u6oKvFCILNuo+fcI/OEumHCwQINEi2D5A=
+    twine_check: true
+

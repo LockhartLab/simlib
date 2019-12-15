@@ -1,0 +1,8 @@
+/build/
+/dist/
+.hypothesis/
+.hypothesis/*
+/.idea/
+/simlib.egg-info/
+__pycache__/
+__pycache__/*
