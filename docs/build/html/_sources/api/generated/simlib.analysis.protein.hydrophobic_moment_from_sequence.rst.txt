@@ -1,0 +1,6 @@
+simlib.analysis.protein.hydrophobic\_moment\_from\_sequence
+===========================================================
+
+.. currentmodule:: simlib.analysis.protein
+
+.. autofunction:: hydrophobic_moment_from_sequence
