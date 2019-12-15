@@ -14,10 +14,7 @@ python _scripts/increment_version.py
 (
   cd docs || exit
   rm -r build/
-  if make html
-  then
-    echo "documentation build successful"
-  fi
+  make html
 )
 
 # upload to git without triggering TravisCI again
