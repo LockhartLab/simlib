@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fc2d59d3-8657-4457-9ad4-fa740a3a63f1" name="Default Changelist" comment="" />
+    <list default="true" id="fc2d59d3-8657-4457-9ad4-fa740a3a63f1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/simlib.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/simlib.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_scripts/update_build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/_scripts/update_build.sh" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +23,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1UxND4pu601KXI778ygnTADwS0Z" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -88,22 +94,41 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1576294163585</updated>
-      <workItem from="1576294164912" duration="13210000" />
+      <workItem from="1576294164912" duration="13710000" />
     </task>
+    <task id="LOCAL-00001" summary="First commit!">
+      <created>1576378057378</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1576378057378</updated>
+    </task>
+    <task id="LOCAL-00002" summary="First commit!">
+      <created>1576378200924</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1576378200924</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First commit!" />
+    <option name="LAST_COMMIT_MESSAGE" value="First commit!" />
   </component>
   <component name="WindowStateProjectService">
     <state x="606" y="263" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1576377570625">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="606" y="263" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1707.920@0.0.1707.920" timestamp="1576377570625" />
-    <state x="478" y="57" key="CommitChangelistDialog2" timestamp="1576378055218">
+    <state x="478" y="57" key="CommitChangelistDialog2" timestamp="1576378198989">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="478" y="57" key="CommitChangelistDialog2/0.0.1707.920@0.0.1707.920" timestamp="1576378055218" />
+    <state x="478" y="57" key="CommitChangelistDialog2/0.0.1707.920@0.0.1707.920" timestamp="1576378198989" />
     <state x="634" y="202" key="FileChooserDialogImpl" timestamp="1576378006091">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
@@ -128,10 +153,14 @@
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="0" y="103" key="SettingsEditor/0.0.1707.920@0.0.1707.920" timestamp="1576296041325" />
-    <state x="446" y="193" key="Vcs.Push.Dialog.v2" timestamp="1576378128419">
+    <state x="446" y="193" key="Vcs.Push.Dialog.v2" timestamp="1576378202194">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="446" y="193" key="Vcs.Push.Dialog.v2/0.0.1707.920@0.0.1707.920" timestamp="1576378128419" />
+    <state x="446" y="193" key="Vcs.Push.Dialog.v2/0.0.1707.920@0.0.1707.920" timestamp="1576378202194" />
+    <state x="584" y="252" key="git4idea.merge.GitPullDialog" timestamp="1576378562762">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="584" y="252" key="git4idea.merge.GitPullDialog/0.0.1707.920@0.0.1707.920" timestamp="1576378562762" />
     <state x="516" y="195" width="672" height="678" key="search.everywhere.popup" timestamp="1576308893919">
       <screen x="0" y="0" width="1707" height="920" />
     </state>

@@ -3,17 +3,15 @@ language: python
 python: 3.7
 
 # run all tests
-#script:
-#  - cp simlib/tests/test.py .
+script:
+  - cp simlib/tests/test.py .
 #  - python -m coverage run test.py
-#  - rm test.py
+  - rm test.py
 
 # after a successful test, update build with new version number
 after_success:
   - bash _scripts/update_build.sh
-  - bash <(curl -s https://codecov.io/bash)
-
-# TODO re-run sphinx
+#  - bash <(curl -s https://codecov.io/bash)
 
 # deploy to pypi
 deploy:
