@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from simlib import include_dir
+# from simlib import include_dir
 from simlib.geometry import distance
 from simlib.misc import ListLike
 
@@ -18,6 +18,9 @@ __all__ = [
     'hydrophobic_moment_from_sequence',
     'HydrophobicityScale'
 ]
+
+# TODO move this to root
+include_dir = os.path.abspath(__file__ + '/../../include')
 
 # Reference to this module
 this = sys.modules[__name__]
