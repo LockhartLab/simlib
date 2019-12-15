@@ -5,13 +5,13 @@ python: 3.7
 # run all tests
 script:
   - cp simlib/tests/test.py .
-#  - python -m coverage run test.py
+  - python -m coverage run test.py
   - rm test.py
 
 # after a successful test, update build with new version number
 after_success:
   - bash _scripts/update_build.sh
-#  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
 
 # deploy to pypi
 deploy:

@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from simlib.tests import TestProtein
+from simlib.tests.analysis import TestProtein
 
 import sys
 import unittest
@@ -12,8 +12,7 @@ import unittest
 # Define test cases
 # TODO see if there's an easier way to look for these cases (without manually updating a list)
 test_cases = [
-    TestGeneric,
-    TestMetrics
+    TestProtein,
 ]
 
 

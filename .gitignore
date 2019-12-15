@@ -2,7 +2,7 @@
 /dist/
 .hypothesis/
 .hypothesis/*
-.idea/
+/.idea/
 /simlib.egg-info/
 __pycache__/
 __pycache__/*
