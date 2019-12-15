@@ -42,8 +42,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># from simlib import include_dir</span>
-<span class="kn">from</span> <span class="nn">simlib.geometry</span> <span class="k">import</span> <span class="n">distance</span>
-<span class="kn">from</span> <span class="nn">simlib.misc</span> <span class="k">import</span> <span class="n">ListLike</span>
+<span class="kn">from</span> <span class="nn">simlib.geometry</span> <span class="kn">import</span> <span class="n">distance</span>
+<span class="kn">from</span> <span class="nn">simlib.misc</span> <span class="kn">import</span> <span class="n">ListLike</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -73,7 +73,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Initialize instance</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize instance of ``HydrophobicityScale`` class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -87,7 +87,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
 
     <span class="c1"># Parse the scale</span>
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="c1"># If integer, assume that we&#39;re referring to the index</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
@@ -299,7 +299,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2019, simlib developers.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.
     </div>
   </body>
 </html>
