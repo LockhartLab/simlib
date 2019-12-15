@@ -61,6 +61,7 @@ intersphinx_mapping = {
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'python': ('https://docs.python.org/3', None),
     'scipy': ('http://docs.scipy.org/doc/scipy/reference', None)
+    'sklearn': ('http://scikit-learn.org/stable', (None, './_intersphinx/sklearn-objects.inv'))
 }
 
 # Viewcode parameters
