@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc2d59d3-8657-4457-9ad4-fa740a3a63f1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/simlib/tests/analysis/test_protein.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/simlib.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/simlib.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simlib/tests/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/simlib/tests/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +93,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1576294163585</updated>
-      <workItem from="1576294164912" duration="14069000" />
+      <workItem from="1576294164912" duration="14571000" />
     </task>
     <task id="LOCAL-00001" summary="First commit!">
       <created>1576378057378</created>
@@ -117,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576378570984</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="First commit!">
+      <created>1576379457863</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1576379457863</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,10 +138,10 @@
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="606" y="263" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1707.920@0.0.1707.920" timestamp="1576377570625" />
-    <state x="478" y="57" key="CommitChangelistDialog2" timestamp="1576378568891">
+    <state x="478" y="57" key="CommitChangelistDialog2" timestamp="1576379456059">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="478" y="57" key="CommitChangelistDialog2/0.0.1707.920@0.0.1707.920" timestamp="1576378568891" />
+    <state x="478" y="57" key="CommitChangelistDialog2/0.0.1707.920@0.0.1707.920" timestamp="1576379456059" />
     <state x="634" y="202" key="FileChooserDialogImpl" timestamp="1576378006091">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
@@ -160,10 +166,10 @@
       <screen x="0" y="0" width="1707" height="920" />
     </state>
     <state x="0" y="103" key="SettingsEditor/0.0.1707.920@0.0.1707.920" timestamp="1576296041325" />
-    <state x="446" y="193" key="Vcs.Push.Dialog.v2" timestamp="1576378571444">
+    <state x="446" y="193" key="Vcs.Push.Dialog.v2" timestamp="1576379459098">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
-    <state x="446" y="193" key="Vcs.Push.Dialog.v2/0.0.1707.920@0.0.1707.920" timestamp="1576378571444" />
+    <state x="446" y="193" key="Vcs.Push.Dialog.v2/0.0.1707.920@0.0.1707.920" timestamp="1576379459098" />
     <state x="584" y="252" key="git4idea.merge.GitPullDialog" timestamp="1576378562762">
       <screen x="0" y="0" width="1707" height="920" />
     </state>
