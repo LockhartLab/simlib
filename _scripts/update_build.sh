@@ -9,6 +9,7 @@ git config --global user.email "travis"
 
 # increment version
 python _scripts/increment_version.py
+cat version.yml
 
 # build documentation
 (
@@ -18,7 +19,6 @@ python _scripts/increment_version.py
 )
 
 # upload to git without triggering TravisCI again
-cat version.yml
 git add version.yml
 git add simlib/_version.py
 git add docs/build/*
