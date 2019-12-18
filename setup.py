@@ -4,17 +4,11 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
+from simlib.version import __version__
+
 import numpy as np
 from setuptools import setup
-import yaml
 
-
-# Read version
-with open('version.yml', 'r') as f:
-    version_data = yaml.safe_load(f.read())
-
-# Convert the version_data to a string
-version = '.'.join([str(version_data[key]) for key in ['major', 'minor', 'patch']])
 
 # Read in requirements.txt
 requirements = np.loadtxt('requirements.txt', dtype='str').tolist()
@@ -22,7 +16,7 @@ requirements = np.loadtxt('requirements.txt', dtype='str').tolist()
 # Setup
 setup(
     name='simlib',
-    version=version,
+    version=__version__,
     author='C. Lockhart',
     author_email='chris@lockhartlab.org',
     description='A toolkit for molecular dynamics simulations',

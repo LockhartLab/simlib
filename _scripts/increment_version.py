@@ -25,7 +25,7 @@ def increment_version():
     version = '.'.join([str(version[key]) for key in ['major', 'minor', 'patch']])
 
     # Write version string to simlib/_version.py
-    with open('simlib/_version.py', 'w') as f:
+    with open('simlib/version.py', 'w') as f:
         f.write("__version__ = '{}'\n".format(version))
 
     # Return

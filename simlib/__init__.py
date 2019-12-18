@@ -4,7 +4,7 @@ from .analysis import *
 from .geometry import *
 from .io import *
 from .misc import *
-from ._version import __version__
+from .version import __version__
 
 
 # Contents
