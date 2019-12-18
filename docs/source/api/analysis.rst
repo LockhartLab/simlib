@@ -17,4 +17,4 @@ Functions
 .. autosummary::
    :toctree: generated
 
-   protein
+   hydrophobic_moment_from_sequence

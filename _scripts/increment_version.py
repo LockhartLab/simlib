@@ -1,20 +1,32 @@
+"""
+increment_version.py
+written in Python3
+author: C. Lockhart <chris@lockhartlab.org>
+"""
+
 
 import yaml
 
-# read in version
-with open('version.yml', 'r') as f:
-    data = yaml.safe_load(f.read())
 
-# update patch
-data['patch'] += 1
+# Helper function to increment package version
+def increment_version():
+    # Read in version
+    with open('version.yml', 'r') as f:
+        version = yaml.safe_load(f.read())
 
-# output version
-with open('version.yml', 'w') as f:
-    yaml.safe_dump(data, f)
+    # Update patch
+    version['patch'] += 1
 
-# create version string
-version = '.'.join([str(data[key]) for key in ['major', 'minor', 'patch']])
+    # Output version
+    with open('version.yml', 'w') as f:
+        yaml.safe_dump(version, f)
 
-# write version string to simlib/_version.py
-with open('simlib/_version.py', 'w') as f:
-    f.write("__version__ = '{}'\n".format(version))
+    # Transform version dict to string
+    version = '.'.join([str(version[key]) for key in ['major', 'minor', 'patch']])
+
+    # Write version string to simlib/_version.py
+    with open('simlib/_version.py', 'w') as f:
+        f.write("__version__ = '{}'\n".format(version))
+
+    # Return
+    return version

@@ -31,5 +31,6 @@ def test():
     result = runner.run(suite)
 
     # If the test was not successful, exit with a code
-    sys.exit(not result.wasSuccessful())
+    if not result.wasSuccessful():
+        sys.exit(1)
 

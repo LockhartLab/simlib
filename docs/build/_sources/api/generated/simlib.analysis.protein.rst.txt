@@ -1,0 +1,30 @@
+simlib.analysis.protein
+=======================
+
+.. rubric:: Description
+
+.. automodule:: simlib.analysis.protein
+   :imported-members:
+
+.. currentmodule:: simlib.analysis.protein
+
+
+.. rubric:: Classes
+
+.. autosummary::
+    :toctree: .
+    
+    HydrophobicityScale
+    
+
+
+
+
+.. rubric:: Functions
+
+.. autosummary::
+    :toctree: .
+    
+    hydrophobic_moment_from_sequence
+    
+
