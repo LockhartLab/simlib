@@ -11,6 +11,7 @@ from setuptools import setup
 
 
 # Read in requirements.txt
+# TODO get rid of requirements.txt in favor of install.sh for travis-ci
 requirements = np.loadtxt('requirements.txt', dtype='str').tolist()
 
 # Setup
