@@ -6,4 +6,3 @@ pandas
 pyyaml
 scipy
 sphinx
-izzy

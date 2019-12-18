@@ -2,6 +2,10 @@
 language: python
 python: 3.7
 
+# before running test scripts, install izzy
+before_script:
+  - pip install izzy
+
 # run all tests
 script:
   - cp simlib/tests/test.py .
