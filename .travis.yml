@@ -2,10 +2,6 @@
 language: python
 python: 3.7
 
-# before running test scripts, install izzy
-before_script:
-  - pip install izzy
-
 # run all tests
 script:
   - cp simlib/tests/test.py .
@@ -23,5 +19,6 @@ deploy:
     password:
       secure: htZ9CW6AXO9p4MtE/LQkI56wAUucHw3Y2h4gdY7MnDMkEPEDTqZ9FYFMlLCif98ThjoQ6PDobqgdWAx8+86kd6E+J/UnSlXQ+ixKAvLz90E1VWgn8R+hMLDG+0CKxPaSA9ffT/jshVR2o/01oJaZPr28UpJjET8wXhdLsFrEowSkrfAIaXCTlTZzzn9qrGHOOY1JpJvGn38Q36K6LXvUDrTNvJHy3GWRwRl5xxNQqHlO0+8Q5mVwAgJ50kfeoYs+u0zvHIrS9KLh03h6JRaSSnUJ8E5jeG6er/GXhPEED56PkSE+zn+2lIh4HkBA0uqHjUWexOSl5j2hPDotPMKx1Pxd0HSiKkkTIIfVrjUxCWkFK5ZsF2frTslpBClUJJ1jCC55fOr96VI2Df3a6+PyMpJ+A9Ap4SalCleDn91S2AhIMHDE0bB/JZRWlI8nXd7WpQQG0u64shHw3SMpg2BYn8XAXm9LdhLs54/keRe8QLEi3GwaCSUKCwmr0GoAYqzCKMrvIA8+XbtrVoV0yjo3Cb7prj7juDKDd2c7G+LiJB20jGgNg2MCh1cPkzKZL+vBDZ9ee8q7Ti0Do2KNKZgp5Q2x1j0jkZzwlkNl+7cycY0PIJaHHXL5cLQtFpAonU0b5wJZoV1rgoMk0OR5WhKkCXM1R/jHNqAxL6MoWvk9ymM=
     twine_check: true
+    skip_cleanup: true
     on:
       tags: true
