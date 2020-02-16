@@ -19,7 +19,6 @@ version = increment_version()
 print('package version: {}\n'.format(version))
 
 # Connect to git repository, tag, add files, commit, push
-# git.tag('v' + version)
 git.add('-A')
 git.commit(input('Commit message: '))
 git.tag('v' + version)

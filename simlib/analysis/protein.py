@@ -226,3 +226,21 @@ def hydrophobic_moment_from_sequence(sequence, offset=100., scale='wimley-white'
     return distance(vector, method='euclidean')
 
 
+# RMSD
+def rmsd(coord1, coord2):
+    """
+    Compute the RMSD between two sets of coordinates
+
+    Parameters
+    ----------
+    coord1 : ArrayLike
+    coord2 : ArrayLike
+
+    Returns
+    -------
+
+    """
+
+
+
+
