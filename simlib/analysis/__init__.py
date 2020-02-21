@@ -1,7 +1,7 @@
 
-from . import protein
+from . import peptide
 
-from .protein import *
+from .peptide import *
 
-# Contents
-__all__ = protein.__all__
+
+__all__ = peptide.__all__

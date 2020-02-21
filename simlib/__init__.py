@@ -1,5 +1,7 @@
 import os
 
+from . import analysis
+
 from .analysis import *
 from .geometry import *
 from .io import *

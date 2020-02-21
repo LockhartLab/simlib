@@ -1,0 +1,7 @@
+simlib.analysis.SecondaryStructure
+==================================
+
+.. currentmodule:: simlib.analysis
+
+.. autoclass:: SecondaryStructure
+   :members:
