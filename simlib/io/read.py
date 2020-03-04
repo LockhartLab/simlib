@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from simlib.framework import Structure, Trajectory
+from simlib.framework import Structure, Topology, Trajectory
 
 import numpy as np
 import pandas as pd
@@ -66,10 +66,6 @@ def read_pdb(filename, backend='pandas'):
     data = np.genfromtxt(atoms.split('\n'), delimiter=sections['width'], dtype=sections['type'], autostrip=True)
     data = pd.DataFrame(data.tolist(), columns=sections['column'])
 
-    # Strip all strings
-    # for column in ['atom', 'residue', 'chain', 'segment', 'element']:
-    #     data[column] = data[column].str.strip()
-
     # Drop extraneous columns
     data = data.drop(columns='blank')
 
@@ -79,20 +75,21 @@ def read_pdb(filename, backend='pandas'):
         data['atom_id'] -= 1
 
     # Determine number of structures in PDB
-    num_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
-    if len(num_structures) != 1:
+    n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
+    if len(n_structures) != 1:
         raise AttributeError('inconsistent record counts in PDB')
-    num_structures = num_structures[0]
+    n_structures = n_structures[0]
 
-    # If there's only 1 structure, our result will be a Structure
-    if num_structures == 1:
-        result = Structure(data)
+    # Separate out dynamic columns for Trajectory and static Topology data
+    dynamical_columns = ['x', 'y', 'z']
+    static_columns = [column for column in data.columns if column not in dynamical_columns]
 
-    # Otherwise, our result will be a Trajectory
-    else:
-        num_atoms = data['atom_id'].nunique()
-        data['structure_id'] = np.repeat(np.arange(num_structures), num_atoms)
-        result = Trajectory(data)
+    # Create Topology first
+    topology = Topology(data[static_columns].drop_duplicates())
+
+    # Next create Trajectory (the result)
+    n_atoms = data['atom_id'].nunique()
+    result = Trajectory(data[dynamical_columns].values.reshape(n_structures, n_atoms, 3), topology=topology)
 
     # Return
     return result

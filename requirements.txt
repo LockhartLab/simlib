@@ -1,5 +1,7 @@
 codecov
 coverage
+gitpipe
+glovebox
 hypothesis
 izzy
 numpy

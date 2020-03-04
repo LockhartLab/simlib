@@ -318,97 +318,97 @@ class Structure:
 
 
 # Trajectory cannot simply be a list of Structures
-class Trajectory(Structure):
-    """
-
-    """
-
-    # Initialize instance of Trajectory class
-    # noinspection PyMissingConstructor
-    def __init__(self, data=None):
-        if isinstance(data, pd.DataFrame):
-            self._data = data
-
-    # Get Structure from Trajectory
-    def __getitem__(self, item):
-        """
-
-
-        Parameters
-        ----------
-        item
-
-        Returns
-        -------
-
-        """
-
-        # Convert item to integer array if not already
-        item = np.array(item, dtype='int').reshape(-1)
-        if len(item) not in [1, 2]:
-            raise AttributeError('index must be structure_id or list with [structure_id, atom_id]')
-
-        # First, get structure
-        result = self.get_structure(item[0])
-
-        # If there's a second dimension, get an atom
-        if len(item) == 2:
-            result = result[item[1]]
-
-        # Return
-        return result
-
-    # Get number of structures in Trajectory
-    def __len__(self):
-        """
-        Number of structures in Trajectory.
-
-        """
-
-        return self._data['structure_id'].nunique()
-
-    # Add a structure
-    # noinspection PyProtectedMember
-    def add_structure(self, structure):
-        structure._data['structure_id'] = self._data['structure_id'].max() + 1
-        self._data = pd.concat([self._data, structure._data])
-
-    # TODO this can be parallelized
-    # Apply
-    def apply(self, function):
-        result = None
-        for structure_id in self._data['structure_id'].unique():
-            # Run the apply function from the Structure with structure_id
-            result_ = self.get_structure(structure_id).apply(function)
-
-            # If the result is a series, convert to frame and use structure_id as the index
-            if isinstance(result_, pd.Series):
-                result_ = result_.to_frame().T
-                result_.index = [structure_id]
-                result_.index.name = 'structure_id'
-
-            if result is None:
-                result = result_
-            else:
-                if isinstance(result, pd.DataFrame):
-                    result = pd.concat([result, result_])
-                elif isinstance(result, list):
-                    result.append(result_)
-                else:
-                    result = [result, result_]
-
-        return result
-
-    # TODO this can be parallelized
-    # Compute secondary structure
-    def compute_secondary_structure(self, recompute=False, executable='stride'):
-        for structure_id in self._data['structure_id'].unique():
-            self.get_structure(structure_id).compute_secondary_structure(recompute=recompute, executable=executable)
-
-    # Get structure
-    def get_structure(self, structure_id):
-        # Make sure structure_id is an array
-        structure_id = np.array(structure_id, dtype='int').reshape(-1)
-
-        # Parse DataFrame for appropriate rows and return as Structure
-        return Structure(self._data.loc[self._data['structure_id'].isin(structure_id), :])
+# class Trajectory(Structure):
+#     """
+#
+#     """
+#
+#     # Initialize instance of Trajectory class
+#     # noinspection PyMissingConstructor
+#     def __init__(self, data=None):
+#         if isinstance(data, pd.DataFrame):
+#             self._data = data
+#
+#     # Get Structure from Trajectory
+#     def __getitem__(self, item):
+#         """
+#
+#
+#         Parameters
+#         ----------
+#         item
+#
+#         Returns
+#         -------
+#
+#         """
+#
+#         # Convert item to integer array if not already
+#         item = np.array(item, dtype='int').reshape(-1)
+#         if len(item) not in [1, 2]:
+#             raise AttributeError('index must be structure_id or list with [structure_id, atom_id]')
+#
+#         # First, get structure
+#         result = self.get_structure(item[0])
+#
+#         # If there's a second dimension, get an atom
+#         if len(item) == 2:
+#             result = result[item[1]]
+#
+#         # Return
+#         return result
+#
+#     # Get number of structures in Trajectory
+#     def __len__(self):
+#         """
+#         Number of structures in Trajectory.
+#
+#         """
+#
+#         return self._data['structure_id'].nunique()
+#
+#     # Add a structure
+#     # noinspection PyProtectedMember
+#     def add_structure(self, structure):
+#         structure._data['structure_id'] = self._data['structure_id'].max() + 1
+#         self._data = pd.concat([self._data, structure._data])
+#
+#     # TODO this can be parallelized
+#     # Apply
+#     def apply(self, function):
+#         result = None
+#         for structure_id in self._data['structure_id'].unique():
+#             # Run the apply function from the Structure with structure_id
+#             result_ = self.get_structure(structure_id).apply(function)
+#
+#             # If the result is a series, convert to frame and use structure_id as the index
+#             if isinstance(result_, pd.Series):
+#                 result_ = result_.to_frame().T
+#                 result_.index = [structure_id]
+#                 result_.index.name = 'structure_id'
+#
+#             if result is None:
+#                 result = result_
+#             else:
+#                 if isinstance(result, pd.DataFrame):
+#                     result = pd.concat([result, result_])
+#                 elif isinstance(result, list):
+#                     result.append(result_)
+#                 else:
+#                     result = [result, result_]
+#
+#         return result
+#
+#     # TODO this can be parallelized
+#     # Compute secondary structure
+#     def compute_secondary_structure(self, recompute=False, executable='stride'):
+#         for structure_id in self._data['structure_id'].unique():
+#             self.get_structure(structure_id).compute_secondary_structure(recompute=recompute, executable=executable)
+#
+#     # Get structure
+#     def get_structure(self, structure_id):
+#         # Make sure structure_id is an array
+#         structure_id = np.array(structure_id, dtype='int').reshape(-1)
+#
+#         # Parse DataFrame for appropriate rows and return as Structure
+#         return Structure(self._data.loc[self._data['structure_id'].isin(structure_id), :])

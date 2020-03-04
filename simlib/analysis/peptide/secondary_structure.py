@@ -7,11 +7,11 @@ author: C. Lockhart <chris@lockhartlab.org>
 from simlib.external import stride
 from simlib.framework import Quantity, Structure, Trajectory
 
+from functools import partial
 from glovebox import GloveBox
 import numpy as np
 import os
 import pandas as pd
-from refunction import Refunction
 
 
 # Class to store secondary structure results
@@ -176,7 +176,7 @@ def compute_secondary_structure(structure_or_trajectory, executable='stride'):
     peptide = structure_or_trajectory.query('peptide')
 
     # Return the result applied to the peptide as SecondaryStructure instance
-    return SecondaryStructure(peptide.apply(Refunction(_compute_secondary_structure, executable=executable)))
+    return SecondaryStructure(peptide.apply(partial(_compute_secondary_structure, executable=executable)))
 
 
 # Compute the secondary structure for a single structure

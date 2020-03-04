@@ -36,7 +36,11 @@ setup(
         'simlib.io',
         'simlib.misc',
     ],
-    install_requires=requirements,
+    install_requires=[
+        'glovebox',
+        'numpy',
+        'pandas', 'typelike'
+    ],
     include_package_data=True,
     zip_safe=True
 )

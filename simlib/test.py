@@ -1,17 +1,17 @@
 
-from simlib.analysis.peptide import compute_secondary_structure
+# from simlib.analysis.peptide import compute_secondary_structure
 from simlib.io import read_pdb
 
 
 trj1 = read_pdb('trajectory_short.pdb')
-# trj1.add_structure(read_pdb('abf_solv_ions.pdb'))
+# trj1.add_structure(read_pdb('x'))
 # assert len(trj1) == 2
 
-secondary_structure = compute_secondary_structure(trj1, executable='C:/Users/Chris/Downloads/stride/stride.exe')
-ss = SecondaryStructure(secondary_structure.T)
-print(ss.mean(axis=None))
-print(ss.mean(axis=0))
-print(ss.mean(axis=1))
+# secondary_structure = compute_secondary_structure(trj1, executable='C:/Users/Chris/Downloads/stride/stride.exe')
+# ss = SecondaryStructure(secondary_structure.T)
+# print(ss.mean(axis=None))
+# print(ss.mean(axis=0))
+# print(ss.mean(axis=1))
 
 
 # str1 = trj1[0]
