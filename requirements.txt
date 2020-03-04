@@ -6,6 +6,7 @@ hypothesis
 izzy
 numpy
 pandas
+privatize
 pyyaml
 scipy
 sphinx

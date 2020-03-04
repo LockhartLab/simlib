@@ -39,7 +39,9 @@ setup(
     install_requires=[
         'glovebox',
         'numpy',
-        'pandas', 'typelike'
+        'pandas',
+        'privatize',
+        'typelike'
     ],
     include_package_data=True,
     zip_safe=True
