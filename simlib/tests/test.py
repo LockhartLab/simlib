@@ -6,6 +6,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 # from simlib.tests.analysis import TestProtein
 from simlib.tests.io import *
+from simlib.tests.geometry import *
 
 import sys
 import unittest
@@ -14,6 +15,7 @@ import unittest
 # TODO see if there's an easier way to look for these cases (without manually updating a list)
 test_cases = [
     TestReadPDB,
+    TestGeometry,
     TestWritePDB,
 ]
 
