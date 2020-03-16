@@ -4,6 +4,7 @@ gitpipe
 glovebox
 hypothesis
 izzy
+numba
 numpy
 pandas
 privatize
