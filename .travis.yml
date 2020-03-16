@@ -5,7 +5,8 @@ python: 3.7
 # run all tests
 script:
   - cp simlib/tests/test.py .
-  - python -m coverage run test.py
+#  - python -m coverage run test.py
+  - coverage run -m unittest test.py
   - rm test.py
 
 # after a successful test, update to codecov
