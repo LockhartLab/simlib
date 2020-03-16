@@ -1,0 +1,6 @@
+simlib.energy.hooke
+===================
+
+.. currentmodule:: simlib.energy
+
+.. autofunction:: hooke

@@ -4,14 +4,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.framework.structure &#8212; simlib 0.0.12 documentation</title>
+    <title>simlib.framework.structure &#8212; simlib 0.0.15 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -21,7 +22,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.12 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -38,7 +39,7 @@
 <span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">simlib.analysis.peptide.hydrophobicity</span> <span class="kn">import</span> <span class="n">rmsd</span>
+<span class="kn">from</span> <span class="nn">simlib.analysis.protein.hydrophobicity</span> <span class="kn">import</span> <span class="n">rmsd</span>
 <span class="kn">from</span> <span class="nn">simlib.external</span> <span class="kn">import</span> <span class="n">stride</span>
 <span class="kn">from</span> <span class="nn">.errata</span> <span class="kn">import</span> <span class="n">pivot</span>
 
@@ -352,100 +353,100 @@
 
 
 <span class="c1"># Trajectory cannot simply be a list of Structures</span>
-<div class="viewcode-block" id="Trajectory"><a class="viewcode-back" href="../../../api/generated/simlib.framework.Trajectory.html#simlib.framework.Trajectory">[docs]</a><span class="k">class</span> <span class="nc">Trajectory</span><span class="p">(</span><span class="n">Structure</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Initialize instance of Trajectory class</span>
-    <span class="c1"># noinspection PyMissingConstructor</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
-
-    <span class="c1"># Get Structure from Trajectory</span>
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        item</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Convert item to integer array if not already</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;index must be structure_id or list with [structure_id, atom_id]&#39;</span><span class="p">)</span>
-
-        <span class="c1"># First, get structure</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="c1"># If there&#39;s a second dimension, get an atom</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-
-        <span class="c1"># Return</span>
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="c1"># Get number of structures in Trajectory</span>
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Number of structures in Trajectory.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
-
-    <span class="c1"># Add a structure</span>
-    <span class="c1"># noinspection PyProtectedMember</span>
-    <span class="k">def</span> <span class="nf">add_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">structure</span><span class="p">):</span>
-        <span class="n">structure</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">_data</span><span class="p">])</span>
-
-    <span class="c1"># TODO this can be parallelized</span>
-    <span class="c1"># Apply</span>
-    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">structure_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-            <span class="c1"># Run the apply function from the Structure with structure_id</span>
-            <span class="n">result_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">structure_id</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-
-            <span class="c1"># If the result is a series, convert to frame and use structure_id as the index</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result_</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
-                <span class="n">result_</span> <span class="o">=</span> <span class="n">result_</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
-                <span class="n">result_</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure_id</span><span class="p">]</span>
-                <span class="n">result_</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;structure_id&#39;</span>
-
-            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">result_</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result</span><span class="p">,</span> <span class="n">result_</span><span class="p">])</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="p">,</span> <span class="n">result_</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="c1"># TODO this can be parallelized</span>
-    <span class="c1"># Compute secondary structure</span>
-    <span class="k">def</span> <span class="nf">compute_secondary_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recompute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;stride&#39;</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">structure_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">structure_id</span><span class="p">)</span><span class="o">.</span><span class="n">compute_secondary_structure</span><span class="p">(</span><span class="n">recompute</span><span class="o">=</span><span class="n">recompute</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="n">executable</span><span class="p">)</span>
-
-    <span class="c1"># Get structure</span>
-    <span class="k">def</span> <span class="nf">get_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">structure_id</span><span class="p">):</span>
-        <span class="c1"># Make sure structure_id is an array</span>
-        <span class="n">structure_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">structure_id</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="c1"># Parse DataFrame for appropriate rows and return as Structure</span>
-        <span class="k">return</span> <span class="n">Structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">structure_id</span><span class="p">),</span> <span class="p">:])</span></div>
+<span class="c1"># class Trajectory(Structure):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#     # Initialize instance of Trajectory class</span>
+<span class="c1">#     # noinspection PyMissingConstructor</span>
+<span class="c1">#     def __init__(self, data=None):</span>
+<span class="c1">#         if isinstance(data, pd.DataFrame):</span>
+<span class="c1">#             self._data = data</span>
+<span class="c1">#</span>
+<span class="c1">#     # Get Structure from Trajectory</span>
+<span class="c1">#     def __getitem__(self, item):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         Parameters</span>
+<span class="c1">#         ----------</span>
+<span class="c1">#         item</span>
+<span class="c1">#</span>
+<span class="c1">#         Returns</span>
+<span class="c1">#         -------</span>
+<span class="c1">#</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#         # Convert item to integer array if not already</span>
+<span class="c1">#         item = np.array(item, dtype=&#39;int&#39;).reshape(-1)</span>
+<span class="c1">#         if len(item) not in [1, 2]:</span>
+<span class="c1">#             raise AttributeError(&#39;index must be structure_id or list with [structure_id, atom_id]&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         # First, get structure</span>
+<span class="c1">#         result = self.get_structure(item[0])</span>
+<span class="c1">#</span>
+<span class="c1">#         # If there&#39;s a second dimension, get an atom</span>
+<span class="c1">#         if len(item) == 2:</span>
+<span class="c1">#             result = result[item[1]]</span>
+<span class="c1">#</span>
+<span class="c1">#         # Return</span>
+<span class="c1">#         return result</span>
+<span class="c1">#</span>
+<span class="c1">#     # Get number of structures in Trajectory</span>
+<span class="c1">#     def __len__(self):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         Number of structures in Trajectory.</span>
+<span class="c1">#</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#         return self._data[&#39;structure_id&#39;].nunique()</span>
+<span class="c1">#</span>
+<span class="c1">#     # Add a structure</span>
+<span class="c1">#     # noinspection PyProtectedMember</span>
+<span class="c1">#     def add_structure(self, structure):</span>
+<span class="c1">#         structure._data[&#39;structure_id&#39;] = self._data[&#39;structure_id&#39;].max() + 1</span>
+<span class="c1">#         self._data = pd.concat([self._data, structure._data])</span>
+<span class="c1">#</span>
+<span class="c1">#     # TODO this can be parallelized</span>
+<span class="c1">#     # Apply</span>
+<span class="c1">#     def apply(self, function):</span>
+<span class="c1">#         result = None</span>
+<span class="c1">#         for structure_id in self._data[&#39;structure_id&#39;].unique():</span>
+<span class="c1">#             # Run the apply function from the Structure with structure_id</span>
+<span class="c1">#             result_ = self.get_structure(structure_id).apply(function)</span>
+<span class="c1">#</span>
+<span class="c1">#             # If the result is a series, convert to frame and use structure_id as the index</span>
+<span class="c1">#             if isinstance(result_, pd.Series):</span>
+<span class="c1">#                 result_ = result_.to_frame().T</span>
+<span class="c1">#                 result_.index = [structure_id]</span>
+<span class="c1">#                 result_.index.name = &#39;structure_id&#39;</span>
+<span class="c1">#</span>
+<span class="c1">#             if result is None:</span>
+<span class="c1">#                 result = result_</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 if isinstance(result, pd.DataFrame):</span>
+<span class="c1">#                     result = pd.concat([result, result_])</span>
+<span class="c1">#                 elif isinstance(result, list):</span>
+<span class="c1">#                     result.append(result_)</span>
+<span class="c1">#                 else:</span>
+<span class="c1">#                     result = [result, result_]</span>
+<span class="c1">#</span>
+<span class="c1">#         return result</span>
+<span class="c1">#</span>
+<span class="c1">#     # TODO this can be parallelized</span>
+<span class="c1">#     # Compute secondary structure</span>
+<span class="c1">#     def compute_secondary_structure(self, recompute=False, executable=&#39;stride&#39;):</span>
+<span class="c1">#         for structure_id in self._data[&#39;structure_id&#39;].unique():</span>
+<span class="c1">#             self.get_structure(structure_id).compute_secondary_structure(recompute=recompute, executable=executable)</span>
+<span class="c1">#</span>
+<span class="c1">#     # Get structure</span>
+<span class="c1">#     def get_structure(self, structure_id):</span>
+<span class="c1">#         # Make sure structure_id is an array</span>
+<span class="c1">#         structure_id = np.array(structure_id, dtype=&#39;int&#39;).reshape(-1)</span>
+<span class="c1">#</span>
+<span class="c1">#         # Parse DataFrame for appropriate rows and return as Structure</span>
+<span class="c1">#         return Structure(self._data.loc[self._data[&#39;structure_id&#39;].isin(structure_id), :])</span>
 </pre></div>
 
           </div>
@@ -462,7 +463,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -473,13 +474,13 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.12 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>

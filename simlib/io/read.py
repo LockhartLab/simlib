@@ -6,6 +6,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from simlib.framework import Structure, Topology, Trajectory
 
+from numba import jit
 import numpy as np
 import pandas as pd
 import re
@@ -39,6 +40,7 @@ def read_pdb(filename, backend='pandas'):
     # Open file, read in all records
     with open(filename, 'r') as buffer:
         records = buffer.read()
+        # records = _atom_reader(buffer)
 
     # Filter out atom records
     # TODO this will be slow for large PDB files; perhaps move to Cython or C backend
@@ -93,3 +95,12 @@ def read_pdb(filename, backend='pandas'):
 
     # Return
     return result
+
+
+# @jit(nopython=False)
+# def _atom_reader(buffer):
+#     result = ''
+#     for line in buffer.readlines():
+#         if line[:4] == 'ATOM':
+#             result += line
+#     return result

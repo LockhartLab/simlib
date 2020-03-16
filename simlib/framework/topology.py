@@ -53,7 +53,7 @@ class Topology:
         """
 
         # Add index to data
-        if isinstance(data, pd.DataFrame):
+        if isinstance(data, pd.DataFrame) and 'index' not in data.columns:
             data['index'] = np.arange(len(data))
 
         # TODO can this be protected?
@@ -84,6 +84,10 @@ class Topology:
         -------
 
         """
+
+        # First, try to see if we can ping the DataFrame
+        if isinstance(item, str):
+            return self._data[item].values
 
         # Make sure that item a valid atom_id
         if item not in self._data['atom_id']:
@@ -189,7 +193,7 @@ class Topology:
 
         # Get indices and parsed data
         indices = self._data.query(text).index.values
-        data = self._data.loc[self._data.index.isin(indices), :]
+        data = self._data.loc[self._data.index.isin(indices), :].copy()
 
         # Return
         return Topology(data)

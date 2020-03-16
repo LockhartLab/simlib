@@ -4,18 +4,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.framework &#8212; simlib 0.0.12 documentation</title>
+    <title>simlib.framework &#8212; simlib 0.0.15 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="simlib.framework.Structure" href="generated/simlib.framework.Structure.html" />
-    <link rel="prev" title="simlib.analysis.peptide.compute_secondary_structure" href="generated/simlib.analysis.peptide.compute_secondary_structure.html" /> 
+    <link rel="prev" title="simlib.energy.hooke" href="generated/simlib.energy.hooke.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,9 +28,9 @@
           <a href="generated/simlib.framework.Structure.html" title="simlib.framework.Structure"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="generated/simlib.analysis.peptide.compute_secondary_structure.html" title="simlib.analysis.peptide.compute_secondary_structure"
+          <a href="generated/simlib.energy.hooke.html" title="simlib.energy.hooke"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">simlib 0.0.12 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">simlib 0.0.15 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -52,8 +53,8 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/simlib.framework.Structure.html#simlib.framework.Structure" title="simlib.framework.Structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Structure</span></code></a>([data, topology])</p></td>
 <td><p>A <cite>Structure</cite> is an object that stores a single three-dimensional “structure”</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/simlib.framework.Trajectory.html#simlib.framework.Trajectory" title="simlib.framework.Trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trajectory</span></code></a>([data])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/simlib.framework.Trajectory.html#simlib.framework.Trajectory" title="simlib.framework.Trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trajectory</span></code></a>(xyz[, box, topology])</p></td>
+<td><p><cite>Trajectory</cite> stores instantaneous data for a <cite>Topology</cite>, i.e., atomic coordinates, box information, velocity, etc.</p></td>
 </tr>
 </tbody>
 </table>
@@ -75,8 +76,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="generated/simlib.analysis.peptide.compute_secondary_structure.html"
-                        title="previous chapter">simlib.analysis.peptide.compute_secondary_structure</a></p>
+  <p class="topless"><a href="generated/simlib.energy.hooke.html"
+                        title="previous chapter">simlib.energy.hooke</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="generated/simlib.framework.Structure.html"
                         title="next chapter">simlib.framework.Structure</a></p>
@@ -96,7 +97,7 @@
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -111,15 +112,15 @@
           <a href="generated/simlib.framework.Structure.html" title="simlib.framework.Structure"
              >next</a> |</li>
         <li class="right" >
-          <a href="generated/simlib.analysis.peptide.compute_secondary_structure.html" title="simlib.analysis.peptide.compute_secondary_structure"
+          <a href="generated/simlib.energy.hooke.html" title="simlib.energy.hooke"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">simlib 0.0.12 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">simlib 0.0.15 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>

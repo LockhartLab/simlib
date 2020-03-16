@@ -41,7 +41,7 @@ setup(
         'numpy',
         'pandas',
         'privatize',
-        'typelike'
+        'typelike', 'hypothesis', 'numba'
     ],
     include_package_data=True,
     zip_safe=True

@@ -4,18 +4,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.analysis.peptide.SecondaryStructure &#8212; simlib 0.0.12 documentation</title>
+    <title>simlib.analysis.peptide.SecondaryStructure &#8212; simlib 0.0.15 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="simlib.analysis.peptide.compute_hydrophobic_moment" href="simlib.analysis.peptide.compute_hydrophobic_moment.html" />
-    <link rel="prev" title="simlib.analysis.peptide.HydrophobicityScale" href="simlib.analysis.peptide.HydrophobicityScale.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -23,16 +22,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="simlib.analysis.peptide.compute_hydrophobic_moment.html" title="simlib.analysis.peptide.compute_hydrophobic_moment"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="simlib.analysis.peptide.HydrophobicityScale.html" title="simlib.analysis.peptide.HydrophobicityScale"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.12 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../analysis.html" >simlib.analysis</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="../analysis.peptide.html" accesskey="U">simlib.analysis.peptide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -43,50 +33,6 @@
             
   <div class="section" id="simlib-analysis-peptide-secondarystructure">
 <h1>simlib.analysis.peptide.SecondaryStructure<a class="headerlink" href="#simlib-analysis-peptide-secondarystructure" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="simlib.analysis.peptide.SecondaryStructure">
-<em class="property">class </em><code class="sig-prename descclassname">simlib.analysis.peptide.</code><code class="sig-name descname">SecondaryStructure</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/analysis/peptide/secondary_structure.html#SecondaryStructure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.analysis.peptide.SecondaryStructure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store the result of secondary structure computation through STRIDE.</p>
-<p>By itself, an instance of <cite>SecondaryStructure</cite> is not a <cite>Quantity</cite>. There are several options for converting an
-instance of <cite>SecondaryStructure</cite> to a <cite>Quantity</cite>.</p>
-<dl class="method">
-<dt id="simlib.analysis.peptide.SecondaryStructure.mean">
-<code class="sig-name descname">mean</code><span class="sig-paren">(</span><em class="sig-param">axis=None</em>, <em class="sig-param">codes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/analysis/peptide/secondary_structure.html#SecondaryStructure.mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.analysis.peptide.SecondaryStructure.mean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the average secondary structure by code for the entire protein (axis = None), each structure (axis = 0),
-or each residue (axis = 1).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em> or </em><em>int.</em>) – Designates if the average should be computed for the entire protein (axis = None), each structure
-(axis = 0), or each residue (axis = 1).</p></li>
-<li><p><strong>codes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The secondary structure codes to compute.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>If axis = None, pandas.Series is returned. Otherwise, the result will be pandas.DataFrame.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.0.1)">pandas.Series</a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)">pandas.DataFrame</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="simlib.analysis.peptide.SecondaryStructure.residues_with_code">
-<code class="sig-name descname">residues_with_code</code><span class="sig-paren">(</span><em class="sig-param">code</em>, <em class="sig-param">residue_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/analysis/peptide/secondary_structure.html#SecondaryStructure.residues_with_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.analysis.peptide.SecondaryStructure.residues_with_code" title="Permalink to this definition">¶</a></dt>
-<dd><p><cite>Quantity</cite></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>code</strong> – </p></li>
-<li><p><strong>residue_id</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -95,12 +41,6 @@ or each residue (axis = 1).</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="simlib.analysis.peptide.HydrophobicityScale.html"
-                        title="previous chapter">simlib.analysis.peptide.HydrophobicityScale</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="simlib.analysis.peptide.compute_hydrophobic_moment.html"
-                        title="next chapter">simlib.analysis.peptide.compute_hydrophobic_moment</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -117,7 +57,7 @@ or each residue (axis = 1).</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -128,21 +68,12 @@ or each residue (axis = 1).</p>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="simlib.analysis.peptide.compute_hydrophobic_moment.html" title="simlib.analysis.peptide.compute_hydrophobic_moment"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="simlib.analysis.peptide.HydrophobicityScale.html" title="simlib.analysis.peptide.HydrophobicityScale"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.12 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../analysis.html" >simlib.analysis</a> &#187;</li>
-          <li class="nav-item nav-item-3"><a href="../analysis.peptide.html" >simlib.analysis.peptide</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
     </div>
   </body>
 </html>

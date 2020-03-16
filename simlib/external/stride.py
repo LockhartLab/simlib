@@ -57,7 +57,6 @@ def stride(pdb, executable='stride'):
     
     # Error check; make sure STRIDE finishes successfully
     if process.wait() != 0:
-        print(error)
         raise SystemError('STRIDE failed')
 
     # Filter for pertinent records in output

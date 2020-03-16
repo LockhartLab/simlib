@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>simlib.energy.Angle &#8212; simlib 0.0.15 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="simlib.framework" href="../framework.html" />
+    <link rel="prev" title="simlib.energy.Bond" href="simlib.energy.Bond.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../framework.html" title="simlib.framework"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="simlib.energy.Bond.html" title="simlib.energy.Bond"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../energy.html" accesskey="U">simlib.energy</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="simlib-energy-angle">
+<h1>simlib.energy.Angle<a class="headerlink" href="#simlib-energy-angle" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="simlib.energy.Angle">
+<em class="property">class </em><code class="sig-prename descclassname">simlib.energy.</code><code class="sig-name descname">Angle</code><span class="sig-paren">(</span><em class="sig-param">xyz0</em>, <em class="sig-param">xyz1</em>, <em class="sig-param">xyz2</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the potential energy of an angle</p>
+<p>The energy of an angle follows Hooke’s law:</p>
+<div class="math notranslate nohighlight">
+\[U = \frac{1}{2} k (\theta - \theta_0)^2\]</div>
+<p>The differential must be split by the components of vectors <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span>, which are used to compute the
+angle <span class="math notranslate nohighlight">\(\theta\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\delta U}{\delta x} = -k (\theta - \theta_0) sin^{-1}(\theta) v_x\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\delta U}{\delta v_x} = -k (\theta - \theta_0) sin^{-1}(\theta) u_x\]</div>
+<p>The derivation:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\delta U}{\delta \theta} = k (\theta - \theta_0)\]</div>
+<div class="math notranslate nohighlight">
+\[\theta = acos(u \cdot v)\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\delta \theta}{\delta (u \cdot v)} = \frac{-1}{\sqrt{1 - (u \cdot v)^2}}
+= \frac{-1}{\sqrt{1 - cos^2(\theta)}}
+= \frac{-1}{\sqrt{sin^2(\theta)}}
+= -sin^{-1}(\theta)\]</div>
+<p>.   . math:: u cdot v = u_x v_x + u_y v_y + u_z v_z
+.. math:: frac{delta (u cdot v)}{delta u_x} = v_x
+.. math:: frac{delta (u cdot v)}{delta v_x} = u_x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xyz0</strong> – </p></li>
+<li><p><strong>xyz1</strong> – </p></li>
+<li><p><strong>xyz2</strong> – </p></li>
+<li><p><strong>ideal_value</strong> – </p></li>
+<li><p><strong>force_constant</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods:</p>
+<dl class="method">
+<dt id="simlib.energy.Angle.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">xyz0</em>, <em class="sig-param">xyz1</em>, <em class="sig-param">xyz2</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Angle.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Angle.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xyz0</strong> (<em>ArrayLike</em>) – Cartesian coordinates for first particle.</p></li>
+<li><p><strong>xyz1</strong> (<em>ArrayLike</em>) – Cartesian coordinates for second particle.</p></li>
+<li><p><strong>xyz2</strong> (<em>ArrayLike</em>) – Cartesian coordinates for third particle.</p></li>
+<li><p><strong>ideal_value</strong> (<em>ArrayLike</em>) – The ideal angle between the particles.</p></li>
+<li><p><strong>force_constant</strong> (<em>ArrayLike</em>) – The spring constant describing the particles.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.energy.Angle.energy">
+<em class="property">property </em><code class="sig-name descname">energy</code><a class="headerlink" href="#simlib.energy.Angle.energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The computed energy term</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Energy</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.energy.Angle.force">
+<em class="property">property </em><code class="sig-name descname">force</code><a class="headerlink" href="#simlib.energy.Angle.force" title="Permalink to this definition">¶</a></dt>
+<dd><p>The computed force vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Force vector</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="simlib.energy.Bond.html"
+                        title="previous chapter">simlib.energy.Bond</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../framework.html"
+                        title="next chapter">simlib.framework</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/generated/simlib.energy.Angle.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../framework.html" title="simlib.framework"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="simlib.energy.Bond.html" title="simlib.energy.Bond"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../energy.html" >simlib.energy</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+    </div>
+  </body>
+</html>

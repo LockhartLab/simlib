@@ -7,9 +7,12 @@ Author: C. Lockhart <chris@lockhartlab.org>
 >>> go.add_particle()
 """
 
+from simlib.misc import experimental
+
 import numpy as np
 
 
+@experimental
 class Go:
     """
 
@@ -69,6 +72,7 @@ class Go:
 
         # Put the Stone in the position
         self.board[position] = stone
+
 
 class Stone:
     """

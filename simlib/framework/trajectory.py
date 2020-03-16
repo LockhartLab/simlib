@@ -45,6 +45,29 @@ class Trajectory(object):
 
         return self.n_structures
 
+    # Get item
+    def __getitem__(self, item):
+        """
+
+        Parameters
+        ----------
+        item
+
+        Returns
+        -------
+
+        """
+
+        result = None
+        if isinstance(item, int):
+            result = self.get_structure(0)
+
+        # If we still don't know what to do, try to get from topology
+        else:
+            result = self.topology[item]
+
+        return result
+
     # Check topology
     def _check_topology(self):
         """
@@ -59,6 +82,28 @@ class Trajectory(object):
         if self.n_atoms != self._topology.n_atoms:
             raise AttributeError('number of atoms in topology and trajectory do not match ({0} vs {1})'
                                  .format(self.n_atoms, self._topology.n_atoms))
+
+    # Apply
+    # TODO please optimize this. Use vectorize, map, parallelization
+    def apply(self, function):
+        result = []
+        for i in np.arange(self.n_structures):
+            structure = self.get_structure(i)
+            result.append(function(structure))
+        return result
+
+    # Get atoms
+    def get_atoms(self, index):
+        return self.xyz[:, index, :]
+
+    # Get structure
+    def get_structure(self, index):
+        index = np.array([index]).ravel()  # this cuks
+        structure = Trajectory(self.xyz[index, :, :].reshape(len(index), self.n_atoms, self.n_dim),
+                               topology=self.topology)
+        if self.n_atoms != structure.n_atoms:
+            raise AttributeError('number of atoms do not match ({0} vs {1})'.format(self.n_atoms, structure.n_atoms))
+        return structure
 
     # Number of atoms
     @property
@@ -103,20 +148,36 @@ class Trajectory(object):
         return self.shape[0]
 
     # Query
-    def query(self, text):
+    def query(self, text, only_index=False):
         """
         Query the set `Topology` and return matching indices
 
         Parameters
         ----------
         text
+        only_index
 
         Returns
         -------
 
         """
-        # Query the topology to get indices
-        return self.topology.query(text).index.values
+
+        # Query the topology to get pertinent data
+        topology = self.topology.query(text)
+
+        # Extract indices
+        index = topology['index']
+
+        #
+        if only_index:
+            result = index
+
+        else:
+            result = Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim),
+                                topology=topology)
+
+        # Return result
+        return result
 
     # Shape
     @property
@@ -154,6 +215,10 @@ class Trajectory(object):
 
         # Return
         return result
+
+    # Show
+    def show(self):
+        pass
 
     # Save as PDB
     def to_pdb(self, filename):

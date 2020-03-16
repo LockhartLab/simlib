@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from simlib.analysis.peptide.hydrophobicity import rmsd
+from simlib.analysis.protein.hydrophobicity import rmsd
 from simlib.external import stride
 from .errata import pivot
 

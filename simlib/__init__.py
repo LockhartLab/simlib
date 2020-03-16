@@ -14,10 +14,10 @@ __all__ = [
     'analysis',
     'geometry',
     'io',
-    # 'include_dir',
+    'include_dir',
     'misc',
     '__version__'
 ]
 
 # Add include path
-#
+include_dir = os.path.abspath(__file__ + '/../../include')

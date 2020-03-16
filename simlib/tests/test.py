@@ -14,7 +14,7 @@ import unittest
 # TODO see if there's an easier way to look for these cases (without manually updating a list)
 test_cases = [
     TestReadPDB,
-    TestWritePDB
+    TestWritePDB,
 ]
 
 
