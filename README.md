@@ -1,11 +1,13 @@
 simlib
 ======
-a package for molecular dynamics simulations and anlysis
+a package for molecular dynamics simulations and analysis
 
 <!--*master:*-->
-<nobr><img src="https://img.shields.io/pypi/v/simlib" alt="version"/></nobr> 
-<nobr><img src="https://img.shields.io/travis/com/lockhartlab/simlib/master"  alt="build-status-master"/></nobr>
-<nobr><img src="https://img.shields.io/codecov/c/github/lockhartlab/simlib/master" alt="coverage-master"/></nobr>
+<span style="white-space: nowrap;">
+    <a href="https://travis-ci.com/github/LockhartLab/simlib"><img src="https://img.shields.io/pypi/v/simlib" /></a>
+    <a href="https://travis-ci.com/github/LockhartLab/simlib"><img src="https://img.shields.io/travis/com/lockhartlab/simlib/master" /></a>
+    <a href="https://codecov.io/gh/LockhartLab/simlib"><img src="https://img.shields.io/codecov/c/github/lockhartlab/simlib/master" /></a>
+</span>
 
 <!--
 *dev:*  
@@ -13,6 +15,13 @@ a package for molecular dynamics simulations and anlysis
 <nobr><img src="https://img.shields.io/codecov/c/github/lockhartlab/simlib/dev" alt="coverage-dev"/></nobr>
 <hr>
 -->
+
+<hr>
+
+"Completed":  
+`simlib.geometry`
+
+<hr>
 
 
 note that this package is **still in development**  

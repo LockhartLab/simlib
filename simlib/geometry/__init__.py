@@ -6,15 +6,23 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from .geometry import *
 
-import numpy as np
-from scipy.spatial.distance import euclidean
-
 __all__ = [
     'angle',
+    'cartesian_to_polar',
     'cos_angle',
+    'cos_vangle',
+    'cross',
+    'dihedral',
     'distance',
+    'dot',
     'norm',
-    'vector'
+    'normal',
+    'polar_to_cartesian',
+    'uvector',
+    'vangle',
+    'vdihedral',
+    'vector',
+    'vnormal'
 ]
 
 
