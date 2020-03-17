@@ -9,21 +9,38 @@ import numpy as np
 
 
 # Compute angle between three points
-def angle(a, b, c):
+def angle(a, b, c, method='atan2'):
+    r"""
+    Compute angle between three points :math:`\angle ABC`.
+
+    Parameters
+    ----------
+    a, b, c : ArrayLike
+        Cartesian coordinates
+    method : str
+        Method to compute angle, see :func:`~vangle` for options.
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Angle between points
+    """
+
     u = vector(a, b)
     v = vector(b, c)
-    return vangle(u, v)
+
+    return vangle(u, v, method=method)
 
 
 # Convert Cartesian to polar coordinates
 def cartesian_to_polar(a):
     """
-    Convert Cartesian to polar coordinates
+    Convert Cartesian to polar coordinates.
 
     Parameters
     ----------
     a : ArrayLike
-        Cartesian coordinates
+        Cartesian coordinates.
 
     Returns
     -------
@@ -49,38 +66,101 @@ def cartesian_to_polar(a):
 
 # Compute angle between three points
 def cos_angle(a, b, c):
+    r"""
+    Compute cosine of the angle between three points :math:`\angle ABC`.
+
+    Parameters
+    ----------
+    a, b, c : ArrayLike
+        Vectors
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Cosine angle of points
+    """
+
     u = vector(a, b)
     v = vector(b, c)
+
     return cos_vangle(u, v)
 
 
-def cos_vangle(u, v):
-    u, v, needs_ravel = _coerce_to_2d(u, v)
-    return _array_result(dot(u, v) / (norm(u) * norm(v)), needs_ravel)
+# Compute angle between vectors
+def cos_vangle(a, b):
+    """
+    Compute cosine angle between vectors.
+
+    Parameters
+    ----------
+    a, b : ArrayLike
+        Vectors
+
+    Returns
+    -------
+    float or numpy.ndarray
+    """
+
+    # Coerce
+    a, b, needs_ravel = _coerce_to_2d(a, b)
+
+    # Return
+    return _array_result(dot(a, b) / (norm(a) * norm(b)), needs_ravel)
+
+
+# Cross product
+def cross(a, b):
+    """
+    Compute cross product between vectors `a` and `b`. Points to :func:`numpy.cross`
+
+    Parameters
+    ----------
+    a, b : ArrayLike
+        Vectors
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Cross product of u and v
+    """
+
+    return np.cross(a, b)
 
 
 # Dihedral angle between 4 points
 def dihedral(a, b, c, d):
-    if (a.ndim > 1 and a.shape[1] != 3) or (a.ndim == 1 and a.shape[0] != 3):
-        raise AttributeError('must be 3D')
+    """
+    Compute dihedral angle between four points.
+
+    Parameters
+    ----------
+    a, b, c, d : ArrayLike
+        Cartesian coordinates.
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Dihedral angle
+    """
+
+    _check_dimensions(a, b, c, d, n_dim=3)
+
     u = vector(a, b)
     v = vector(b, c)
     w = vector(c, d)
+
     return vdihedral(u, v, w)
 
 
 # Compute the distance between two vectors
-def distance(a, b=None, method='euclidean'):
+def distance(a, b=None):
     """
-    Compute the distance between two vectors
+    Compute the Euclidean distance between two vectors
 
     Parameters
     ----------
-    a : ArrayLike
-    b : ArrayLike
-
-    method : str
-        (Default: 'euclidean')
+    a, b : ArrayLike
+        Vectors
 
     Returns
     -------
@@ -89,11 +169,12 @@ def distance(a, b=None, method='euclidean'):
     """
 
     # Coerce
-    a, b, needs_ravel = _coerce_to_2d(a, b)
+    a, needs_ravel = _coerce_to_2d(a)
 
-    # If y is not supplied, set to zeros
+    # If y is not supplied, set to zeros; then coerce
     if b is None:
         b = np.zeros(a.shape)
+    b, _ = _coerce_to_2d(b)
 
     # Return distance
     return _array_result(np.sqrt(np.sum(np.square(vector(a, b)), axis=1)), needs_ravel)
@@ -113,23 +194,58 @@ def dot(a, b, axis=1):
 
     Returns
     -------
-    numpy.ndarray
+    float or numpy.ndarray
         Vector dot product
     """
 
-    return np.sum(np.multiply(a, b), axis=axis)
+    a, b, needs_ravel = _coerce_to_2d(a, b)
+
+    return _array_result(np.sum(np.multiply(a, b), axis=axis), needs_ravel)
 
 
 # Normed vector
-def norm(u):
-    u, needs_ravel = _coerce_to_2d(u)
-    return _array_result(np.linalg.norm(u, axis=1), needs_ravel)
+def norm(a):
+    r"""
+    Compute vector norm.
+
+    .. math :: |a| = \sqrt{a_x^2 + a_y^2 + a_z^2}
+
+    Parameters
+    ----------
+    a : ArrayLike
+        Vector
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Normed vector
+    """
+
+    # a, needs_ravel = _coerce_to_2d(a)
+    #
+    # return _array_result(np.linalg.norm(a, axis=1), needs_ravel)
+    return distance(a)
 
 
-# Compute the normal between four points
+# Compute the normal between three points
 def normal(a, b, c):
+    """
+    Compute normal vector between three points.
+
+    Parameters
+    ----------
+    a, b, c : ArrayLike
+        Cartesian coordinates.
+
+    Returns
+    -------
+    numpy.ndarray
+        Vector normal
+    """
+
     u = vector(a, b)
     v = vector(b, c)
+
     return vnormal(u, v)
 
 
@@ -145,7 +261,7 @@ def polar_to_cartesian(a):
 
     Returns
     -------
-    numpy.ndarray
+    float or numpy.ndarray
         Cartesian coordinates, same shape as `a`
     """
 
@@ -168,26 +284,112 @@ def polar_to_cartesian(a):
 
 # Create unit vector
 def uvector(a):
+    r"""
+    Compute unit vector.
+
+    .. math :: \^{a} = \frac{a}{|a|}
+
+    Parameters
+    ----------
+    a : ArrayLike
+        Vector
+
+    Returns
+    -------
+    numpy.ndarray
+        Unit vector
+    """
+
     a, needs_ravel = _coerce_to_2d(a)
     return _array_result(a / norm(a).reshape(-1, 1), needs_ravel)
 
 
 # Compute angle between 2 vectors
-def vangle(u, v):
-    return np.arccos(cos_vangle(u, v))
+def vangle(a, b, method='atan2'):
+    r"""
+    Compute the angle between two vectors.
+
+    If method = 'atan2',
+
+    ..math :: \theta = atan2(norm(cross(a, b)), dot(a, b))
+
+    If method = 'acos',
+
+    ..math :: \theta = acos \frac{a \dot b}{|a| |b|}
+
+    Parameters
+    ----------
+    a, b : ArrayLike
+        Vectors
+    method : str
+        Using 'atan2' or 'acos' method of computing angle.
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Angle between vectors
+    """
+
+    method = str(method).lower()
+
+    if method == 'atan2':
+        cross_ = cross(a, b)
+        if _has_dimensions(a, b, n_dim=2):
+            if a.ndim == 2 and b.ndim == 2:
+                cross_ = cross_.reshape(-1, 1)
+            else:
+                cross_ = [cross_]
+        result = np.arctan2(norm(cross_), dot(a, b))
+    elif method == 'acos':
+        result = np.arccos(cos_vangle(a, b))
+    else:
+        raise AttributeError('method %s unknown' % method)
+
+    return result
 
 
 # Compute dihedral between 3 vectors
-def vdihedral(u, v, w):
-    if (u.ndim > 1 and u.shape[1] != 3) or (u.ndim == 1 and u.shape[0] != 3):
-        raise AttributeError('must be 3D')
-    q = vnormal(u, v)
-    r = vnormal(v, w)
-    return vangle(q, r)
+def vdihedral(a, b, c):
+    """
+    Compute the dihedral angle between three vectors.
+
+    Parameters
+    ----------
+    a, b, c : ArrayLike
+        Vectors
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Dihedral angle
+    """
+
+    _check_dimensions(a, b, c, n_dim=3)
+
+    u = vnormal(a, b)
+    v = vnormal(b, c)
+
+    return vangle(u, v)
 
 
 # Compute vector between 2 sets of points
 def vector(a, b, normalize=False):
+    """
+    Compute vector between two sets of points.
+
+    Parameters
+    ----------
+    a, b : ArrayLike
+        Cartesian coordinates.
+    normalize : bool
+        Should the unit vector be computed? (Default: False)
+
+    Returns
+    -------
+    numpy.ndarray
+        Vector between `a` and `b`.
+    """
+
     # Coerce input
     a, b, needs_ravel = _coerce_to_2d(a, b)
 
@@ -199,10 +401,25 @@ def vector(a, b, normalize=False):
 
 
 # Compute normal
-def vnormal(u, v):
-    return np.cross(u, v)
+def vnormal(a, b):
+    """
+    Compute the normal between two vectors.
+
+    Parameters
+    ----------
+    a, b : ArrayLike
+        Vectors
+
+    Returns
+    -------
+    numpy.ndarray
+        Vector normal
+    """
+
+    return cross(a, b)
 
 
+# Helper function to ravel array result
 def _array_result(a, needs_ravel=False):
     if needs_ravel:
         if a.ndim > 1:
@@ -210,6 +427,11 @@ def _array_result(a, needs_ravel=False):
         else:
             a = a[0]
     return a
+
+
+def _check_dimensions(*args, n_dim=3):
+    if not _has_dimensions(*args, n_dim=n_dim):
+        raise AttributeError('must be %sD' % n_dim)
 
 
 def _coerce_to_2d(a, *args):
@@ -233,3 +455,11 @@ def _coerce_to_2d(a, *args):
 
     # Return
     return result
+
+
+# Helper function to check dimensionality
+def _has_dimensions(*args, n_dim=3):
+    result = []
+    for arg in args:
+        result.append((arg.ndim > 1 and arg.shape[1] == n_dim) or (arg.ndim == 1 and arg.shape[0] == n_dim))
+    return all(result)

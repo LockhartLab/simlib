@@ -4,15 +4,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.energy.Bond &#8212; simlib 0.0.15 documentation</title>
+    <title>simlib.energy.Bond &#8212; simlib 0.0.20 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="simlib.energy.Angle" href="simlib.energy.Angle.html" />
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../energy.html" title="simlib.energy"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.20 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" accesskey="U">simlib.energy</a> &#187;</li> 
       </ul>
@@ -52,9 +52,9 @@
 <div class="math notranslate nohighlight">
 \[U = \frac{1}{2} k (r - r_0)^2\]</div>
 <p>Since <span class="math notranslate nohighlight">\(r\)</span> can be separated out into components <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>, and <span class="math notranslate nohighlight">\(z\)</span>, we must compute the
-partial derivatives of <span class="math notranslate nohighlight">\(\delta U\)</span>.</p>
+partial derivatives of <span class="math notranslate nohighlight">\(\delta U\)</span>. Then, <span class="math notranslate nohighlight">\(F = -\delta U / \delta \Delta x\)</span>.</p>
 <div class="math notranslate nohighlight">
-\[\frac{\delta U}{\delta \Delta x} = k(r-r_0)\frac{\Delta x}{r}\]</div>
+\[F = -\frac{\delta U}{\delta \Delta x} = -k(r-r_0)\frac{\Delta x}{r}\]</div>
 <p>For the derivation:</p>
 <div class="math notranslate nohighlight">
 \[\delta U = k(r-r_0) \delta r\]</div>
@@ -151,7 +151,7 @@ partial derivatives of <span class="math notranslate nohighlight">\(\delta U\)</
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -168,14 +168,14 @@ partial derivatives of <span class="math notranslate nohighlight">\(\delta U\)</
         <li class="right" >
           <a href="../energy.html" title="simlib.energy"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.20 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" >simlib.energy</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
     </div>
   </body>
 </html>

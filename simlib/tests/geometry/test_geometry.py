@@ -75,10 +75,14 @@ class TestGeometry(TestCase):
         r = np.arccos(cos_r)
 
         # Test angles
-        np.testing.assert_almost_equal(q, angle(a, b, c))
-        np.testing.assert_almost_equal(r, angle(b, c, d))
-        np.testing.assert_almost_equal(q, vangle(u, v))
-        np.testing.assert_almost_equal(r, vangle(v, w))
+        np.testing.assert_almost_equal(q, angle(a, b, c, method='acos'))
+        np.testing.assert_almost_equal(r, angle(b, c, d, method='acos'))
+        np.testing.assert_almost_equal(q, vangle(u, v, method='acos'))
+        np.testing.assert_almost_equal(r, vangle(v, w, method='acos'))
+        np.testing.assert_almost_equal(q, angle(a, b, c, method='atan2'))
+        np.testing.assert_almost_equal(r, angle(b, c, d, method='atan2'))
+        np.testing.assert_almost_equal(q, vangle(u, v, method='atan2'))
+        np.testing.assert_almost_equal(r, vangle(v, w, method='atan2'))
 
         # Compute normal
         np.testing.assert_equal(np.cross(u, v), normal(a, b, c))

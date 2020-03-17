@@ -4,15 +4,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.energy.Angle &#8212; simlib 0.0.15 documentation</title>
+    <title>simlib.energy.Angle &#8212; simlib 0.0.20 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="simlib.framework" href="../framework.html" />
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="simlib.energy.Bond.html" title="simlib.energy.Bond"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.20 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" accesskey="U">simlib.energy</a> &#187;</li> 
       </ul>
@@ -50,25 +50,39 @@
 <p>The energy of an angle follows Hooke’s law:</p>
 <div class="math notranslate nohighlight">
 \[U = \frac{1}{2} k (\theta - \theta_0)^2\]</div>
-<p>The differential must be split by the components of vectors <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span>, which are used to compute the
+<p>The derivative must be split by the components of vectors <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span>, which are used to compute the
 angle <span class="math notranslate nohighlight">\(\theta\)</span>:</p>
 <div class="math notranslate nohighlight">
-\[\frac{\delta U}{\delta x} = -k (\theta - \theta_0) sin^{-1}(\theta) v_x\]</div>
+\[F = -\frac{\delta U}{\delta x} = k (\theta - \theta_0) sin^{-1}(\theta) / |v|\]</div>
 <div class="math notranslate nohighlight">
-\[\frac{\delta U}{\delta v_x} = -k (\theta - \theta_0) sin^{-1}(\theta) u_x\]</div>
+\[\frac{\delta U}{\delta v_x} = -k (\theta - \theta_0) sin^{-1}(\theta) / |u|\]</div>
 <p>The derivation:</p>
 <div class="math notranslate nohighlight">
 \[\frac{\delta U}{\delta \theta} = k (\theta - \theta_0)\]</div>
 <div class="math notranslate nohighlight">
-\[\theta = acos(u \cdot v)\]</div>
+\[\theta = acos(\^{u_{ij}} \cdot \^{u_{jk}})\]</div>
 <div class="math notranslate nohighlight">
-\[\frac{\delta \theta}{\delta (u \cdot v)} = \frac{-1}{\sqrt{1 - (u \cdot v)^2}}
+\[\frac{\delta \theta}{\delta u_i} = \frac{-1}{\sqrt{1 - (\^{u} \cdot \^{v})^2}}
 = \frac{-1}{\sqrt{1 - cos^2(\theta)}}
-= \frac{-1}{\sqrt{sin^2(\theta)}}
+= \frac{-1}{\sqrt{sin^2(\theta)}}\]</div>
+<div class="math notranslate nohighlight">
+\[u_i = [x, y, z]
 = -sin^{-1}(\theta)\]</div>
-<p>.   . math:: u cdot v = u_x v_x + u_y v_y + u_z v_z
-.. math:: frac{delta (u cdot v)}{delta u_x} = v_x
-.. math:: frac{delta (u cdot v)}{delta v_x} = u_x</p>
+<div class="math notranslate nohighlight">
+\[u \cdot v = u_x v_x + u_y v_y + u_z v_z\]</div>
+<div class="math notranslate nohighlight">
+\[\delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}\]</div>
+<div class="math notranslate nohighlight">
+\[u = [\Delta x, \Delta y, \Delta z]\]</div>
+<p>f1 = dth/duv / <a href="#id1"><span class="problematic" id="id2">|u|</span></a> * (u * (cos th / <a href="#id3"><span class="problematic" id="id4">|u|</span></a>) - v / <a href="#id5"><span class="problematic" id="id6">|v|</span></a>) = dth/duv / <a href="#id7"><span class="problematic" id="id8">|u|</span></a> * (u * costh - v)
+f3 = dth/duv / <a href="#id9"><span class="problematic" id="id10">|v|</span></a> * (v * (cos th / <a href="#id11"><span class="problematic" id="id12">|v|</span></a>) - u / <a href="#id13"><span class="problematic" id="id14">|u|</span></a>) = dth/duv / <a href="#id15"><span class="problematic" id="id16">|v|</span></a> * (v * costh - u)
+f2 = -1 * (f1 + f3)</p>
+<div class="math notranslate nohighlight">
+\[\frac{\delta u}{\delta \Delta x} = [1, 1, 1]\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\delta (u \cdot v)}{\delta u_x} = v_x\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\delta (u \cdot v)}{\delta v_x} = u_x\]</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -157,7 +171,7 @@ angle <span class="math notranslate nohighlight">\(\theta\)</span>:</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -174,14 +188,14 @@ angle <span class="math notranslate nohighlight">\(\theta\)</span>:</p>
         <li class="right" >
           <a href="simlib.energy.Bond.html" title="simlib.energy.Bond"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.15 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.20 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" >simlib.energy</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
     </div>
   </body>
 </html>
