@@ -83,6 +83,8 @@ class TestGeometry(TestCase):
         np.testing.assert_almost_equal(r, angle(b, c, d, method='atan2'))
         np.testing.assert_almost_equal(q, vangle(u, v, method='atan2'))
         np.testing.assert_almost_equal(r, vangle(v, w, method='atan2'))
+        with np.testing.assert_raises(AttributeError):
+            vangle(u, v, method='junk')
 
         # Compute normal
         np.testing.assert_equal(np.cross(u, v), normal(a, b, c))
@@ -109,6 +111,14 @@ class TestGeometry(TestCase):
         # Compute xyz to polar and vice versa (don't need to compute because we can use identities)
         np.testing.assert_array_almost_equal(a, polar_to_cartesian(cartesian_to_polar(a)))
         np.testing.assert_array_almost_equal(a, cartesian_to_polar(polar_to_cartesian(a)))
+        with np.testing.assert_raises(AttributeError):
+            cartesian_to_polar(np.random.rand(3, 1))
+        with np.testing.assert_raises(AttributeError):
+            polar_to_cartesian(np.random.rand(3, 1))
+
+        # Misc
+        with np.testing.assert_raises(AttributeError):
+            vector(np.random.rand(3, 2), np.random.rand(3, 1))
 
 
 def _distance(a, b, n_points):
