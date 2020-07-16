@@ -1,0 +1,30 @@
+Info) VMD for LINUXAMD64, version 1.9.3 (December 1, 2016)
+Info) http://www.ks.uiuc.edu/Research/vmd/                         
+Info) Email questions and bug reports to vmd@ks.uiuc.edu           
+Info) Please include this reference in published work using VMD:   
+Info)    Humphrey, W., Dalke, A. and Schulten, K., `VMD - Visual   
+Info)    Molecular Dynamics', J. Molec. Graphics 1996, 14.1, 33-38.
+Info) -------------------------------------------------------------
+Info) Multithreading available, 8 CPUs detected.
+Info) Free system memory: 5551MB (34%)
+Info) Dynamically loaded 2 plugins in directory:
+Info) /usr/local/lib/vmd/plugins/LINUXAMD64/molfile
+Info) Using plugin pdb for structure file ../samples/trajectory.pdb
+Info) Using plugin pdb for coordinates from file ../samples/trajectory.pdb
+Info) Determining bond structure from distance search ...
+Info) Finished with coordinate file ../samples/trajectory.pdb.
+Info) Analyzing structure ...
+Info)    Atoms: 41806
+Info)    Bonds: 27954
+Info)    Angles: 0  Dihedrals: 0  Impropers: 0  Cross-terms: 0
+Info)    Bondtypes: 0  Angletypes: 0  Dihedraltypes: 0  Impropertypes: 0
+Info)    Residues: 13871
+Info)    Waters: 13852
+Info)    Segments: 10
+Info)    Fragments: 13856   Protein: 1   Nucleic: 0
+0
+atomselect0
+41806
+Info) VMD for LINUXAMD64, version 1.9.3 (December 1, 2016)
+Info) Exiting normally.
+vmd > 

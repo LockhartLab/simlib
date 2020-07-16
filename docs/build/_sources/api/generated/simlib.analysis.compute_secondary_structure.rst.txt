@@ -1,0 +1,6 @@
+simlib.analysis.compute\_secondary\_structure
+=============================================
+
+.. currentmodule:: simlib.analysis
+
+.. autofunction:: compute_secondary_structure

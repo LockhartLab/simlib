@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>simlib.framework.Structure &#8212; simlib 0.0.33 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="simlib.framework.Trajectory" href="simlib.framework.Trajectory.html" />
+    <link rel="prev" title="simlib.framework" href="../framework.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="simlib.framework.Trajectory.html" title="simlib.framework.Trajectory"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../framework.html" title="simlib.framework"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../framework.html" accesskey="U">simlib.framework</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="simlib-framework-structure">
+<h1>simlib.framework.Structure<a class="headerlink" href="#simlib-framework-structure" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="simlib.framework.Structure">
+<em class="property">class </em><code class="sig-prename descclassname">simlib.framework.</code><code class="sig-name descname">Structure</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">topology=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/structure.html#Structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <cite>Structure</cite> is an object that stores a single three-dimensional “structure”</p>
+<p>“Structure” can be used loosely here because it applies to proteins, proteins in water baths, proteins in lipid
+environments, ligands in water, etc.</p>
+<dl class="simple">
+<dt>The <cite>Structure</cite> instance generally follows PDB format [1] in that in contains,</dt><dd><ul class="simple">
+<li><p>id</p></li>
+<li><p>x</p></li>
+<li><p>y</p></li>
+<li><p>z</p></li>
+<li><p>alpha</p></li>
+<li><p>beta</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="simlib.framework.Structure.add_atoms">
+<code class="sig-name descname">add_atoms</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/structure.html#Structure.add_atoms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Structure.add_atoms" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwargs</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.framework.Structure.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/structure.html#Structure.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Structure.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy of Structure instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Copy of instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>simlib.Structure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.framework.Structure.rmsd">
+<code class="sig-name descname">rmsd</code><span class="sig-paren">(</span><em class="sig-param">structure</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/structure.html#Structure.rmsd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Structure.rmsd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute root-mean-square deviation (RMSD) with another structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>structure</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.framework.Structure.set_topology">
+<code class="sig-name descname">set_topology</code><span class="sig-paren">(</span><em class="sig-param">topology</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/structure.html#Structure.set_topology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Structure.set_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set topology</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>topology</strong> (<em>Topology</em>) – Instance of Topology class</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.framework.Structure.to_pdb">
+<code class="sig-name descname">to_pdb</code><span class="sig-paren">(</span><em class="sig-param">filename_or_buffer</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/structure.html#Structure.to_pdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Structure.to_pdb" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename_or_buffer</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="simlib.framework.Structure.xyz">
+<em class="property">property </em><code class="sig-name descname">xyz</code><a class="headerlink" href="#simlib.framework.Structure.xyz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../framework.html"
+                        title="previous chapter">simlib.framework</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="simlib.framework.Trajectory.html"
+                        title="next chapter">simlib.framework.Trajectory</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/generated/simlib.framework.Structure.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="simlib.framework.Trajectory.html" title="simlib.framework.Trajectory"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../framework.html" title="simlib.framework"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../framework.html" >simlib.framework</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+    </div>
+  </body>
+</html>

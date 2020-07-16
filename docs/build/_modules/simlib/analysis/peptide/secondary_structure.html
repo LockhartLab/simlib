@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>simlib.analysis.peptide.secondary_structure &#8212; simlib 0.0.12 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">simlib 0.0.12 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for simlib.analysis.peptide.secondary_structure</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">secondary_structure.py</span>
+<span class="sd">written in Python3</span>
+<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">simlib.external</span> <span class="kn">import</span> <span class="n">stride</span>
+<span class="kn">from</span> <span class="nn">simlib.framework</span> <span class="kn">import</span> <span class="n">Quantity</span><span class="p">,</span> <span class="n">Structure</span><span class="p">,</span> <span class="n">Trajectory</span>
+
+<span class="kn">from</span> <span class="nn">glovebox</span> <span class="kn">import</span> <span class="n">GloveBox</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">refunction</span> <span class="kn">import</span> <span class="n">Refunction</span>
+
+
+<span class="c1"># Class to store secondary structure results</span>
+<div class="viewcode-block" id="SecondaryStructure"><a class="viewcode-back" href="../../../../api/generated/simlib.analysis.peptide.SecondaryStructure.html#simlib.analysis.peptide.SecondaryStructure">[docs]</a><span class="k">class</span> <span class="nc">SecondaryStructure</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Store the result of secondary structure computation through STRIDE.</span>
+
+<span class="sd">    By itself, an instance of `SecondaryStructure` is not a `Quantity`. There are several options for converting an</span>
+<span class="sd">    instance of `SecondaryStructure` to a `Quantity`.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># STRIDE secondary structure codes</span>
+    <span class="n">codes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Initialize instance of SecondaryStructure</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize instance of SecondaryStructure class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : pandas.DataFrame</span>
+<span class="sd">            The secondary structure data from STRIDE. Contains a column for each residue_id, and contains a row for</span>
+<span class="sd">            each observation. Element represent the secondary structure code from STRIDE.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Type check</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;must be initialized with instance of pandas DataFrame&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Set instance value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="c1"># Override __repr__</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+
+    <span class="c1"># Handle codes</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_handle_codes</span><span class="p">(</span><span class="n">codes</span><span class="p">):</span>
+        <span class="c1"># If codes is not defined, use the global codes</span>
+        <span class="k">if</span> <span class="n">codes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">codes</span> <span class="o">=</span> <span class="n">SecondaryStructure</span><span class="o">.</span><span class="n">codes</span>
+
+        <span class="c1"># Convert codes to numpy array for simplicity</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Make sure that all codes are permissible</span>
+        <span class="k">if</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">codes</span><span class="p">,</span> <span class="n">SecondaryStructure</span><span class="o">.</span><span class="n">codes</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="n">bad_codes</span> <span class="o">=</span> <span class="p">[</span><span class="n">code</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">codes</span> <span class="k">if</span> <span class="n">code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SecondaryStructure</span><span class="o">.</span><span class="n">codes</span><span class="p">]</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;bad codes </span><span class="si">%s</span><span class="s1"> were provided&#39;</span> <span class="o">%</span> <span class="n">bad_codes</span><span class="p">)</span>
+
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">codes</span>
+
+    <span class="c1"># Mean</span>
+<div class="viewcode-block" id="SecondaryStructure.mean"><a class="viewcode-back" href="../../../../api/generated/simlib.analysis.peptide.SecondaryStructure.html#simlib.analysis.peptide.SecondaryStructure.mean">[docs]</a>    <span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">codes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the average secondary structure by code for the entire protein (axis = None), each structure (axis = 0),</span>
+<span class="sd">        or each residue (axis = 1).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        axis : None or int.</span>
+<span class="sd">            Designates if the average should be computed for the entire protein (axis = None), each structure</span>
+<span class="sd">            (axis = 0), or each residue (axis = 1).</span>
+<span class="sd">        codes : str</span>
+<span class="sd">            The secondary structure codes to compute.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.Series or pandas.DataFrame</span>
+<span class="sd">            If axis = None, pandas.Series is returned. Otherwise, the result will be pandas.DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Handle codes</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_codes</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span>
+
+        <span class="c1">#</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">==</span> <span class="n">code</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">codes</span><span class="o">=</span><span class="p">[</span><span class="n">code</span><span class="p">])[</span><span class="n">code</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># If axis is not None, coerce to DataFrame; if None, make Series. Return to user</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+    <span class="c1"># Standard deviation</span>
+    <span class="k">def</span> <span class="nf">std</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">codes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Sum</span>
+    <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">codes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Handle codes</span>
+        <span class="n">codes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_codes</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span>
+
+        <span class="c1"># x</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">codes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">==</span> <span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">==</span> <span class="n">code</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1"># Do residues have code?</span>
+<div class="viewcode-block" id="SecondaryStructure.residues_with_code"><a class="viewcode-back" href="../../../../api/generated/simlib.analysis.peptide.SecondaryStructure.html#simlib.analysis.peptide.SecondaryStructure.residues_with_code">[docs]</a>    <span class="k">def</span> <span class="nf">residues_with_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">residue_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        `Quantity`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        code</span>
+<span class="sd">        residue_id</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Handle code</span>
+        <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;code cannot be None&#39;</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_codes</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+        <span class="c1"># Handle residue_id</span>
+        <span class="k">if</span> <span class="n">residue_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">residue_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">residue_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">residue_id</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Return as Quantity</span>
+        <span class="k">return</span> <span class="n">Quantity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">residue_id</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">code</span><span class="p">))</span></div></div>
+
+
+<span class="c1"># Compute secondary structure using STRIDE</span>
+<div class="viewcode-block" id="compute_secondary_structure"><a class="viewcode-back" href="../../../../api/generated/simlib.analysis.peptide.compute_secondary_structure.html#simlib.analysis.peptide.compute_secondary_structure">[docs]</a><span class="k">def</span> <span class="nf">compute_secondary_structure</span><span class="p">(</span><span class="n">structure_or_trajectory</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;stride&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the secondary structure for :func:`simlib.Structure` or :func:`simlib.Trajectory`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure_or_trajectory : Structure or Trajectory</span>
+<span class="sd">        An instance of Structure or Trajectory</span>
+<span class="sd">    executable : str</span>
+<span class="sd">        Path to STRIDE executable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SecondaryStructure</span>
+<span class="sd">        The secondary structure for the object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If not Structure or Trajectory, throw an error</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">structure_or_trajectory</span><span class="p">,</span> <span class="p">(</span><span class="n">Structure</span><span class="p">,</span> <span class="n">Trajectory</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cannot interpret </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">structure_or_trajectory</span><span class="p">)</span>
+
+    <span class="c1"># Filter only peptide atoms out of Structure or Trajectory</span>
+    <span class="n">peptide</span> <span class="o">=</span> <span class="n">structure_or_trajectory</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;peptide&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Return the result applied to the peptide as SecondaryStructure instance</span>
+    <span class="k">return</span> <span class="n">SecondaryStructure</span><span class="p">(</span><span class="n">peptide</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">Refunction</span><span class="p">(</span><span class="n">_compute_secondary_structure</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="n">executable</span><span class="p">)))</span></div>
+
+
+<span class="c1"># Compute the secondary structure for a single structure</span>
+<span class="k">def</span> <span class="nf">_compute_secondary_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;stride&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the secondary structure for a :func:`simlib.Structure` instance</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure : Structure</span>
+<span class="sd">        Instance of Structure class.</span>
+<span class="sd">    executable : str</span>
+<span class="sd">        Path to STRIDE executable.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SecondaryStructure</span>
+<span class="sd">        The secondary structure of the Structure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create temporary PDB in glovebox</span>
+    <span class="n">gb</span> <span class="o">=</span> <span class="n">GloveBox</span><span class="p">(</span><span class="s1">&#39;simlib-stride&#39;</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">temp_pdb</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gb</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;temp.pdb&#39;</span><span class="p">)</span>
+    <span class="n">structure</span><span class="o">.</span><span class="n">to_pdb</span><span class="p">(</span><span class="n">temp_pdb</span><span class="p">)</span>
+
+    <span class="c1"># Run STRIDE</span>
+    <span class="n">secondary_structure</span> <span class="o">=</span> <span class="n">stride</span><span class="p">(</span><span class="n">temp_pdb</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="n">executable</span><span class="p">)[[</span><span class="s1">&#39;residue_id&#39;</span><span class="p">,</span> <span class="s1">&#39;secondary_structure&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># Clean out the glovebox</span>
+    <span class="n">gb</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">secondary_structure</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;residue_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">simlib 0.0.12 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+    </div>
+  </body>
+</html>

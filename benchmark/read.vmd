@@ -1,0 +1,8 @@
+
+mol new ../samples/trajectory.pdb waitfor all
+
+
+set sel [atomselect top "all"]
+puts [$sel num]
+
+exit

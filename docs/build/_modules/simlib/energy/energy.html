@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>simlib.energy.energy &#8212; simlib 0.0.33 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for simlib.energy.energy</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">energy.py</span>
+<span class="sd">written in Python3</span>
+<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">simlib.geometry</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># TODO allow computation to work with only distances? Need a way to speed up calculations using REMD</span>
+
+
+<span class="c1"># Coerce coordinates into an acceptable form</span>
+<span class="k">def</span> <span class="nf">_coerce_xyz</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># Place to store results</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Loop over all coordinates in arguments</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)):</span>
+        <span class="c1"># Make sure we&#39;re dealing with a 2D array</span>
+        <span class="n">xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">xyz</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Make sure coordinates are the same shape</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">!=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;coordinates must be same shapes&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Save coerced coordinates</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="k">class</span> <span class="nc">EnergyTerm</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_force</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_compute_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_compute_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The computed energy term</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            Energy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_energy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The computed force vector</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            Force vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_force</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="Bond"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Bond.html#simlib.energy.Bond">[docs]</a><span class="k">class</span> <span class="nc">Bond</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the bond potential energy according to Hooke&#39;s law</span>
+
+<span class="sd">    The energy :math:`U` can be computed from the difference in the measured distance :math:`r` from the ideal distance</span>
+<span class="sd">    :math:`r_0`, scaled by the spring constant :math:`k`.</span>
+
+<span class="sd">    .. math:: U = \frac{1}{2} k (r - r_0)^2</span>
+
+<span class="sd">    Since :math:`r` can be separated out into components :math:`x`, :math:`y`, and :math:`z`, we must compute the</span>
+<span class="sd">    partial derivatives of :math:`\delta U`. Then, :math:`F = -\delta U / \delta \Delta x`.</span>
+
+<span class="sd">    .. math:: F = -\frac{\delta U}{\delta \Delta x} = -k(r-r_0)\frac{\Delta x}{r}</span>
+
+<span class="sd">    For the derivation:</span>
+
+<span class="sd">    .. math:: \delta U = k(r-r_0) \delta r</span>
+<span class="sd">    .. math:: r = \sqrt{r^2}</span>
+<span class="sd">    .. math:: \delta r = \frac{1}{2}(r^2)^{-1/2} \delta r^2</span>
+<span class="sd">    .. math:: r^2 = (\Delta x)^2 + (\Delta y)^2 + (\Delta z)^2</span>
+<span class="sd">    .. math:: \frac{\delta r^2}{\delta \Delta x} = 2 \Delta x</span>
+
+<span class="sd">    The same for above can be computed for :math:`y` or :math:`z`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from simlib import Bond</span>
+<span class="sd">    &gt;&gt;&gt; bond = Bond(atom1, atom2, idval)</span>
+<span class="sd">    &gt;&gt;&gt; bond.energy</span>
+<span class="sd">    &gt;&gt;&gt; bond.derivative</span>
+<span class="sd">    &gt;&gt;&gt; bond.force</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Bond.__init__"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Bond.html#simlib.energy.Bond.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">ideal_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">force_constant</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        a : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for first particle.</span>
+<span class="sd">        b : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for second particle.</span>
+<span class="sd">        ideal_value : ArrayLike</span>
+<span class="sd">            The ideal distance between the particles.</span>
+<span class="sd">        force_constant : ArrayLike</span>
+<span class="sd">            The spring constant describing the particles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Coerce shapes</span>
+        <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span> <span class="o">=</span> <span class="n">_coerce_xyz</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+
+        <span class="c1"># Compute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">-</span> <span class="n">ideal_value</span>
+
+        <span class="c1"># Save parameters</span>
+        <span class="n">EnergyTerm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ideal_value</span> <span class="o">=</span> <span class="n">ideal_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">=</span> <span class="n">force_constant</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Angle"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Angle.html#simlib.energy.Angle">[docs]</a><span class="k">class</span> <span class="nc">Angle</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the potential energy of an angle</span>
+
+<span class="sd">    The energy of an angle follows Hooke&#39;s law:</span>
+
+<span class="sd">    .. math:: U = \frac{1}{2} k (\theta - \theta_0)^2</span>
+
+<span class="sd">    The derivative must be split by the components of vectors :math:`u` and :math:`v`, which are used to compute the</span>
+<span class="sd">    angle :math:`\theta`:</span>
+
+<span class="sd">    .. math:: F = -\frac{\delta U}{\delta x} = k (\theta - \theta_0) sin^{-1}(\theta) / |v|</span>
+
+
+
+<span class="sd">    .. math:: \frac{\delta U}{\delta v_x} = -k (\theta - \theta_0) sin^{-1}(\theta) / |u|</span>
+
+<span class="sd">    The derivation:</span>
+
+<span class="sd">    .. math:: \frac{\delta U}{\delta \theta} = k (\theta - \theta_0)</span>
+<span class="sd">    .. math:: \theta = acos(\^{u_{ij}} \cdot \^{u_{jk}})</span>
+<span class="sd">    .. math:: \frac{\delta \theta}{\delta u_i} = \frac{-1}{\sqrt{1 - (\^{u} \cdot \^{v})^2}}</span>
+<span class="sd">                                               = \frac{-1}{\sqrt{1 - cos^2(\theta)}}</span>
+<span class="sd">                                               = \frac{-1}{\sqrt{sin^2(\theta)}}</span>
+
+<span class="sd">    .. math:: u_i = [x, y, z]</span>
+<span class="sd">                                               = -sin^{-1}(\theta)</span>
+<span class="sd">    .. math:: u \cdot v = u_x v_x + u_y v_y + u_z v_z</span>
+
+<span class="sd">    .. math:: \delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}</span>
+<span class="sd">    .. math:: u = [\Delta x, \Delta y, \Delta z]</span>
+
+<span class="sd">    f1 = dth/duv / |u| * (u * (cos th / |u|) - v / |v|) = dth/duv / |u| * (u * costh - v)</span>
+<span class="sd">    f3 = dth/duv / |v| * (v * (cos th / |v|) - u / |u|) = dth/duv / |v| * (v * costh - u)</span>
+<span class="sd">    f2 = -1 * (f1 + f3)</span>
+
+
+<span class="sd">    .. math:: \frac{\delta u}{\delta \Delta x} = [1, 1, 1]</span>
+
+<span class="sd">    .. math:: \frac{\delta (u \cdot v)}{\delta u_x} = v_x</span>
+<span class="sd">    .. math:: \frac{\delta (u \cdot v)}{\delta v_x} = u_x</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xyz0</span>
+<span class="sd">    xyz1</span>
+<span class="sd">    xyz2</span>
+<span class="sd">    ideal_value</span>
+<span class="sd">    force_constant</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Angle.__init__"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Angle.html#simlib.energy.Angle.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">xyz2</span><span class="p">,</span> <span class="n">ideal_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">force_constant</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xyz0 : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for first particle.</span>
+<span class="sd">        xyz1 : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for second particle.</span>
+<span class="sd">        xyz2 : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for third particle.</span>
+<span class="sd">        ideal_value : ArrayLike</span>
+<span class="sd">            The ideal angle between the particles.</span>
+<span class="sd">        force_constant : ArrayLike</span>
+<span class="sd">            The spring constant describing the particles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Coerce shapes</span>
+        <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">xyz2</span> <span class="o">=</span> <span class="n">_coerce_xyz</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">xyz2</span><span class="p">)</span>
+
+        <span class="c1"># Compute angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_angle</span> <span class="o">=</span> <span class="n">angle</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">xyz2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_angle</span> <span class="o">-</span> <span class="n">ideal_value</span>
+
+        <span class="c1"># Save parameters</span>
+        <span class="n">EnergyTerm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ideal_value</span> <span class="o">=</span> <span class="n">ideal_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">=</span> <span class="n">force_constant</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<span class="k">class</span> <span class="nc">Dihedral</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="c1"># TODO LJ with pairlists</span>
+<span class="k">class</span> <span class="nc">LennardJones</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    .. math:: U = 4\epsilon [(\frac{\sigma}{r})^{12} - (\frac{\sigma}{r})^6]</span>
+<span class="sd">    .. math:: F = -\frac{\delta U}{\delta x} = -24\frac{\epsilon \Delta x}{r}[2(\frac{\sigma}{r})^{12} - (\frac{\sigma}{r})^6]</span>
+
+<span class="sd">    .. math:: U = 4\epsilon [z^{12} - z^6]</span>
+<span class="sd">    .. math:: dU/dx = 4e [12z^{11} - 6z^5] dz</span>
+<span class="sd">    .. math:: dU/dx = 24e [2z^{11} - z^5] dz</span>
+<span class="sd">    .. math:: z = s / r = sr^{-1}</span>
+<span class="sd">    .. math:: dz/dx = -sr^{-2} dr</span>
+<span class="sd">    .. math:: r = sqrt(delta x + delta y + delta z)</span>
+<span class="sd">    .. math:: dr/dx = 1/2(r^2)^(-1/2) * d(r^2)</span>
+<span class="sd">    .. math:: r2 = delta x + delta y + delta z</span>
+<span class="sd">    .. math:: d(r^2)/dx = delta x</span>
+
+
+<span class="sd">    .. math:: \frac{\delta U}{\delta x} = 4\epsilon [12(\frac{\sigma}{r})^{11} - 6(\frac{\sigma}{r})^5] *</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xyz0 : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for first particle.</span>
+<span class="sd">        xyz1 : ArrayLike</span>
+<span class="sd">            Cartesian coordinates for second particle.</span>
+<span class="sd">        sigma : float</span>
+<span class="sd">        epsilon : float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Coerce shapes</span>
+        <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span> <span class="o">=</span> <span class="n">_coerce_xyz</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+
+        <span class="c1"># Compute distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="mf">1000.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_r6</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_r12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_r6</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Save parameters</span>
+        <span class="n">EnergyTerm</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+
+    <span class="c1"># TODO save some of these intermediary calculations for force</span>
+    <span class="k">def</span> <span class="nf">_compute_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">4.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_r12</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r6</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mf">24.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r12</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_r6</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FullElectrostatic</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+    </div>
+  </body>
+</html>
