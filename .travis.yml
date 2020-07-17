@@ -46,3 +46,8 @@ jobs:
           skip_cleanup: true
           on:
             tags: true
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always

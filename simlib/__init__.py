@@ -1,8 +1,12 @@
 
 import os
 
+from . import framework
+from framework import *
+
 from . import analysis
 from . import external
+
 from . import geometry
 from . import viz
 
@@ -24,6 +28,7 @@ __all__ = [
 
 __all__.extend(analysis.__all__)
 __all__.extend(external.__all__)
+__all__.extend(framework.__all__)
 __all__.extend(geometry.__all__)
 __all__.extend(viz.__all__)
 
