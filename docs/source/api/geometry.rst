@@ -12,7 +12,6 @@ Functions
    angle
    cartesian_to_polar
    cos_angle
-   cos_vangle
    cross
    dihedral
    distance
@@ -20,8 +19,5 @@ Functions
    norm
    normal
    polar_to_cartesian
-   uvector
-   vangle
-   vdihedral
    vector
    vnormal
