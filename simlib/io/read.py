@@ -4,9 +4,8 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from simlib.framework import Structure, Topology, Trajectory
+from simlib.framework import Topology, Trajectory
 
-from numba import jit
 import numpy as np
 import pandas as pd
 import re

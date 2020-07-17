@@ -5,7 +5,8 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 from simlib.io import read_pdb
-from simlib.framework import Structure, Trajectory
+# from simlib.framework import Structure, Trajectory
+from simlib.framework import Trajectory
 
 import numpy as np
 import os.path

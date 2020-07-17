@@ -2,7 +2,7 @@
 import os
 
 from . import framework
-from framework import *
+from .framework import *
 
 from . import analysis
 from . import external

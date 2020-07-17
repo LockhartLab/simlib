@@ -1,14 +1,13 @@
 
 from .errata import *
 from .quantity import *
-from .structure import Structure
-from .topology import Topology
-from .trajectory import Trajectory
+# from .structure import Structure
+from .trajectory import Topology, Trajectory
 
 __all__ = [
     'pivot',
     'Quantity',
-    'Structure',
+    # 'Structure',
     'Topology',
     'Trajectory'
 ]

@@ -4,9 +4,11 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
+from .errata import pivot
+from .trajectory import Trajectory
+
 from simlib.analysis.protein.hydrophobicity import rmsd
 from simlib.external import stride
-from .errata import pivot
 
 from glovebox import GloveBox
 import numpy as np
