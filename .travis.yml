@@ -11,7 +11,7 @@ python: 3.7
 
 # run all tests
 script:
-  - if: commit_message !~ /[deploy]/
+  - if: commit_message !~ /\[deploy\]/
   - cp simlib/tests/test.py .
 #  - python -m coverage run test.py
   - coverage run -m unittest test.py
@@ -28,7 +28,7 @@ after_success:
 
 # deploy to pyp
 deploy:
-  - if: commit_message =~ /[deploy]/
+  - if: commit_message =~ /\[deploy\]/
   - provider: pypi
     user: "__token__"
     password:
