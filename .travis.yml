@@ -2,12 +2,9 @@
 language: python
 python: 3.7
 
-# enable stages based on commit message
-#stages:
-#  - name: script
-#    if: commit_message !~ /[deploy]/
-#  - name: deploy
-#    if: commit_message =~ /[deploy]/
+branches:
+  only:
+    - master
 
 jobs:
   include:
