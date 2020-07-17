@@ -21,6 +21,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
   - python _scripts/increment_version.py
   - (cd docs && make html source build & cd ..)
+  - git remote set-url origin git@github.com:LockhartLab/simlib.git
   - python _scripts/deploy_to_master.py
 
 # deploy to pypi
