@@ -16,8 +16,12 @@ version_dict = dict([element.split(': ') for element in data])
 version = '.'.join([str(version_dict[key]) for key in ['major', 'minor', 'patch']])
 
 # Read in requirements.txt
-with open('requirements.txt', 'r') as f:
-    requirements = f.read().splitlines()
+with open('requirements.txt', 'r') as stream:
+    requirements = stream.read().splitlines()
+
+# Long description
+with open('README.md', 'r') as stream:
+    long_description = stream.read()
 
 # Setup
 setup(
@@ -26,12 +30,13 @@ setup(
     author='C. Lockhart',
     author_email='chris@lockhartlab.org',
     description='A toolkit for molecular dynamics simulations',
-    long_description='A toolkit for molecular dynamics simulations',
-    long_description_content_type='text/x-rst',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url="https://www.lockhartlab.org",
     packages=[
         'simlib',
         'simlib.analysis',
+        'simlib.analysis.protein',
         'simlib.geometry',
         'simlib.io',
         'simlib.misc',
