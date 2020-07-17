@@ -26,9 +26,11 @@ jobs:
         - cd docs
         - make html
         - cd ..
-        - git remote set-url origin git@github.com:LockhartLab/simlib.git
+#        - git remote set-url origin git@github.com:LockhartLab/simlib.git
+        - git add -A
+        - git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
         - python _scripts/deploy_to_master.py
-        - git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master --tags
+        - git push -q doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master --tags
 
     - if: commit_message =~ /\[deploy\]/
       # deploy to pyp

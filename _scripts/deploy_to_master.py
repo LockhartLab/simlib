@@ -24,7 +24,7 @@ with open('version.yml', 'r') as f:
 version = '.'.join([str(version[key]) for key in ['major', 'minor', 'patch']])
 
 # Connect to git repository, tag, add files, commit, push
-git.add('-A')
-git.commit('[deploy] test successful')
+# git.add('-A')
+# git.commit('[deploy] test successful')
 git.tag('v' + version)
 # git.push(remote='origin', branch='master', options='--tags')
