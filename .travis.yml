@@ -23,7 +23,8 @@ jobs:
         - cd docs
         - make html
         - cd ..
-#        - git remote set-url origin git@github.com:LockhartLab/simlib.git
+        - git config user.name "doclockh"
+        - git config user.email "chris@lockhartlab.org"
         - git checkout master
         - git add -A
         - git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
