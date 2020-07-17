@@ -5,7 +5,7 @@ glovebox
 hypothesis
 izzy
 numba
-numpy
+numpy>=1.18.0
 pandas
 privatize
 pyyaml
