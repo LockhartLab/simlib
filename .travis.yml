@@ -2,9 +2,13 @@
 language: python
 python: 3.7
 
+# enable stages based on commit message
+stages:
+  - name: script
+    if: commit_message !~ /^(\[deploy\])/
+
 # run all tests
 script:
-  - if: commit_message !~ /^(\[deploy\])/
   - cp simlib/tests/test.py .
 #  - python -m coverage run test.py
   - coverage run -m unittest test.py
