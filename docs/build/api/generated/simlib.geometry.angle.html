@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.geometry.angle &#8212; simlib 0.0.24 documentation</title>
+    <title>simlib.geometry.angle &#8212; simlib 0.0.25 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -22,7 +22,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.24 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.25 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -35,17 +35,23 @@
 <h1>simlib.geometry.angle<a class="headerlink" href="#simlib-geometry-angle" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="simlib.geometry.angle">
-<code class="sig-prename descclassname">simlib.geometry.</code><code class="sig-name descname">angle</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">method='atan2'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/geometry/geometry.html#angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.geometry.angle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute angle between three points <span class="math notranslate nohighlight">\(\angle ABC\)</span>.</p>
+<code class="sig-prename descclassname">simlib.geometry.</code><code class="sig-name descname">angle</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c=None</em>, <em class="sig-param">method='atan2'</em>, <em class="sig-param">radians=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/geometry/geometry.html#angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.geometry.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the angle between two vectors or three vertices.</p>
+<p>If method = ‘atan2’,</p>
+<p>..math :: theta = atan2(norm(cross(a, b)), dot(a, b))</p>
+<p>If method = ‘acos’,</p>
+<p>..math :: theta = acos frac{a dot b}{<a href="#id1"><span class="problematic" id="id2">|a|</span></a> <a href="#id3"><span class="problematic" id="id4">|b|</span></a>}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>b</strong><strong>, </strong><strong>c</strong> (<em>a</em><em>,</em>) – Cartesian coordinates</p></li>
-<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Method to compute angle, see <a class="reference internal" href="simlib.geometry.vangle.html#simlib.geometry.vangle" title="simlib.geometry.vangle"><code class="xref py py-func docutils literal notranslate"><span class="pre">vangle()</span></code></a> for options.</p></li>
+<li><p><strong>b</strong><strong>, </strong><strong>c</strong> (<em>a</em><em>,</em>) – Vectors with same dimensionality. Both <cite>a</cite> and <cite>b</cite> must be provided. If <cite>c</cite> is provided, all three are taken as
+vertices. Otherwise, <cite>a</cite> and <cite>b</cite> are assumed to be Euclidean vectors.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Method to compute angle, see <code class="xref py py-func docutils literal notranslate"><span class="pre">vangle()</span></code> for options.</p></li>
+<li><p><strong>radians</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Should the output be in radians? (Default: True)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Angle between points</p>
+<dd class="field-even"><p>Angle between vectors</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a> or <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
@@ -88,7 +94,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.24 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.25 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.energy.energy &#8212; simlib 0.0.24 documentation</title>
+    <title>simlib.energy.energy &#8212; simlib 0.0.25 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -22,7 +22,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -48,33 +48,13 @@
 <span class="c1"># TODO allow computation to work with only distances? Need a way to speed up calculations using REMD</span>
 
 
-<span class="c1"># Coerce coordinates into an acceptable form</span>
-<span class="k">def</span> <span class="nf">_coerce_xyz</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-    <span class="c1"># Place to store results</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># Loop over all coordinates in arguments</span>
-    <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)):</span>
-        <span class="c1"># Make sure we&#39;re dealing with a 2D array</span>
-        <span class="n">xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">xyz</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="c1"># Make sure coordinates are the same shape</span>
-        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">shape</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span>
-        <span class="k">elif</span> <span class="n">shape</span> <span class="o">!=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;coordinates must be same shapes&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Save coerced coordinates</span>
-        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
-
-    <span class="c1"># Return</span>
-    <span class="k">return</span> <span class="n">results</span>
-
-
+<span class="c1"># Metaclass that defines structure of each energy term</span>
 <span class="k">class</span> <span class="nc">EnergyTerm</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metaclass that defines structure of each energy term.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize class instance</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_force</span> <span class="o">=</span> <span class="kc">None</span>
@@ -120,6 +100,7 @@
         <span class="k">return</span> <span class="n">result</span>
 
 
+<span class="c1"># Bond energy term</span>
 <div class="viewcode-block" id="Bond"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Bond.html#simlib.energy.Bond">[docs]</a><span class="k">class</span> <span class="nc">Bond</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the bond potential energy according to Hooke&#39;s law</span>
@@ -153,14 +134,14 @@
 <span class="sd">    &gt;&gt;&gt; bond.force</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Bond.__init__"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Bond.html#simlib.energy.Bond.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">,</span> <span class="n">ideal_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">force_constant</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+<div class="viewcode-block" id="Bond.__init__"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Bond.html#simlib.energy.Bond.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">ideal_value</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">force_constant</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize instance of Bond class.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        a : ArrayLike</span>
-<span class="sd">            Cartesian coordinates for first particle.</span>
-<span class="sd">        b : ArrayLike</span>
-<span class="sd">            Cartesian coordinates for second particle.</span>
+<span class="sd">        a, b : ArrayLike</span>
+<span class="sd">            Cartesian coordinates</span>
 <span class="sd">        ideal_value : ArrayLike</span>
 <span class="sd">            The ideal distance between the particles.</span>
 <span class="sd">        force_constant : ArrayLike</span>
@@ -168,11 +149,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Coerce shapes</span>
-        <span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span> <span class="o">=</span> <span class="n">_coerce_xyz</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">_coerce_xyz</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
         <span class="c1"># Compute</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">xyz0</span><span class="p">,</span> <span class="n">xyz1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span> <span class="o">-</span> <span class="n">ideal_value</span>
 
         <span class="c1"># Save parameters</span>
@@ -181,7 +162,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">=</span> <span class="n">force_constant</span></div>
 
     <span class="k">def</span> <span class="nf">_compute_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span></div>
@@ -189,9 +170,9 @@
 
 <div class="viewcode-block" id="Angle"><a class="viewcode-back" href="../../../api/generated/simlib.energy.Angle.html#simlib.energy.Angle">[docs]</a><span class="k">class</span> <span class="nc">Angle</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the potential energy of an angle</span>
+<span class="sd">    Compute the potential energy of an angle.</span>
 
-<span class="sd">    The energy of an angle follows Hooke&#39;s law:</span>
+<span class="sd">    The energy of an angle follows the harmonic potential:</span>
 
 <span class="sd">    .. math:: U = \frac{1}{2} k (\theta - \theta_0)^2</span>
 
@@ -207,14 +188,18 @@
 <span class="sd">    The derivation:</span>
 
 <span class="sd">    .. math:: \frac{\delta U}{\delta \theta} = k (\theta - \theta_0)</span>
-<span class="sd">    .. math:: \theta = acos(\^{u_{ij}} \cdot \^{u_{jk}})</span>
-<span class="sd">    .. math:: \frac{\delta \theta}{\delta u_i} = \frac{-1}{\sqrt{1 - (\^{u} \cdot \^{v})^2}}</span>
+<span class="sd">    .. math:: \theta = acos(\hat{u_{ij}} \cdot \hat{u_{jk}})</span>
+<span class="sd">    .. math:: \frac{\delta \theta}{\delta u \cdot v} = \frac{-1}{\sqrt{1 - (\hat{u} \cdot \hat{v})^2}}</span>
 <span class="sd">                                               = \frac{-1}{\sqrt{1 - cos^2(\theta)}}</span>
 <span class="sd">                                               = \frac{-1}{\sqrt{sin^2(\theta)}}</span>
+<span class="sd">                                               = \frac{-1}{sin(\theta)}</span>
+<span class="sd">                                               = sin^{-1}(\theta)</span>
 
 <span class="sd">    .. math:: u_i = [x, y, z]</span>
-<span class="sd">                                               = -sin^{-1}(\theta)</span>
+<span class="sd">    .. math:: \frac{\delta u_i}{\delta x} = 1</span>
+
 <span class="sd">    .. math:: u \cdot v = u_x v_x + u_y v_y + u_z v_z</span>
+<span class="sd">    .. math:: \delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}</span>
 
 <span class="sd">    .. math:: \delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}</span>
 <span class="sd">    .. math:: u = [\Delta x, \Delta y, \Delta z]</span>
@@ -271,7 +256,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">=</span> <span class="n">force_constant</span></div>
 
     <span class="k">def</span> <span class="nf">_compute_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offset</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
@@ -343,6 +328,32 @@
 <span class="k">class</span> <span class="nc">FullElectrostatic</span><span class="p">(</span><span class="n">EnergyTerm</span><span class="p">):</span>
     <span class="k">pass</span>
 
+
+
+<span class="c1"># Coerce coordinates into an acceptable form</span>
+<span class="k">def</span> <span class="nf">_coerce_xyz</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># Place to store results</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Loop over all coordinates in arguments</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)):</span>
+        <span class="c1"># Make sure we&#39;re dealing with a 2D array</span>
+        <span class="n">xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">xyz</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Make sure coordinates are the same shape</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">!=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;coordinates must be same shapes&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Save coerced coordinates</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">results</span>
 </pre></div>
 
           </div>
@@ -370,7 +381,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

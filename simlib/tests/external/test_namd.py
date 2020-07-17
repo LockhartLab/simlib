@@ -1,5 +1,5 @@
 
-from simlib.external import NAMD, NAMDConfiguration
+from simlib.external import namd, NAMDConfiguration
 import os
 import time
 

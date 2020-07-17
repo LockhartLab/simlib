@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.energy.Angle &#8212; simlib 0.0.24 documentation</title>
+    <title>simlib.energy.Angle &#8212; simlib 0.0.25 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="simlib.energy.Bond.html" title="simlib.energy.Bond"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" accesskey="U">simlib.energy</a> &#187;</li> 
       </ul>
@@ -46,8 +46,8 @@
 <dl class="class">
 <dt id="simlib.energy.Angle">
 <em class="property">class </em><code class="sig-prename descclassname">simlib.energy.</code><code class="sig-name descname">Angle</code><span class="sig-paren">(</span><em class="sig-param">xyz0</em>, <em class="sig-param">xyz1</em>, <em class="sig-param">xyz2</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Angle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the potential energy of an angle</p>
-<p>The energy of an angle follows Hooke’s law:</p>
+<dd><p>Compute the potential energy of an angle.</p>
+<p>The energy of an angle follows the harmonic potential:</p>
 <div class="math notranslate nohighlight">
 \[U = \frac{1}{2} k (\theta - \theta_0)^2\]</div>
 <p>The derivative must be split by the components of vectors <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span>, which are used to compute the
@@ -60,16 +60,21 @@ angle <span class="math notranslate nohighlight">\(\theta\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\frac{\delta U}{\delta \theta} = k (\theta - \theta_0)\]</div>
 <div class="math notranslate nohighlight">
-\[\theta = acos(\^{u_{ij}} \cdot \^{u_{jk}})\]</div>
+\[\theta = acos(\hat{u_{ij}} \cdot \hat{u_{jk}})\]</div>
 <div class="math notranslate nohighlight">
-\[\frac{\delta \theta}{\delta u_i} = \frac{-1}{\sqrt{1 - (\^{u} \cdot \^{v})^2}}
+\[\frac{\delta \theta}{\delta u \cdot v} = \frac{-1}{\sqrt{1 - (\hat{u} \cdot \hat{v})^2}}
 = \frac{-1}{\sqrt{1 - cos^2(\theta)}}
-= \frac{-1}{\sqrt{sin^2(\theta)}}\]</div>
+= \frac{-1}{\sqrt{sin^2(\theta)}}
+= \frac{-1}{sin(\theta)}
+= sin^{-1}(\theta)\]</div>
 <div class="math notranslate nohighlight">
-\[u_i = [x, y, z]
-= -sin^{-1}(\theta)\]</div>
+\[u_i = [x, y, z]\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\delta u_i}{\delta x} = 1\]</div>
 <div class="math notranslate nohighlight">
 \[u \cdot v = u_x v_x + u_y v_y + u_z v_z\]</div>
+<div class="math notranslate nohighlight">
+\[\delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}\]</div>
 <div class="math notranslate nohighlight">
 \[\delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}\]</div>
 <div class="math notranslate nohighlight">
@@ -188,7 +193,7 @@ f2 = -1 * (f1 + f3)</p>
         <li class="right" >
           <a href="simlib.energy.Bond.html" title="simlib.energy.Bond"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" >simlib.energy</a> &#187;</li> 
       </ul>

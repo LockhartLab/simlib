@@ -8,6 +8,7 @@ from .topology import Topology
 
 import numpy as np
 import pandas as pd
+# from typelike import IntLike
 
 
 # Trajectory class
@@ -58,9 +59,9 @@ class Trajectory(object):
 
         """
 
-        result = None
-        if isinstance(item, int):
-            result = self.get_structure(0)
+        # TODO create an IntLike object for typelike
+        if isinstance(item, (int, np.int, np.int64)):
+            result = self.get_structure(item)
 
         # If we still don't know what to do, try to get from topology
         else:
@@ -277,6 +278,11 @@ class Trajectory(object):
                     comments=''
                 )
 
+    # Convert to MDAnalysis Universe
+    # mdanalysis.org
+    def to_universe(self):
+        pass
+
     # Get topology
     @property
     def topology(self):
@@ -294,6 +300,11 @@ class Trajectory(object):
 
         # Return
         return self._topology
+
+    # View
+    # https://github.com/arose/nglview
+    def view(self):
+        pass
 
     # Get XYZ coordinates
     @property

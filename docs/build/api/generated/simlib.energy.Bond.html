@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.energy.Bond &#8212; simlib 0.0.24 documentation</title>
+    <title>simlib.energy.Bond &#8212; simlib 0.0.25 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../energy.html" title="simlib.energy"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" accesskey="U">simlib.energy</a> &#187;</li> 
       </ul>
@@ -45,7 +45,7 @@
 <h1>simlib.energy.Bond<a class="headerlink" href="#simlib-energy-bond" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="simlib.energy.Bond">
-<em class="property">class </em><code class="sig-prename descclassname">simlib.energy.</code><code class="sig-name descname">Bond</code><span class="sig-paren">(</span><em class="sig-param">xyz0</em>, <em class="sig-param">xyz1</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Bond" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">simlib.energy.</code><code class="sig-name descname">Bond</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Bond" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the bond potential energy according to Hooke’s law</p>
 <p>The energy <span class="math notranslate nohighlight">\(U\)</span> can be computed from the difference in the measured distance <span class="math notranslate nohighlight">\(r\)</span> from the ideal distance
 <span class="math notranslate nohighlight">\(r_0\)</span>, scaled by the spring constant <span class="math notranslate nohighlight">\(k\)</span>.</p>
@@ -78,12 +78,12 @@ partial derivatives of <span class="math notranslate nohighlight">\(\delta U\)</
 <p class="rubric">Methods:</p>
 <dl class="method">
 <dt id="simlib.energy.Bond.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">xyz0</em>, <em class="sig-param">xyz1</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Bond.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">ideal_value=1.0</em>, <em class="sig-param">force_constant=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/energy/energy.html#Bond.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.energy.Bond.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize instance of Bond class.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>ArrayLike</em>) – Cartesian coordinates for first particle.</p></li>
-<li><p><strong>b</strong> (<em>ArrayLike</em>) – Cartesian coordinates for second particle.</p></li>
+<li><p><strong>b</strong> (<em>a</em><em>,</em>) – Cartesian coordinates</p></li>
 <li><p><strong>ideal_value</strong> (<em>ArrayLike</em>) – The ideal distance between the particles.</p></li>
 <li><p><strong>force_constant</strong> (<em>ArrayLike</em>) – The spring constant describing the particles.</p></li>
 </ul>
@@ -168,7 +168,7 @@ partial derivatives of <span class="math notranslate nohighlight">\(\delta U\)</
         <li class="right" >
           <a href="../energy.html" title="simlib.energy"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../energy.html" >simlib.energy</a> &#187;</li> 
       </ul>

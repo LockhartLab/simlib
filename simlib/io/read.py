@@ -42,6 +42,11 @@ def read_pdb(filename, backend='pandas'):
         records = buffer.read()
         # records = _atom_reader(buffer)
 
+    # Return
+    return _read_pdb(records)
+
+
+def _read_pdb(records):
     # Filter out atom records
     # TODO this will be slow for large PDB files; perhaps move to Cython or C backend
     atoms = re.sub(r'^(?!ATOM).*$', '', records, flags=re.MULTILINE).replace('\n\n', '\n').lstrip()
@@ -87,6 +92,9 @@ def read_pdb(filename, backend='pandas'):
     static_columns = [column for column in data.columns if column not in dynamical_columns]
 
     # Create Topology first
+    # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
+    data['alpha'] = 0.
+    data['beta'] = 0.
     topology = Topology(data[static_columns].drop_duplicates())
 
     # Next create Trajectory (the result)
@@ -95,7 +103,6 @@ def read_pdb(filename, backend='pandas'):
 
     # Return
     return result
-
 
 # @jit(nopython=False)
 # def _atom_reader(buffer):

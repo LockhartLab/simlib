@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.geometry.geometry &#8212; simlib 0.0.24 documentation</title>
+    <title>simlib.geometry.geometry &#8212; simlib 0.0.25 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -22,7 +22,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -44,27 +44,123 @@
 
 
 <span class="c1"># Compute angle between three points</span>
-<div class="viewcode-block" id="angle"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.angle.html#simlib.geometry.angle">[docs]</a><span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;atan2&#39;</span><span class="p">):</span>
+<span class="c1"># TODO introduce signed angles</span>
+<div class="viewcode-block" id="angle"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.angle.html#simlib.geometry.angle">[docs]</a><span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;atan2&#39;</span><span class="p">,</span> <span class="n">radians</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute angle between three points :math:`\angle ABC`.</span>
+<span class="sd">    Compute the angle between two vectors or three vertices.</span>
+
+<span class="sd">    If method = &#39;atan2&#39;,</span>
+
+<span class="sd">    ..math :: \theta = atan2(norm(cross(a, b)), dot(a, b))</span>
+
+<span class="sd">    If method = &#39;acos&#39;,</span>
+
+<span class="sd">    ..math :: \theta = acos \frac{a \dot b}{|a| |b|}</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    a, b, c : ArrayLike</span>
-<span class="sd">        Cartesian coordinates</span>
+<span class="sd">        Vectors with same dimensionality. Both `a` and `b` must be provided. If `c` is provided, all three are taken as</span>
+<span class="sd">        vertices. Otherwise, `a` and `b` are assumed to be Euclidean vectors.</span>
 <span class="sd">    method : str</span>
 <span class="sd">        Method to compute angle, see :func:`~vangle` for options.</span>
+<span class="sd">    radians : bool</span>
+<span class="sd">        Should the output be in radians? (Default: True)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    float or numpy.ndarray</span>
-<span class="sd">        Angle between points</span>
+<span class="sd">        Angle between vectors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">u</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="c1"># If c is provided, compute Euclidean vectors</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">vangle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span></div>
+    <span class="c1"># Vectors must have at least 2 dimensions</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">_get_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;angles can only be computed with 2D or 3D vectors (n_dim = </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">n_dim</span><span class="p">)</span>
+
+    <span class="c1"># Coerce to a 2D form</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">needs_ravel</span> <span class="o">=</span> <span class="n">_coerce_to_2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># Format the method</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">method</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Compute the angle</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;atan2&#39;</span><span class="p">:</span>
+        <span class="n">cross_</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_has_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">cross_</span> <span class="o">=</span> <span class="n">cross_</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cross_</span> <span class="o">=</span> <span class="p">[</span><span class="n">cross_</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">cross_</span><span class="p">),</span> <span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;acos&#39;</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">cos_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;method </span><span class="si">%s</span><span class="s1"> unknown&#39;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span>
+
+    <span class="c1"># Convert from radians to degrees?</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">radians</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">degrees_to_radians</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">_array_result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">needs_ravel</span><span class="p">)</span></div>
+
+
+<span class="c1"># Compute the gradient of an angle</span>
+<span class="c1"># noinspection DuplicatedCode</span>
+<span class="k">def</span> <span class="nf">angle_gradient</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gradient of angle with respect to vertices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a, b, c : ArrayLike</span>
+<span class="sd">        Cartesian coordinates.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If c is provided, compute Euclidean vectors</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># Vectors must have at least 2 dimensions</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">_get_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;angles can only be computed with 2D or 3D vectors (n_dim = </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">n_dim</span><span class="p">)</span>
+
+    <span class="c1"># Coerce to a 2D form</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">needs_ravel</span> <span class="o">=</span> <span class="n">_coerce_to_2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># Compute angle and factors</span>
+    <span class="n">cos_theta</span> <span class="o">=</span> <span class="n">cos_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">inv_sin_theta</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">cos_theta</span> <span class="o">*</span> <span class="n">cos_theta</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">inv_a_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">inv_b_norm</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">a_unit</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">inv_a_norm</span>
+    <span class="n">b_unit</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">inv_b_norm</span>
+
+    <span class="c1"># Compute gradients (here, gradient_a, gradient_b, and gradient_c stand for vertices)</span>
+    <span class="n">gradient_a</span> <span class="o">=</span> <span class="n">inv_sin_theta</span> <span class="o">*</span> <span class="n">inv_a_norm</span> <span class="o">*</span> <span class="p">(</span><span class="n">a_unit</span> <span class="o">*</span> <span class="n">cos_theta</span> <span class="o">-</span> <span class="n">a_unit</span><span class="p">)</span>
+    <span class="n">gradient_c</span> <span class="o">=</span> <span class="n">inv_sin_theta</span> <span class="o">*</span> <span class="n">inv_b_norm</span> <span class="o">*</span> <span class="p">(</span><span class="n">b_unit</span> <span class="o">*</span> <span class="n">cos_theta</span> <span class="o">-</span> <span class="n">b_unit</span><span class="p">)</span>
+    <span class="n">gradient_b</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="p">(</span><span class="n">gradient_a</span> <span class="o">+</span> <span class="n">gradient_c</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="n">_array_result</span><span class="p">(</span><span class="n">gradient_a</span><span class="p">,</span> <span class="n">needs_ravel</span><span class="p">),</span>
+        <span class="n">_array_result</span><span class="p">(</span><span class="n">gradient_b</span><span class="p">,</span> <span class="n">needs_ravel</span><span class="p">),</span>
+        <span class="n">_array_result</span><span class="p">(</span><span class="n">gradient_c</span><span class="p">,</span> <span class="n">needs_ravel</span><span class="p">)</span>
+    <span class="p">])</span>
 
 
 <span class="c1"># Convert Cartesian to polar coordinates</span>
@@ -100,7 +196,7 @@
 
 
 <span class="c1"># Compute angle between three points</span>
-<div class="viewcode-block" id="cos_angle"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.cos_angle.html#simlib.geometry.cos_angle">[docs]</a><span class="k">def</span> <span class="nf">cos_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<div class="viewcode-block" id="cos_angle"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.cos_angle.html#simlib.geometry.cos_angle">[docs]</a><span class="k">def</span> <span class="nf">cos_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute cosine of the angle between three points :math:`\angle ABC`.</span>
 
@@ -115,26 +211,8 @@
 <span class="sd">        Cosine angle of points</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">u</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">cos_vangle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
-
-
-<span class="c1"># Compute angle between vectors</span>
-<div class="viewcode-block" id="cos_vangle"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.cos_vangle.html#simlib.geometry.cos_vangle">[docs]</a><span class="k">def</span> <span class="nf">cos_vangle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute cosine angle between vectors.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    a, b : ArrayLike</span>
-<span class="sd">        Vectors</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    float or numpy.ndarray</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">vector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
     <span class="c1"># Coerce</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">needs_ravel</span> <span class="o">=</span> <span class="n">_coerce_to_2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
@@ -160,6 +238,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">degrees_to_radians</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
 
 <span class="c1"># Dihedral angle between 4 points</span>
@@ -263,7 +345,7 @@
 
 
 <span class="c1"># Compute the normal between three points</span>
-<div class="viewcode-block" id="normal"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.normal.html#simlib.geometry.normal">[docs]</a><span class="k">def</span> <span class="nf">normal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<div class="viewcode-block" id="normal"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.normal.html#simlib.geometry.normal">[docs]</a><span class="k">def</span> <span class="nf">normal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute normal vector between three points.</span>
 
@@ -278,10 +360,10 @@
 <span class="sd">        Vector normal</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">u</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">vector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">vnormal</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
 
 
 <span class="c1"># Polar to cartesian coordinates</span>
@@ -300,8 +382,15 @@
 <span class="sd">        Cartesian coordinates, same shape as `a`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1">#</span>
+    <span class="c1"># a = np.array(a).reshape(-1)</span>
+
     <span class="c1"># Coerce</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">needs_ravel</span> <span class="o">=</span> <span class="n">_coerce_to_2d</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="c1"># if b is not None:</span>
+    <span class="c1">#     b = np.array(b).reshape(-1)</span>
+    <span class="c1">#     b, _ = _coerce_to_2d(b)</span>
+    <span class="c1">#     a = np.hstack([a, b])</span>
 
     <span class="n">n_dim</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">n_dim</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
@@ -318,7 +407,7 @@
 
 
 <span class="c1"># Create unit vector</span>
-<div class="viewcode-block" id="uvector"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.uvector.html#simlib.geometry.uvector">[docs]</a><span class="k">def</span> <span class="nf">uvector</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">unit_vector</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute unit vector.</span>
 
@@ -336,51 +425,35 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">a</span><span class="p">,</span> <span class="n">needs_ravel</span> <span class="o">=</span> <span class="n">_coerce_to_2d</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_array_result</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">needs_ravel</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_array_result</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">needs_ravel</span><span class="p">)</span>
 
 
-<span class="c1"># Compute angle between 2 vectors</span>
-<div class="viewcode-block" id="vangle"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.vangle.html#simlib.geometry.vangle">[docs]</a><span class="k">def</span> <span class="nf">vangle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;atan2&#39;</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the angle between two vectors.</span>
-
-<span class="sd">    If method = &#39;atan2&#39;,</span>
-
-<span class="sd">    ..math :: \theta = atan2(norm(cross(a, b)), dot(a, b))</span>
-
-<span class="sd">    If method = &#39;acos&#39;,</span>
-
-<span class="sd">    ..math :: \theta = acos \frac{a \dot b}{|a| |b|}</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">vangle_gradient</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    a, b : ArrayLike</span>
-<span class="sd">        Vectors</span>
-<span class="sd">    method : str</span>
-<span class="sd">        Using &#39;atan2&#39; or &#39;acos&#39; method of computing angle.</span>
+<span class="sd">    u</span>
+<span class="sd">    v</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    float or numpy.ndarray</span>
-<span class="sd">        Angle between vectors</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">method</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">method</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">cos_theta</span> <span class="o">=</span> <span class="n">cos_vangle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">inv_sin_theta</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">cos_theta</span> <span class="o">*</span> <span class="n">cos_theta</span><span class="p">)</span>
+    <span class="n">inv_u_norm</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="n">inv_v_norm</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">u_unit</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">inv_u_norm</span>
+    <span class="n">v_unit</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">inv_v_norm</span>
 
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;atan2&#39;</span><span class="p">:</span>
-        <span class="n">cross_</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">_has_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">cross_</span> <span class="o">=</span> <span class="n">cross_</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">cross_</span> <span class="o">=</span> <span class="p">[</span><span class="n">cross_</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">cross_</span><span class="p">),</span> <span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;acos&#39;</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">cos_vangle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;method </span><span class="si">%s</span><span class="s1"> unknown&#39;</span> <span class="o">%</span> <span class="n">method</span><span class="p">)</span>
+    <span class="n">gradient_a</span> <span class="o">=</span> <span class="n">inv_sin_theta</span> <span class="o">*</span> <span class="n">inv_u_norm</span> <span class="o">*</span> <span class="p">(</span><span class="n">u_unit</span> <span class="o">*</span> <span class="n">cos_theta</span> <span class="o">-</span> <span class="n">v_unit</span><span class="p">)</span>
+    <span class="n">gradient_c</span> <span class="o">=</span> <span class="n">inv_sin_theta</span> <span class="o">*</span> <span class="n">inv_v_norm</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_unit</span> <span class="o">*</span> <span class="n">cos_theta</span> <span class="o">-</span> <span class="n">u_unit</span><span class="p">)</span>
+    <span class="n">gradient_b</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span> <span class="o">*</span> <span class="p">(</span><span class="n">gradient_a</span> <span class="o">+</span> <span class="n">gradient_c</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">result</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gradient_a</span><span class="p">)</span>
 
 
 <span class="c1"># Compute dihedral between 3 vectors</span>
@@ -412,6 +485,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute vector between two sets of points.</span>
 
+<span class="sd">    .. math:: vector = a - b</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    a, b : ArrayLike</span>
@@ -428,30 +503,11 @@
     <span class="c1"># Coerce input</span>
     <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">needs_ravel</span> <span class="o">=</span> <span class="n">_coerce_to_2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
-    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
         <span class="n">v</span> <span class="o">/=</span> <span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">_array_result</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">needs_ravel</span><span class="p">)</span></div>
-
-
-<span class="c1"># Compute normal</span>
-<div class="viewcode-block" id="vnormal"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.vnormal.html#simlib.geometry.vnormal">[docs]</a><span class="k">def</span> <span class="nf">vnormal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the normal between two vectors.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    a, b : ArrayLike</span>
-<span class="sd">        Vectors</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    numpy.ndarray</span>
-<span class="sd">        Vector normal</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
 
 
 <span class="c1"># Helper function to ravel array result</span>
@@ -492,12 +548,28 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
+<span class="k">def</span> <span class="nf">_get_dimensions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_dim</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">arg</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_dim</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
 <span class="c1"># Helper function to check dimensionality</span>
 <span class="k">def</span> <span class="nf">_has_dimensions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">arg</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">arg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">n_dim</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">arg</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">n_dim</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
 </pre></div>
 
           </div>
@@ -525,7 +597,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

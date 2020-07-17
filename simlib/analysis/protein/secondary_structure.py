@@ -49,7 +49,7 @@ class SecondaryStructure:
 
     # Override __repr__
     def __repr__(self):
-        return pd.DataFrame.__repr__(self._data)
+        return str(self._data.agg(''.join, axis=1).values)
 
     # Handle codes
     @staticmethod

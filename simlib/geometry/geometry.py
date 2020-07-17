@@ -9,27 +9,123 @@ import numpy as np
 
 
 # Compute angle between three points
-def angle(a, b, c, method='atan2'):
+# TODO introduce signed angles
+def angle(a, b, c=None, method='atan2', radians=True):
     r"""
-    Compute angle between three points :math:`\angle ABC`.
+    Compute the angle between two vectors or three vertices.
+
+    If method = 'atan2',
+
+    ..math :: \theta = atan2(norm(cross(a, b)), dot(a, b))
+
+    If method = 'acos',
+
+    ..math :: \theta = acos \frac{a \dot b}{|a| |b|}
+
 
     Parameters
     ----------
     a, b, c : ArrayLike
-        Cartesian coordinates
+        Vectors with same dimensionality. Both `a` and `b` must be provided. If `c` is provided, all three are taken as
+        vertices. Otherwise, `a` and `b` are assumed to be Euclidean vectors.
     method : str
         Method to compute angle, see :func:`~vangle` for options.
+    radians : bool
+        Should the output be in radians? (Default: True)
 
     Returns
     -------
     float or numpy.ndarray
-        Angle between points
+        Angle between vectors
     """
 
-    u = vector(a, b)
-    v = vector(b, c)
+    # If c is provided, compute Euclidean vectors
+    if c is not None:
+        a = vector(a, b)
+        b = vector(c, b)
 
-    return vangle(u, v, method=method)
+    # Vectors must have at least 2 dimensions
+    n_dim = _get_dimensions(a, b)
+    if np.min(n_dim) < 2:
+        raise AttributeError('angles can only be computed with 2D or 3D vectors (n_dim = %s)' % n_dim)
+
+    # Coerce to a 2D form
+    a, b, needs_ravel = _coerce_to_2d(a, b)
+
+    # Format the method
+    method = str(method).lower()
+
+    # Compute the angle
+    if method == 'atan2':
+        cross_ = cross(a, b)
+        if _has_dimensions(a, b, n_dim=2):
+            if a.ndim == 2 and b.ndim == 2:
+                cross_ = cross_.reshape(-1, 1)
+            else:
+                cross_ = [cross_]
+        result = np.arctan2(norm(cross_), dot(a, b))
+
+    elif method == 'acos':
+        result = np.arccos(cos_angle(a, b))
+
+    else:
+        raise AttributeError('method %s unknown' % method)
+
+    # Convert from radians to degrees?
+    if not radians:
+        result = degrees_to_radians(result)
+
+    # Return
+    return _array_result(result, needs_ravel)
+
+
+# Compute the gradient of an angle
+# noinspection DuplicatedCode
+def angle_gradient(a, b, c=None):
+    """
+    Gradient of angle with respect to vertices.
+
+    Parameters
+    ----------
+    a, b, c : ArrayLike
+        Cartesian coordinates.
+
+    Returns
+    -------
+    """
+
+    # If c is provided, compute Euclidean vectors
+    if c is not None:
+        a = vector(a, b)
+        b = vector(c, b)
+
+    # Vectors must have at least 2 dimensions
+    n_dim = _get_dimensions(a, b)
+    if np.min(n_dim) < 2:
+        raise AttributeError('angles can only be computed with 2D or 3D vectors (n_dim = %s)' % n_dim)
+
+    # Coerce to a 2D form
+    a, b, needs_ravel = _coerce_to_2d(a, b)
+
+    # Compute angle and factors
+    cos_theta = cos_angle(a, b).reshape(-1, 1)
+    inv_sin_theta = (1. / np.sqrt(1. - cos_theta * cos_theta)).reshape(-1, 1)
+    inv_a_norm = (1. / norm(a)).reshape(-1, 1)
+    inv_b_norm = (1. / norm(b)).reshape(-1, 1)
+    a_unit = a * inv_a_norm
+    b_unit = b * inv_b_norm
+
+    # Compute gradients (here, gradient_a, gradient_b, and gradient_c stand for vertices)
+    gradient_a = inv_sin_theta * inv_a_norm * (a_unit * cos_theta - a_unit)
+    gradient_c = inv_sin_theta * inv_b_norm * (b_unit * cos_theta - b_unit)
+    gradient_b = -1. * (gradient_a + gradient_c)
+
+    # Return
+    return np.array([
+        _array_result(gradient_a, needs_ravel),
+        _array_result(gradient_b, needs_ravel),
+        _array_result(gradient_c, needs_ravel)
+    ])
 
 
 # Convert Cartesian to polar coordinates
@@ -65,7 +161,7 @@ def cartesian_to_polar(a):
 
 
 # Compute angle between three points
-def cos_angle(a, b, c):
+def cos_angle(a, b, c=None):
     r"""
     Compute cosine of the angle between three points :math:`\angle ABC`.
 
@@ -80,26 +176,8 @@ def cos_angle(a, b, c):
         Cosine angle of points
     """
 
-    u = vector(a, b)
-    v = vector(b, c)
-
-    return cos_vangle(u, v)
-
-
-# Compute angle between vectors
-def cos_vangle(a, b):
-    """
-    Compute cosine angle between vectors.
-
-    Parameters
-    ----------
-    a, b : ArrayLike
-        Vectors
-
-    Returns
-    -------
-    float or numpy.ndarray
-    """
+    if c is not None:
+        a, b = vector(a, b), vector(c, b)
 
     # Coerce
     a, b, needs_ravel = _coerce_to_2d(a, b)
@@ -125,6 +203,10 @@ def cross(a, b):
     """
 
     return np.cross(a, b)
+
+
+def degrees_to_radians(a):
+    return a * 180. / np.pi
 
 
 # Dihedral angle between 4 points
@@ -228,7 +310,7 @@ def norm(a):
 
 
 # Compute the normal between three points
-def normal(a, b, c):
+def normal(a, b, c=None):
     """
     Compute normal vector between three points.
 
@@ -243,10 +325,10 @@ def normal(a, b, c):
         Vector normal
     """
 
-    u = vector(a, b)
-    v = vector(b, c)
+    if c is not None:
+        a, b = vector(a, b), vector(c, b)
 
-    return vnormal(u, v)
+    return cross(a, b)
 
 
 # Polar to cartesian coordinates
@@ -265,8 +347,15 @@ def polar_to_cartesian(a):
         Cartesian coordinates, same shape as `a`
     """
 
+    #
+    # a = np.array(a).reshape(-1)
+
     # Coerce
     a, needs_ravel = _coerce_to_2d(a)
+    # if b is not None:
+    #     b = np.array(b).reshape(-1)
+    #     b, _ = _coerce_to_2d(b)
+    #     a = np.hstack([a, b])
 
     n_dim = a.shape[1]
     if n_dim in (2, 3):
@@ -283,7 +372,7 @@ def polar_to_cartesian(a):
 
 
 # Create unit vector
-def uvector(a):
+def unit_vector(a):
     r"""
     Compute unit vector.
 
@@ -304,48 +393,32 @@ def uvector(a):
     return _array_result(a / norm(a).reshape(-1, 1), needs_ravel)
 
 
-# Compute angle between 2 vectors
-def vangle(a, b, method='atan2'):
-    r"""
-    Compute the angle between two vectors.
-
-    If method = 'atan2',
-
-    ..math :: \theta = atan2(norm(cross(a, b)), dot(a, b))
-
-    If method = 'acos',
-
-    ..math :: \theta = acos \frac{a \dot b}{|a| |b|}
+#
+def vangle_gradient(u, v):
+    """
 
     Parameters
     ----------
-    a, b : ArrayLike
-        Vectors
-    method : str
-        Using 'atan2' or 'acos' method of computing angle.
+    u
+    v
 
     Returns
     -------
-    float or numpy.ndarray
-        Angle between vectors
+
     """
 
-    method = str(method).lower()
+    cos_theta = cos_vangle(u, v)
+    inv_sin_theta = 1. / np.sqrt(1. - cos_theta * cos_theta)
+    inv_u_norm = 1. / norm(u)
+    inv_v_norm = 1. / norm(v)
+    u_unit = u * inv_u_norm
+    v_unit = v * inv_v_norm
 
-    if method == 'atan2':
-        cross_ = cross(a, b)
-        if _has_dimensions(a, b, n_dim=2):
-            if a.ndim == 2 and b.ndim == 2:
-                cross_ = cross_.reshape(-1, 1)
-            else:
-                cross_ = [cross_]
-        result = np.arctan2(norm(cross_), dot(a, b))
-    elif method == 'acos':
-        result = np.arccos(cos_vangle(a, b))
-    else:
-        raise AttributeError('method %s unknown' % method)
+    gradient_a = inv_sin_theta * inv_u_norm * (u_unit * cos_theta - v_unit)
+    gradient_c = inv_sin_theta * inv_v_norm * (v_unit * cos_theta - u_unit)
+    gradient_b = -1. * (gradient_a + gradient_c)
 
-    return result
+    print(gradient_a)
 
 
 # Compute dihedral between 3 vectors
@@ -377,6 +450,8 @@ def vector(a, b, normalize=False):
     """
     Compute vector between two sets of points.
 
+    .. math:: vector = a - b
+
     Parameters
     ----------
     a, b : ArrayLike
@@ -393,30 +468,11 @@ def vector(a, b, normalize=False):
     # Coerce input
     a, b, needs_ravel = _coerce_to_2d(a, b)
 
-    v = np.subtract(b, a)
+    v = np.subtract(a, b)
     if normalize:
         v /= norm(v).reshape(-1, 1)
 
     return _array_result(v, needs_ravel)
-
-
-# Compute normal
-def vnormal(a, b):
-    """
-    Compute the normal between two vectors.
-
-    Parameters
-    ----------
-    a, b : ArrayLike
-        Vectors
-
-    Returns
-    -------
-    numpy.ndarray
-        Vector normal
-    """
-
-    return cross(a, b)
 
 
 # Helper function to ravel array result
@@ -457,9 +513,25 @@ def _coerce_to_2d(a, *args):
     return result
 
 
+def _get_dimensions(*args, n_dim=3):
+    result = []
+    for arg in args:
+        arg = np.array(arg)
+        n_dim = 1
+        if arg.ndim > 1:
+            n_dim = arg.shape[1]
+        elif arg.ndim == 1:
+            n_dim = arg.shape[0]
+        result.append(n_dim)
+    return result
+
+
 # Helper function to check dimensionality
 def _has_dimensions(*args, n_dim=3):
     result = []
     for arg in args:
+        arg = np.array(arg)
         result.append((arg.ndim > 1 and arg.shape[1] == n_dim) or (arg.ndim == 1 and arg.shape[0] == n_dim))
     return all(result)
+
+

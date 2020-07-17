@@ -1,11 +1,23 @@
 
 import simlib.flags as flags
 import functools
+import warnings
 
 
 __all__ = [
+    'deprecated',
     'experimental'
 ]
+
+
+# Decorator to indicate if deprecated
+# noinspection PyDeprecation
+def deprecated(function=None):
+    @functools.wraps(function)
+    def execute_function(*args, **kwargs):
+        warnings.warn('will be deprecated', DeprecationWarning)
+        return function(*args, **kwargs)
+    return execute_function
 
 
 # Decorator to indicate if still in development
@@ -31,3 +43,4 @@ def experimental(f=None):
         return execute_function
     else:
         return execute_function(f)
+

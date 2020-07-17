@@ -13,33 +13,13 @@ import numpy as np
 # TODO allow computation to work with only distances? Need a way to speed up calculations using REMD
 
 
-# Coerce coordinates into an acceptable form
-def _coerce_xyz(*args):
-    # Place to store results
-    results = []
-
-    # Loop over all coordinates in arguments
-    shape = None
-    for i in range(len(args)):
-        # Make sure we're dealing with a 2D array
-        xyz = np.array(args[i])
-        if xyz.ndim == 1:
-            xyz = xyz.reshape(1, -1)
-
-        # Make sure coordinates are the same shape
-        if shape is None:
-            shape = xyz.shape
-        elif shape != xyz.shape:
-            raise AttributeError('coordinates must be same shapes')
-
-        # Save coerced coordinates
-        results.append(xyz)
-
-    # Return
-    return results
-
-
+# Metaclass that defines structure of each energy term
 class EnergyTerm(metaclass=ABCMeta):
+    """
+    Metaclass that defines structure of each energy term.
+    """
+
+    # Initialize class instance
     def __init__(self):
         self._energy = None
         self._force = None
@@ -85,6 +65,7 @@ class EnergyTerm(metaclass=ABCMeta):
         return result
 
 
+# Bond energy term
 class Bond(EnergyTerm):
     r"""
     Compute the bond potential energy according to Hooke's law
@@ -118,14 +99,14 @@ class Bond(EnergyTerm):
     >>> bond.force
     """
 
-    def __init__(self, xyz0, xyz1, ideal_value=1., force_constant=1.):
+    def __init__(self, a, b, ideal_value=1., force_constant=1.):
         """
+        Initialize instance of Bond class.
+
         Parameters
         ----------
-        a : ArrayLike
-            Cartesian coordinates for first particle.
-        b : ArrayLike
-            Cartesian coordinates for second particle.
+        a, b : ArrayLike
+            Cartesian coordinates
         ideal_value : ArrayLike
             The ideal distance between the particles.
         force_constant : ArrayLike
@@ -133,11 +114,11 @@ class Bond(EnergyTerm):
         """
 
         # Coerce shapes
-        xyz0, xyz1 = _coerce_xyz(xyz0, xyz1)
+        a, b = _coerce_xyz(a, b)
 
         # Compute
-        self._vector = vector(xyz0, xyz1)
-        self._distance = distance(xyz0, xyz1)
+        self._vector = vector(a, b)
+        self._distance = distance(a, b)
         self._offset = self._distance - ideal_value
 
         # Save parameters
@@ -146,7 +127,7 @@ class Bond(EnergyTerm):
         self._force_constant = force_constant
 
     def _compute_energy(self):
-        return 0.5 * self._force_constant * np.power(self._offset, 2)
+        return 0.5 * self._force_constant * np.square(self._offset)
 
     def _compute_force(self):
         return -1. * self._force_constant * self._offset[:, None] * self._vector / self._distance[:, None]
@@ -154,9 +135,9 @@ class Bond(EnergyTerm):
 
 class Angle(EnergyTerm):
     r"""
-    Compute the potential energy of an angle
+    Compute the potential energy of an angle.
 
-    The energy of an angle follows Hooke's law:
+    The energy of an angle follows the harmonic potential:
 
     .. math:: U = \frac{1}{2} k (\theta - \theta_0)^2
 
@@ -172,14 +153,18 @@ class Angle(EnergyTerm):
     The derivation:
 
     .. math:: \frac{\delta U}{\delta \theta} = k (\theta - \theta_0)
-    .. math:: \theta = acos(\^{u_{ij}} \cdot \^{u_{jk}})
-    .. math:: \frac{\delta \theta}{\delta u_i} = \frac{-1}{\sqrt{1 - (\^{u} \cdot \^{v})^2}}
+    .. math:: \theta = acos(\hat{u_{ij}} \cdot \hat{u_{jk}})
+    .. math:: \frac{\delta \theta}{\delta u \cdot v} = \frac{-1}{\sqrt{1 - (\hat{u} \cdot \hat{v})^2}}
                                                = \frac{-1}{\sqrt{1 - cos^2(\theta)}}
                                                = \frac{-1}{\sqrt{sin^2(\theta)}}
+                                               = \frac{-1}{sin(\theta)}
+                                               = sin^{-1}(\theta)
 
     .. math:: u_i = [x, y, z]
-                                               = -sin^{-1}(\theta)
+    .. math:: \frac{\delta u_i}{\delta x} = 1
+
     .. math:: u \cdot v = u_x v_x + u_y v_y + u_z v_z
+    .. math:: \delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}
 
     .. math:: \delta (\^{u} \cdot \^{v}) = u \frac{dv}{dx} v \frac{du}{dx}
     .. math:: u = [\Delta x, \Delta y, \Delta z]
@@ -236,7 +221,7 @@ class Angle(EnergyTerm):
         self._force_constant = force_constant
 
     def _compute_energy(self):
-        return 0.5 * self._force_constant * np.power(self._offset, 2)
+        return 0.5 * self._force_constant * np.square(self._offset)
 
     def _compute_force(self):
         pass
@@ -308,3 +293,29 @@ class LennardJones(EnergyTerm):
 class FullElectrostatic(EnergyTerm):
     pass
 
+
+
+# Coerce coordinates into an acceptable form
+def _coerce_xyz(*args):
+    # Place to store results
+    results = []
+
+    # Loop over all coordinates in arguments
+    shape = None
+    for i in range(len(args)):
+        # Make sure we're dealing with a 2D array
+        xyz = np.array(args[i])
+        if xyz.ndim == 1:
+            xyz = xyz.reshape(1, -1)
+
+        # Make sure coordinates are the same shape
+        if shape is None:
+            shape = xyz.shape
+        elif shape != xyz.shape:
+            raise AttributeError('coordinates must be same shapes')
+
+        # Save coerced coordinates
+        results.append(xyz)
+
+    # Return
+    return results

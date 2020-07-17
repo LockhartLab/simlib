@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>simlib.framework.trajectory &#8212; simlib 0.0.24 documentation</title>
+    <title>simlib.framework.trajectory &#8212; simlib 0.0.25 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -22,7 +22,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -43,6 +43,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="c1"># from typelike import IntLike</span>
 
 
 <span class="c1"># Trajectory class</span>
@@ -93,9 +94,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># TODO create an IntLike object for typelike</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
         <span class="c1"># If we still don&#39;t know what to do, try to get from topology</span>
         <span class="k">else</span><span class="p">:</span>
@@ -312,6 +313,11 @@
                     <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
                 <span class="p">)</span></div>
 
+    <span class="c1"># Convert to MDAnalysis Universe</span>
+    <span class="c1"># mdanalysis.org</span>
+    <span class="k">def</span> <span class="nf">to_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
     <span class="c1"># Get topology</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">topology</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -329,6 +335,11 @@
 
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topology</span>
+
+    <span class="c1"># View</span>
+    <span class="c1"># https://github.com/arose/nglview</span>
+    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
 
     <span class="c1"># Get XYZ coordinates</span>
     <span class="nd">@property</span>
@@ -370,7 +381,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.24 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.25 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

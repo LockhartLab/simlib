@@ -30,26 +30,56 @@ class TestEnergy(TestCase):
         v = c - b
         w = d - c
 
+        # Compute unit vectors
+        u_norm = u / _norm(u, n_atoms)
+        v_norm = v / _norm(v, n_atoms)
+
         # Sanity
         r = np.sqrt(np.sum(np.square(b - a), axis=1))
         x = (b - a) / r[:, None]
         y = np.array([(b - a)[:, i] / r for i in range(a.shape[1])]).T
         np.testing.assert_array_equal(x.ravel(), np.array(y).ravel())
 
-        # Bond
-        r = np.sqrt(np.sum(np.square(b - a), axis=1))
-        u0 = 0.5 * k * (r - r0)**2
-        du0 = k * (r - r0)[:, None] * (b - a) / r[:, None]
-        bond = Bond(a, b, r0, k)
-        u1 = bond.energy
-        np.testing.assert_almost_equal(u0, u1)
-        # np.testing.assert_array_almost_equal(du0.ravel(), np.array(du1).ravel())
+        # Compute bond metrics
+        vector = b - a
+        distance = np.sqrt(np.sum(np.square(vector), axis=1))
+        offset = distance - r0
+        energy = 0.5 * k * offset ** 2
+        force = -k * offset[:, None] * vector / distance[:, None]
+        term = Bond(a, b, r0, k)
+
+        # Test bond
+        np.testing.assert_array_almost_equal(vector, term._vector)
+        np.testing.assert_array_almost_equal(distance, term._distance)
+        np.testing.assert_array_almost_equal(offset, term._offset)
+        np.testing.assert_array_almost_equal(energy, term.energy)
+        np.testing.assert_array_almost_equal(force, term.force)
 
         # Angle
-        r = np.arccos(np.vdot(u, v) / (np.linalg.norm(u) * np.linalg.norm(v)))
-        u0 = 0.5 * k * (r - r0) ** 2
-        # du0 = k * (r - r0)[:, None] * (b - a) / r[:, None]
-        angle = Angle(a, b, c, r0, k)
-        u1 = angle.energy
-        np.testing.assert_almost_equal(u0, u1)
-        # np.testing.assert_array_almost_equal(du0.ravel(), np.array(du1).ravel())
+        if n_dim >= 2:
+            angle = np.arccos(_dot(u_norm, v_norm, n_atoms))
+            offset = angle - r0
+            energy = 0.5 * k * np.square(offset)
+            # force = -k * offset[:, None] * vector / distance[:, None]
+            term = Angle(a, b, c, r0, k)
+            np.testing.assert_array_almost_equal(angle, term._angle)
+            np.testing.assert_array_almost_equal(offset, term._offset)
+            np.testing.assert_array_almost_equal(energy, term.energy)
+
+
+def _dot(u, v, n_points):
+    if n_points == 0:
+        result = np.vdot(u, v)
+    else:
+        result = np.sum(np.multiply(u, v), axis=1)
+    return result
+
+
+def _norm(u, n_points):
+    if n_points == 0:
+        result = np.linalg.norm(u)
+    elif n_points == 1:
+        result = np.linalg.norm(u, axis=1)
+    else:
+        result = np.linalg.norm(u, axis=1).reshape(-1, 1)
+    return result

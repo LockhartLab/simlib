@@ -8,9 +8,9 @@ from .geometry import *
 
 __all__ = [
     'angle',
+    'angle_gradient',
     'cartesian_to_polar',
     'cos_angle',
-    'cos_vangle',
     'cross',
     'dihedral',
     'distance',
@@ -18,11 +18,9 @@ __all__ = [
     'norm',
     'normal',
     'polar_to_cartesian',
-    'uvector',
-    'vangle',
+    'unit_vector',
     'vdihedral',
     'vector',
-    'vnormal'
 ]
 
 

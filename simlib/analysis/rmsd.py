@@ -10,7 +10,22 @@ author: C. Lockhart
 
 """
 
+import numpy as np
+
 
 # Compute the RMSD between 2 trajectories
-def rmsd(trajectory1, trajectory2=None, pairwise=False, fit=True):
-    pass
+def rmsd(q, r=None, pairwise=True, fit=False):
+    if r is None:
+        r = q
+    return rmsd_pairwise(q, r)
+
+
+def rmsd_pairwise(q, r):
+    nq = len(q)
+    nr = len(r)
+    result = np.zeros((nq, nr))
+    for i in range(nq):
+        for j in range(nr):
+            result[i, j] = np.sqrt(np.mean((q[i].xyz - r[j].xyz) ** 2))
+    return result
+
