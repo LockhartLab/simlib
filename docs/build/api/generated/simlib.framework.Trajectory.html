@@ -43,6 +43,21 @@
 <dt id="simlib.framework.Trajectory">
 <em class="property">class </em><code class="sig-prename descclassname">simlib.framework.</code><code class="sig-name descname">Trajectory</code><span class="sig-paren">(</span><em class="sig-param">xyz</em>, <em class="sig-param">box=None</em>, <em class="sig-param">topology=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>Trajectory</cite> stores instantaneous data for a <cite>Topology</cite>, i.e., atomic coordinates, box information, velocity, etc.</p>
+<p class="rubric">Methods:</p>
+<dl class="method">
+<dt id="simlib.framework.Trajectory.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">xyz</em>, <em class="sig-param">box=None</em>, <em class="sig-param">topology=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xyz</strong> (<em>ArrayLike</em><em>, </em><em>three-dimensional</em>) – Cartesian coordinates for all atoms and all structures. First axis must represent the structure index,
+second axis must represent the atom, and the third index will represent x, y, or z.</p></li>
+<li><p><strong>topology</strong> (<em>Topology</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="simlib.framework.Trajectory.n_atoms">
 <em class="property">property </em><code class="sig-name descname">n_atoms</code><a class="headerlink" href="#simlib.framework.Trajectory.n_atoms" title="Permalink to this definition">¶</a></dt>
