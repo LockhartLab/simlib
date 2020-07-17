@@ -39,9 +39,9 @@ class TestGeometry(TestCase):
         w = c - d
 
         # Test vectors
-        np.testing.assert_equal(u, vector(a, b))
-        np.testing.assert_equal(v, vector(b, c))
-        np.testing.assert_equal(w, vector(c, d))
+        np.testing.assert_almost_equal(u, vector(a, b))
+        np.testing.assert_almost_equal(v, vector(b, c))
+        np.testing.assert_almost_equal(w, vector(c, d))
 
         # Compute normalized vectors
         u_norm = _norm(u, n_points)
@@ -62,9 +62,9 @@ class TestGeometry(TestCase):
         w_unit = w / w_norm
 
         # Test unit vectors
-        np.testing.assert_equal(u_unit, unit_vector(u))
-        np.testing.assert_equal(v_unit, unit_vector(v))
-        np.testing.assert_equal(w_unit, unit_vector(w))
+        np.testing.assert_almost_equal(u_unit, unit_vector(u))
+        np.testing.assert_almost_equal(v_unit, unit_vector(v))
+        np.testing.assert_almost_equal(w_unit, unit_vector(w))
 
         # Get cos angles
         cos_q = _dot((a - b) / _norm(a - b, n_points), (c - b) / _norm(c - b, n_points), n_points)
@@ -109,22 +109,22 @@ class TestGeometry(TestCase):
             angle(a, b, c, method='junk')
 
         # Test normal
-        np.testing.assert_equal(np.cross(a - b, c - b), normal(a, b, c))
-        np.testing.assert_equal(np.cross(a - b, d - b), normal(a, b, d))
-        np.testing.assert_equal(np.cross(a - c, d - c), normal(a, c, d))
-        np.testing.assert_equal(np.cross(b - c, d - c), normal(b, c, d))
+        np.testing.assert_almost_equal(np.cross(a - b, c - b), normal(a, b, c))
+        np.testing.assert_almost_equal(np.cross(a - b, d - b), normal(a, b, d))
+        np.testing.assert_almost_equal(np.cross(a - c, d - c), normal(a, c, d))
+        np.testing.assert_almost_equal(np.cross(b - c, d - c), normal(b, c, d))
 
         # Test vertex normal vs vector normal
-        np.testing.assert_equal(normal(vector(a, b), vector(c, b)), normal(a, b, c))
-        np.testing.assert_equal(normal(vector(a, b), vector(d, b)), normal(a, b, d))
-        np.testing.assert_equal(normal(vector(a, c), vector(d, c)), normal(a, c, d))
-        np.testing.assert_equal(normal(vector(b, c), vector(d, c)), normal(b, c, d))
+        np.testing.assert_almost_equal(normal(vector(a, b), vector(c, b)), normal(a, b, c))
+        np.testing.assert_almost_equal(normal(vector(a, b), vector(d, b)), normal(a, b, d))
+        np.testing.assert_almost_equal(normal(vector(a, c), vector(d, c)), normal(a, c, d))
+        np.testing.assert_almost_equal(normal(vector(b, c), vector(d, c)), normal(b, c, d))
 
         # Compute dihedral
         # if n_dim == 3:
         #     phi = vangle(np.cross(u, v), np.cross(v, w))
-        #     np.testing.assert_equal(phi, dihedral(a, b, c, d))
-        #     np.testing.assert_equal(phi, vdihedral(u, v, w))
+        #     np.testing.assert_almost_equal(phi, dihedral(a, b, c, d))
+        #     np.testing.assert_almost_equal(phi, vdihedral(u, v, w))
         # else:
         #     with np.testing.assert_raises(AttributeError):
         #         dihedral(a, b, c, d)
@@ -132,9 +132,9 @@ class TestGeometry(TestCase):
         #         vdihedral(u, v, w)
 
         # Compute distance
-        np.testing.assert_equal(_distance(a, b, n_points), distance(a, b))
-        np.testing.assert_equal(_distance(b, c, n_points), distance(b, c))
-        np.testing.assert_equal(_distance(c, d, n_points), distance(c, d))
+        np.testing.assert_almost_equal(_distance(a, b, n_points), distance(a, b))
+        np.testing.assert_almost_equal(_distance(b, c, n_points), distance(b, c))
+        np.testing.assert_almost_equal(_distance(c, d, n_points), distance(c, d))
 
         # Test xyz to polar and vice versa (don't need to compute because we can use identities)
         np.testing.assert_array_almost_equal(a, polar_to_cartesian(cartesian_to_polar(a)))
