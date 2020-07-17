@@ -49,9 +49,9 @@ class TestGeometry(TestCase):
         w_norm = _norm(w, n_points)
 
         # Test normalized vectors
-        np.testing.assert_equal(u_norm.ravel(), norm(u))
-        np.testing.assert_equal(v_norm.ravel(), norm(v))
-        np.testing.assert_equal(w_norm.ravel(), norm(w))
+        np.testing.assert_equal(u_norm.ravel(), norm(u).reshape(-1))
+        np.testing.assert_equal(v_norm.ravel(), norm(v).reshape(-1))
+        np.testing.assert_equal(w_norm.ravel(), norm(w).reshape(-1))
         np.testing.assert_equal(u / u_norm, vector(a, b, normalize=True))
         np.testing.assert_equal(v / v_norm, vector(b, c, normalize=True))
         np.testing.assert_equal(w / w_norm, vector(c, d, normalize=True))
