@@ -27,6 +27,7 @@ jobs:
         - make html
         - cd ..
 #        - git remote set-url origin git@github.com:LockhartLab/simlib.git
+        - git checkout master
         - git add -A
         - git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
         - python _scripts/deploy_to_master.py
