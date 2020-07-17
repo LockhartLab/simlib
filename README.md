@@ -4,7 +4,7 @@ a package for molecular dynamics simulations and analysis
 
 <!--*master:*-->
 <span style="white-space: nowrap;">
-    <a href="https://travis-ci.com/github/LockhartLab/simlib"><img src="https://img.shields.io/pypi/v/simlib" /></a>
+    <a href="https://pypi.org/project/simlib/"><img src="https://img.shields.io/pypi/v/simlib" /></a>
     <a href="https://travis-ci.com/github/LockhartLab/simlib"><img src="https://img.shields.io/travis/com/lockhartlab/simlib/master" /></a>
     <a href="https://codecov.io/gh/LockhartLab/simlib"><img src="https://img.shields.io/codecov/c/github/lockhartlab/simlib/master" /></a>
 </span>
