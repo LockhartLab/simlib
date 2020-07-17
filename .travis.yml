@@ -31,6 +31,10 @@ jobs:
         - git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master:master --tags
 
     - if: commit_message =~ /\[deploy\]/
+      #
+      script:
+        - echo 0
+
       # deploy to pyp
       deploy:
         - provider: pypi
