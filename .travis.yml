@@ -4,6 +4,7 @@ python: 3.7
 
 # run all tests
 script:
+  - if: commit_message !~ /^(\[deploy\])/
   - cp simlib/tests/test.py .
 #  - python -m coverage run test.py
   - coverage run -m unittest test.py
@@ -12,9 +13,15 @@ script:
 # after a successful test, update to codecov
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+#  - increment version
+#  - build docs
+#  - git add -u
+#  - git commit -m "[deploy] test successful"
+#  - git push
 
 # deploy to pypi
 deploy:
+#  - if: commit_message =~ /^(\[deploy\])/
   - provider: pypi
     user: "__token__"
     password:

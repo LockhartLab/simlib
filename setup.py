@@ -37,6 +37,7 @@ setup(
         'simlib',
         'simlib.analysis',
         'simlib.analysis.protein',
+        'simlib.external',
         'simlib.geometry',
         'simlib.io',
         'simlib.misc',
