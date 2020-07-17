@@ -1,6 +1,0 @@
-simlib.analysis.compute\_hydrophobic\_moment
-============================================
-
-.. currentmodule:: simlib.analysis
-
-.. autofunction:: compute_hydrophobic_moment

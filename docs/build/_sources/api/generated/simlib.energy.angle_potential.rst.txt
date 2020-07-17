@@ -1,6 +1,0 @@
-simlib.energy.angle\_potential
-==============================
-
-.. currentmodule:: simlib.energy
-
-.. autofunction:: angle_potential

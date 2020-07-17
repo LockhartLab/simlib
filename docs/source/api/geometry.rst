@@ -20,4 +20,3 @@ Functions
    normal
    polar_to_cartesian
    vector
-   vnormal

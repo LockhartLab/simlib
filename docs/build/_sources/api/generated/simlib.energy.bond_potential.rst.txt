@@ -1,6 +1,0 @@
-simlib.energy.bond\_potential
-=============================
-
-.. currentmodule:: simlib.energy
-
-.. autofunction:: bond_potential
