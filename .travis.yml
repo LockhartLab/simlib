@@ -5,9 +5,9 @@ python: 3.7
 # enable stages based on commit message
 stages:
   - name: script
-    if: commit_message !~ /^(\[deploy\])/
+    if: commit_message !~ /[deploy]/
   - name: deploy
-    if: commit_message =~ /^(\[deploy\])/
+    if: commit_message =~ /[deploy]/
 
 # run all tests
 script:
@@ -25,7 +25,7 @@ after_success:
   - python _scripts/deploy_to_master.py
   - git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master --tags
 
-# deploy to pypi
+# deploy to pyp
 deploy:
   - provider: pypi
     user: "__token__"
