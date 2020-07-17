@@ -23,6 +23,7 @@ after_success:
   - (cd docs && make html source build & cd ..)
   - git remote set-url origin git@github.com:LockhartLab/simlib.git
   - python _scripts/deploy_to_master.py
+  - git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master --tags
 
 # deploy to pypi
 deploy:
