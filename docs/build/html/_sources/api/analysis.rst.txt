@@ -1,20 +1,8 @@
+
 simlib.analysis
 ===============
 
-Classes
-~~~~~~~
+.. toctree::
+   :maxdepth: 1
 
-.. currentmodule:: simlib.analysis
-
-.. autosummary::
-   :toctree: generated
-
-   HydrophobicityScale
-   
-Functions
-~~~~~~~~~
-
-.. autosummary::
-   :toctree: generated
-
-   protein
+   analysis.peptide

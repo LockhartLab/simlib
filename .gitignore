@@ -6,7 +6,6 @@
 /simlib.egg-info/
 __pycache__/
 __pycache__/*
-/_scripts/
 /samples/
 samples
 samples/*

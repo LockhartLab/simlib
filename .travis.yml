@@ -6,6 +6,8 @@ python: 3.7
 stages:
   - name: script
     if: commit_message !~ /^(\[deploy\])/
+  - name: deploy
+    if: commit_message =~ /^(\[deploy\])/
 
 # run all tests
 script:
@@ -17,15 +19,12 @@ script:
 # after a successful test, update to codecov
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-#  - increment version
-#  - build docs
-#  - git add -u
-#  - git commit -m "[deploy] test successful"
-#  - git push
+  - python _scripts/increment_version.py
+  - (cd docs && make html source build)
+  - python _scripts/deploy_to_master.py
 
 # deploy to pypi
 deploy:
-#  - if: commit_message =~ /^(\[deploy\])/
   - provider: pypi
     user: "__token__"
     password:
