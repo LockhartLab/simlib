@@ -12,8 +12,8 @@ import yaml
 git = Git()
 
 # We must be on master branch
-branch = git.get_branch()
-assert branch == 'master', branch
+# branch = git.get_branch()
+# assert branch == 'master', branch
 
 # Increment version; print out string
 # version = increment_version()
