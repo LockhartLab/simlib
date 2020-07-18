@@ -103,4 +103,4 @@ def _get_rotation_matrix(covariance_matrix):
         s = np.diag(np.array([1., 1., np.sign(np.linalg.det(np.dot(u, v)))]))
         r = np.dot(np.dot(u, s), v)
         rotation_matrix.append(r)
-    return np.array(rotation_matrix)
+    return rotation_matrix
