@@ -38,6 +38,7 @@ class Trajectory(object):
     def __add__(self, other):
         if isinstance(other, NumberLike):
             self._xyz = self._xyz + other
+        return self
 
     # Length of trajectory
     def __len__(self):
@@ -99,13 +100,27 @@ class Trajectory(object):
             result.append(function(structure))
         return result
 
+    # Copy
+    # TODO
+    def copy(self):
+        """
+        Create a copy of the Trajectory.
+
+        Returns
+        -------
+        simlib.Trajectory
+            Deep copy of the Trajectory.
+        """
+
+        pass
+
     # Get atoms
     def get_atoms(self, index):
         return self.xyz[:, index, :]
 
     # Get structure
     def get_structure(self, index):
-        index = np.array([index]).ravel()  # this cuks
+        index = np.array([index]).ravel()  # this sucks
         structure = Trajectory(self.xyz[index, :, :].reshape(len(index), self.n_atoms, self.n_dim),
                                topology=self.topology)
         if self.n_atoms != structure.n_atoms:

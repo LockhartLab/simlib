@@ -10,6 +10,7 @@ author: C. Lockhart
 
 """
 
+# TODO this is a little ugly
 from simlib.transform import fit as _fit
 import numpy as np
 

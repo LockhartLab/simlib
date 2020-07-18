@@ -96,6 +96,19 @@ def to_origin(a):
 
 @njit
 def _get_rotation_matrix(covariance_matrix):
+    """
+    Compute the rotation matrix from the method from Kabsch (1976) Acta Cryst. A32.
+
+
+
+    Parameters
+    ----------
+    covariance_matrix
+
+    Returns
+    -------
+
+    """
     n_structures = covariance_matrix.shape[0]
     rotation_matrix = []
     for i in range(n_structures):
