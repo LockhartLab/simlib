@@ -19,17 +19,18 @@ jobs:
       # after a successful test, update to codecov
       after_success:
         - bash <(curl -s https://codecov.io/bash)
-        - python _scripts/increment_version.py
-        - cd docs
-        - make html
-        - cd ..
-        - git config user.name "doclockh"
-        - git config user.email "chris@lockhartlab.org"
-        - git checkout master
-        - git add -A
-        - git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
-        - python _scripts/deploy_to_master.py
-        - git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master:master --tags
+        - |
+          version=$(python _scripts/increment_version.py)
+          cd docs
+          make html
+          cd ..
+          git config user.name "doclockh"
+          git config user.email "chris@lockhartlab.org"
+          git checkout master
+          git add -A
+          git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
+          git tag $version
+          git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master:master --tags
 
     - if: commit_message =~ /\[deploy\]/
       #
