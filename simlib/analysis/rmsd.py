@@ -10,6 +10,7 @@ author: C. Lockhart
 
 """
 
+from simlib.transform import fit as _fit
 import numpy as np
 
 
@@ -69,9 +70,16 @@ def _rmsd(a, b, fit=True):
     n_a = len(a)
     n_b = len(b)
 
+    a_xyz = a.xyz
+    b_xyz = b.xyz
+
+    # Should we fit the two structures?
+    if fit:
+        b_xyz = _fit(a, b)
+
     result = np.zeros((n_a, n_b))
     for i in range(n_a):
         for j in range(n_b):
-            result[i, j] = np.sqrt(np.mean((a[i].xyz - b[j].xyz) ** 2))
+            result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
 
     return result

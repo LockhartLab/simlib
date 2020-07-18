@@ -8,6 +8,7 @@ from .errata import pivot
 
 import numpy as np
 import pandas as pd
+from typelike import NumberLike
 
 
 # Trajectory class
@@ -32,6 +33,11 @@ class Trajectory(object):
         self._xyz = xyz
         self._box = box
         self._topology = topology
+
+    # Add
+    def __add__(self, other):
+        if isinstance(other, NumberLike):
+            self._xyz = self._xyz + other
 
     # Length of trajectory
     def __len__(self):
