@@ -42,6 +42,7 @@ setup(
         'simlib.geometry',
         'simlib.io',
         'simlib.misc',
+        'simlib.transform',
         'simlib.viz'
     ],
     install_requires=[
