@@ -43,7 +43,7 @@ setup(
         'simlib.io',
         'simlib.misc',
         'simlib.transform',
-        'simlib.viz'
+        # 'simlib.viz'
     ],
     install_requires=[
         'glovebox',
