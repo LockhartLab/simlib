@@ -12,6 +12,7 @@ author: C. Lockhart
 
 # TODO this is a little ugly
 from simlib.transform import fit as _fit
+from itertools import product
 import numpy as np
 
 
@@ -26,8 +27,8 @@ def rmsd(a, b=None, paired=False, fit=True):
 
     Parameters
     ----------
-    a : Trajectory
-    b : Trajectory
+    a : simlib.Trajectory
+    b : simlib.Trajectory
     paired : bool
         Are a and b paired? That is, should we compute RMSD between (a[0], b[0]), (a[1], b[1]), etc.? (Default: False)
     fit : bool
@@ -42,35 +43,11 @@ def rmsd(a, b=None, paired=False, fit=True):
     if a is None:
         b = a
 
-    # Compute paired?
-    if len(a) == len(b) and paired:
-        result = _rmsd_paired(a, b, fit=fit)
+    # Number of atoms between a and b must be identical
+    if a.n_atoms != b.n_atoms:
+        raise AttributeError('a and b must have same number of atoms')
 
-    # Otherwise, compute RMSD taking a x b
-    else:
-        result = _rmsd(a, b, fit=fit)
-
-    # Return
-    return result
-
-
-def _rmsd(a, b, fit=True):
-    """
-
-    Parameters
-    ----------
-    a
-    b
-
-    Returns
-    -------
-
-    """
-
-    # Get the number of elements in a and b
-    n_a = len(a)
-    n_b = len(b)
-
+    # Get coordinates
     a_xyz = a.xyz
     b_xyz = b.xyz
 
@@ -78,9 +55,68 @@ def _rmsd(a, b, fit=True):
     if fit:
         b_xyz = _fit(a, b)
 
-    result = np.zeros((n_a, n_b))
-    for i in range(n_a):
-        for j in range(n_b):
-            result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
+    # Compute paired?
+    if paired:
+        if len(a) != len(b):
+            raise AttributeError('cannot compute paired RMSD because a and b have different number of structures')
+        # iterable = zip(range(a.n_structures), range(b.n_structures))
+        a_index = range(a.n_structures)
+        b_index = range(b.n_structures)
+        diff = a_xyz - b_xyz
 
+    # Otherwise, compute RMSD taking a x b
+    else:
+        # iterable = product(range(a.n_structures), range(b.n_structures))
+        a_index, b_index = list(product(range(a.n_structures), range(b.n_structures)))
+        diff = a_xyz[a_index, :, :] - b_xyz[b_index, :, :]
+
+    # Actually Compute RMSD
+    result = np.sqrt(np.sum(np.square(diff), axis=(1, 2)) / a.n_atoms)
+    # result = np.zeros((a.n_structures, b.n_structures))
+    # for i, j in iterable:
+    #     result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
+
+    # Pivot into wide form
+    # https://stackoverflow.com/questions/17028329/python-create-a-pivot-table
+    rows, row_pos = np.unique(a_index, return_inverse=True)
+    cols, col_pos = np.unique(b_index, return_inverse=True)
+    pivot_table = np.zeros(len(rows), len(cols))
+    pivot_table[row_pos, col_pos] = result
+
+    # Return
     return result
+
+#
+# def _rmsd(a, b, paired=False, fit=True):
+#     """
+#
+#     Parameters
+#     ----------
+#     a
+#     b
+#
+#     Returns
+#     -------
+#
+#     """
+#
+#     # Get the number of elements in a and b
+#     n_a = len(a)
+#     n_b = len(b)
+#
+#     a_xyz = a.xyz
+#     b_xyz = b.xyz
+#
+#     # Should we fit the two structures?
+#     if fit:
+#         b_xyz = _fit(a, b)
+#
+#     result = np.zeros((n_a, n_b))
+#     if not paired:
+#         iterable = product(range(n_a), range(n_b))
+#     else:
+#         iterable = zip(range(n_a), range(n_b))
+#     for i, j in iterable:
+#         result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
+#
+#     return result

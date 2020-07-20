@@ -35,7 +35,7 @@ def RCSB(pdb_id, most_common=False):
 
     # If most_common, compute the pairwise RMSD and select structure structure with minimum average value
     if most_common:
-        r = rmsd(result, pairwise=True)
+        r = rmsd(result, paired=False, fit=True)
         i = np.argmin(r.mean(axis=0))
         result = result[i]
 
