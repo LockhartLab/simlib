@@ -11,7 +11,7 @@ author: C. Lockhart
 """
 
 # TODO this is a little ugly
-from simlib.transform import fit as _fit
+from simlib.transform.transform import _fit
 from itertools import product
 import numpy as np
 
@@ -55,10 +55,6 @@ def rmsd(a, b=None, paired=False, fit=True):
     a_xyz = a.xyz
     b_xyz = b.xyz
 
-    # Should we fit the two structures?
-    if fit:
-        b_xyz = _fit(a, b)
-
     # Compute paired?
     if paired:
         if len(a) != len(b):
@@ -66,7 +62,6 @@ def rmsd(a, b=None, paired=False, fit=True):
         # iterable = zip(range(a.n_structures), range(b.n_structures))
         a_index = range(a.n_structures)
         b_index = range(b.n_structures)
-        diff = a_xyz - b_xyz
 
     # Otherwise, compute RMSD taking a x b
     else:
@@ -74,20 +69,31 @@ def rmsd(a, b=None, paired=False, fit=True):
         # iterable = product(range(a.n_structures), range(b.n_structures))
         ab_product = np.array(list(product(range(a.n_structures), range(b.n_structures))))
         a_index, b_index = ab_product[:, 0], ab_product[:, 1]
-        diff = a_xyz[a_index, :, :] - b_xyz[b_index, :, :]
+
+    # Expand a_xyz and b_xyz so they have the same dimensions and are "paired"
+    a_xyz = a_xyz[a_index, :, :]
+    b_xyz = b_xyz[b_index, :, :]
+
+    # Should we fit the two structures?
+    if fit:
+        b_xyz = _fit(a_xyz, b_xyz)
+
+    # Compute the difference between a and b
+    # diff = a_xyz[a_index, :, :] - b_xyz[b_index, :, :]
 
     # Actually Compute RMSD
-    result = np.sqrt(np.sum(np.square(diff), axis=(1, 2)) / a.n_atoms)
+    result = np.sqrt(np.sum(np.square(a_xyz - b_xyz), axis=(1, 2)) / a.n_atoms)
     # result = np.zeros((a.n_structures, b.n_structures))
     # for i, j in iterable:
     #     result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
 
     # Pivot into wide form
     # https://stackoverflow.com/questions/17028329/python-create-a-pivot-table
-    rows, row_pos = np.unique(a_index, return_inverse=True)
-    cols, col_pos = np.unique(b_index, return_inverse=True)
-    pivot_table = np.zeros((len(rows), len(cols)))
-    pivot_table[row_pos, col_pos] = result
+    # rows, row_pos = np.unique(a_index, return_inverse=True)
+    # cols, col_pos = np.unique(b_index, return_inverse=True)
+    # pivot_table = np.zeros((len(rows), len(cols)))
+    # pivot_table[row_pos, col_pos] = result
+    result = result.reshape(a.n_structures, b.n_structures)
 
     # Return
     return result

@@ -94,6 +94,58 @@ def to_origin(a):
     return a
 
 
+def _fit(a_xyz, b_xyz, backend='python'):
+    """
+    `a_xyz` and `b_xyz` must be paired.
+
+    Parameters
+    ----------
+    a_xyz : numpy.ndarray
+    b_xyz : numpy.ndarray
+    backend : str
+
+    Returns
+    -------
+
+    """
+
+    # Extract dimensions
+    n_structures, n_atoms, n_dim = a_xyz.shape
+
+    # Sanity check
+    if n_structures != b_xyz.shape[0]:
+        raise AttributeError('a_xyz and b_xyz must have the same number of structures')
+    if n_atoms != b_xyz.shape[1]:
+        raise AttributeError('a_xyz and b_xyz must have the same number of atoms')
+
+    # Centers
+    a_xyz_center = np.tile(a_xyz.mean(axis=1), n_atoms).reshape(n_structures, n_atoms, n_dim)
+    b_xyz_center = np.tile(b_xyz.mean(axis=1), n_atoms).reshape(n_structures, n_atoms, n_dim)
+
+    # Move structures to center
+    a_xyz = a_xyz - a_xyz_center
+    b_xyz = b_xyz - b_xyz_center
+
+    # Transpose b
+    b_xyz_transpose = np.transpose(b_xyz, axes=[0, 2, 1])
+
+    # Compute covariance matrix
+    covariance_matrix = np.matmul(b_xyz_transpose, a_xyz)
+
+    # Get rotation matrix
+    rotation_matrix = _get_rotation_matrix(covariance_matrix)
+
+    # Perform optimal rotation
+    b_xyz = np.matmul(b_xyz, rotation_matrix)
+
+    # Move b to a center
+    b_xyz = b_xyz + a_xyz_center
+
+    # Return
+    return b_xyz
+
+
+
 @njit
 def _get_rotation_matrix(covariance_matrix):
     """
