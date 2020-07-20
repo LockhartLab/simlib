@@ -7,7 +7,8 @@ author: C. Lockhart <chris@lockhartlab.org>
 from simlib.framework import Topology, Trajectory
 
 import numpy as np
-import pandas as pd
+from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
+# import pandas as pd
 import re
 
 
@@ -70,10 +71,12 @@ def _read_pdb(records):
 
     # Read in
     data = np.genfromtxt(atoms.split('\n'), delimiter=sections['width'], dtype=sections['type'], autostrip=True)
-    data = pd.DataFrame(data.tolist(), columns=sections['column'])
+    data.dtype.names = sections['column']
+    # data = pd.DataFrame(data.tolist(), columns=sections['column'])
 
     # Drop extraneous columns
-    data = data.drop(columns='blank')
+    data = drop_fields(data, 'blank')
+    # data = data.drop(columns='blank')
 
     # TODO this should also be done for residue_id probably
     # If the PDB starts at atom_id = 1, change to 0-index
@@ -81,24 +84,30 @@ def _read_pdb(records):
         data['atom_id'] -= 1
 
     # Determine number of structures in PDB
-    n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
+    n_structures = np.unique(np.bincount(data['atom_id']))
+    # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
     if len(n_structures) != 1:
         raise AttributeError('inconsistent record counts in PDB')
     n_structures = n_structures[0]
 
     # Separate out dynamic columns for Trajectory and static Topology data
     dynamical_columns = ['x', 'y', 'z']
-    static_columns = [column for column in data.columns if column not in dynamical_columns]
+    static_columns = [column for column in data.dtype.names if column not in dynamical_columns]
+    # static_columns = [column for column in data.columns if column not in dynamical_columns]
 
     # Create Topology first
     # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
     data['alpha'] = 0.
     data['beta'] = 0.
-    topology = Topology(data[static_columns].drop_duplicates())
+    topology = Topology(np.unique(data[static_columns]))
+    # topology = Topology(data[static_columns].drop_duplicates())
 
     # Next create Trajectory (the result)
-    n_atoms = data['atom_id'].nunique()
-    result = Trajectory(data[dynamical_columns].values.reshape(n_structures, n_atoms, 3), topology=topology)
+    n_atoms = len(np.unique(data['atom_id']))
+    # n_atoms = data['atom_id'].nunique()
+    result = Trajectory(structured_to_unstructured(data[dynamical_columns]).reshape(n_structures, n_atoms, 3),
+                        topology=topology)
+    # result = Trajectory(data[dynamical_columns].values.reshape(n_structures, n_atoms, 3), topology=topology)
 
     # Return
     return result
