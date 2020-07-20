@@ -70,6 +70,7 @@ def rmsd(a, b=None, paired=False, fit=True):
 
     # Otherwise, compute RMSD taking a x b
     else:
+        # FIXME the problem with this that it's memory-intensive to replicate ...
         # iterable = product(range(a.n_structures), range(b.n_structures))
         ab_product = np.array(list(product(range(a.n_structures), range(b.n_structures))))
         a_index, b_index = ab_product[:, 0], ab_product[:, 1]
@@ -85,7 +86,7 @@ def rmsd(a, b=None, paired=False, fit=True):
     # https://stackoverflow.com/questions/17028329/python-create-a-pivot-table
     rows, row_pos = np.unique(a_index, return_inverse=True)
     cols, col_pos = np.unique(b_index, return_inverse=True)
-    pivot_table = np.zeros(len(rows), len(cols))
+    pivot_table = np.zeros((len(rows), len(cols)))
     pivot_table[row_pos, col_pos] = result
 
     # Return
