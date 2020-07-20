@@ -37,6 +37,10 @@ def rmsd(a, b=None, paired=False, fit=True):
     Returns
     -------
 
+
+    See Also
+    --------
+    http://manual.gromacs.org/documentation/current/onlinehelp/gmx-rms.html
     """
 
     # If a is None, then select b
@@ -67,7 +71,8 @@ def rmsd(a, b=None, paired=False, fit=True):
     # Otherwise, compute RMSD taking a x b
     else:
         # iterable = product(range(a.n_structures), range(b.n_structures))
-        a_index, b_index = list(product(range(a.n_structures), range(b.n_structures)))
+        ab_product = np.array(list(product(range(a.n_structures), range(b.n_structures))))
+        a_index, b_index = ab_product[:, 0], ab_product[:, 1]
         diff = a_xyz[a_index, :, :] - b_xyz[b_index, :, :]
 
     # Actually Compute RMSD
