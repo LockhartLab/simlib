@@ -37,13 +37,13 @@ setup(
         'simlib',
         'simlib.analysis',
         'simlib.analysis.protein',
-        # 'simlib.external',
+        'simlib.external',
         'simlib.framework',
         'simlib.geometry',
         'simlib.io',
         'simlib.misc',
         'simlib.transform',
-        # 'simlib.viz'
+        'simlib.viz'
     ],
     install_requires=[
         'glovebox',
