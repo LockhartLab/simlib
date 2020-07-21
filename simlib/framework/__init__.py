@@ -6,7 +6,7 @@ from .trajectory import Topology, Trajectory
 
 __all__ = [
     'pivot',
-    'Quantity',
+    # 'Quantity',
     # 'Structure',
     'Topology',
     'Trajectory'

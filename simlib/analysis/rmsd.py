@@ -10,7 +10,7 @@ author: C. Lockhart
 
 """
 
-# TODO this is a little ugly
+# noinspection PyProtectedMember
 from simlib.transform.transform import _fit
 from itertools import product
 import numpy as np
