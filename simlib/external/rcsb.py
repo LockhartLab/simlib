@@ -42,15 +42,3 @@ def RCSB(pdb_id, most_common=False):
     # Return
     return result
 
-
-# print(pdb._data[0])
-# pdb.write('1BA4.pdb')
-
-# Take out lines only with CRYST, MODEL, or ATOM
-# temp1 = re.sub(r'^(?!(ATOM|CRYST|MODEL)).*$', '', pdb._raw, flags=re.MULTILINE).strip()
-
-# Remove unnecessary whitespace
-# temp2 = re.sub(r'\s*$', '', temp1, flags=re.MULTILINE)
-
-# print(temp2)
-

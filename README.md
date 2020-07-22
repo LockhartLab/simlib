@@ -1,5 +1,5 @@
-simlib
-======
+<img src="simlib.svg" alt="simlib" height="200px">
+
 a package for molecular dynamics simulations and analysis
 
 <!--*master:*-->

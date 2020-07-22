@@ -237,12 +237,14 @@ def dihedral(a, b, c, d):
 # Compute the distance between two vectors
 def distance(a, b=None):
     """
-    Compute the Euclidean distance between two vectors
+    Compute the Euclidean distance between two vectors.
 
     Parameters
     ----------
-    a, b : ArrayLike
-        Vectors
+    a : ArrayLike
+        Vector
+    b : ArrayLike
+        (Optional) Vector. If None, `b` is set to 0 and the distance to the origin is computed.
 
     Returns
     -------
