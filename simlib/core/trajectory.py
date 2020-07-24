@@ -340,6 +340,7 @@ class Trajectory(object):
                                                     'x', 'y', 'z', 'alpha', 'beta', 'segment', 'element']]
 
                 # Write out PDB file
+                # TODO add box to header
                 np.savetxt(
                     buffer,
                     structure,
@@ -431,6 +432,7 @@ class Topology:
         Initialize class instance
         """
 
+        # If data is set, check that it's a DataFrame
         if data is not None and not isinstance(data, pd.DataFrame):
             raise AttributeError('data must be pandas.DataFrame')
 

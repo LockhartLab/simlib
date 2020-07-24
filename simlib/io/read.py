@@ -217,8 +217,7 @@ def read_dcd(filename, topology=None):
     z = _xyz(72 + 8 * n_atoms, 76 + 8 * n_atoms, 76 + 12 * n_atoms)
 
     # Create Trajectory and return
-    return Trajectory(np.vstack([x, y, z]).reshape(n_structures, n_atoms, 3),
-                      box=np.vstack([box_x, box_y, box_z]).reshape(n_structures, 3), topology=topology)
+    return Trajectory(np.dstack([x, y, z]), box=np.vstack([box_x, box_y, box_z]).T, topology=topology)
 
 
 
