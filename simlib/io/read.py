@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from simlib.framework import Topology, Trajectory
+from simlib.core import Topology, Trajectory
 
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured

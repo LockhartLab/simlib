@@ -1,10 +1,10 @@
-simlib.framework
-================
+simlib.core
+===========
 
 Classes
 ~~~~~~~
 
-.. currentmodule:: simlib.framework
+.. currentmodule:: simlib.core
 
 .. autosummary::
    :toctree: generated

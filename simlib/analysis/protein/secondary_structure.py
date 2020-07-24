@@ -4,8 +4,8 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
+from simlib.core import Quantity, Trajectory
 from simlib.external import stride
-from simlib.framework import Quantity, Trajectory
 
 from functools import partial
 from glovebox import GloveBox
