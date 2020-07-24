@@ -206,13 +206,14 @@ class Trajectory(object):
         topology = self.topology.query(expr)
 
         # Extract indices
-        index = topology['index']
+        index = topology.index.values
 
         #
         if only_index:
             result = index
 
         else:
+            # TODO does this work for when multiple structures should be returned?
             result = Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim),
                                 topology=topology)
 
@@ -244,8 +245,8 @@ class Trajectory(object):
             data = data[data[key].isin(item)]
 
         # Extract indices and create a new topology
-        index = data['index'].values
-        topology = Topology(data)
+        index = data.index.values
+        topology = Topology(data.reindex())
 
         # Return
         return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
@@ -307,7 +308,7 @@ class Trajectory(object):
         trajectory = self.to_frame()
 
         # Merge trajectory and topology
-        data = trajectory.merge(topology, how='inner', on='index').drop(columns='index')
+        data = trajectory.merge(topology.reset_index(), how='inner', on='index').set_index('index')
 
         # Sort by structure_id and then atom_id
         data = data.sort_values(['structure_id', 'atom_id'])
@@ -413,7 +414,6 @@ class Topology:
 
     # Required columns
     columns = [
-        'index',
         'atom_id',
         'atom',
         'residue',
@@ -432,8 +432,9 @@ class Topology:
         """
 
         # Add index to data
-        if isinstance(data, pd.DataFrame) and 'index' not in data.columns:
-            data['index'] = np.arange(len(data))
+        if isinstance(data, pd.DataFrame) and 'index' not in data.index.name:
+            data = data.reindex()
+            data.index.name = 'index'
 
         # TODO can this be protected?
         # Save data or create blank DataFrame
