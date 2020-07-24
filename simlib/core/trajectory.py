@@ -101,9 +101,9 @@ class Trajectory(object):
         return result
 
     # Compute the center of the Trajectory
-    def center(self):
+    def center(self, weights=None):
         """
-        Compute the center of the Trajectory.
+        Compute the center of every structure in the Trajectory.
 
         Returns
         -------
@@ -111,7 +111,7 @@ class Trajectory(object):
             Center of every structure in the Trajectory.
         """
 
-        return np.sqrt(np.sum(np.square(self._xyz)), axis=1)
+        return np.sum(self._xyz, axis=1) / self.n_atoms
 
     # Copy
     # TODO
