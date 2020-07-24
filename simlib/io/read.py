@@ -203,20 +203,17 @@ def read_dcd(filename, topology=None):
 
     # xyz
     # noinspection PyShadowingNames
-    def _xyz(offset):
-        n_byte = np.ndarray((n_structures,), endian + 'i', buffer, offset=offset + 8 * n_atoms,
-                            strides=(80 + 12 * n_atoms))
+    def _xyz(off1, off2, off3):
+        n_byte = np.ndarray((n_structures,), endian + 'i', buffer, offset=off1, strides=(80 + 12 * n_atoms))
         if any(n_byte != 4 * n_atoms):
             raise IOError('failed reading DCD file')
-        r = np.ndarray((n_structures, n_atoms), endian + 'f', buffer, offset=offset + 4 + 8 * n_atoms,
-                       strides=(80 + 12 * n_atoms, 4))
-        if any(np.ndarray((n_structures,), endian + 'i', buffer, offset=offset + 4 + 12 * n_atoms,
-                          strides=(80 + 12 * n_atoms)) != n_byte):
+        r = np.ndarray((n_structures, n_atoms), endian + 'f', buffer, offset=off2, strides=(80 + 12 * n_atoms, 4))
+        if any(np.ndarray((n_structures,), endian + 'i', buffer, offset=off3, strides=(80 + 12 * n_atoms)) != n_byte):
             raise IOError('failed reading DCD file')
         return r
-    x = _xyz(56)
-    y = _xyz(64)
-    z = _xyz(72)
+    x = _xyz(56, 60, 60 + 4 * n_atoms)
+    y = _xyz(64 + 4 * n_atoms, 68 + 4 * n_atoms, 68 + 8 * n_atoms)
+    z = _xyz(72 + 8 * n_atoms, 76 + 8 * n_atoms, 72 + 12 * n_atoms)
 
     # Create Trajectory and return
     return Trajectory(np.vstack([x, y, z]), box=np.vstack([box_x, box_y, box_z]), topology=topology)
