@@ -246,7 +246,7 @@ class Trajectory(object):
 
         # Extract indices and create a new topology
         index = data.index.values
-        topology = Topology(data.reindex())
+        topology = Topology(data)
 
         # Return
         return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
@@ -431,11 +431,13 @@ class Topology:
         Initialize class instance
         """
 
+        if data is not None and not isinstance(data, pd.DataFrame):
+            raise AttributeError('data must be pandas.DataFrame')
+
         # Add index to data
-        # TODO this is one option; another would just be to always reindex
-        if isinstance(data, pd.DataFrame) and data.index.name != 'index':
-            data = data.reindex()
-            data.index.name = 'index'
+        if isinstance(data, pd.DataFrame):
+            data['index'] = (data['atom_id'].rank() - 1).astype(int)
+            data = data.set_index('index')
 
         # TODO can this be protected?
         # Save data or create blank DataFrame
