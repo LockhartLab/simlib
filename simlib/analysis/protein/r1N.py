@@ -1,24 +1,35 @@
 """
 r1N.py
 
+language: Python
+version: 3.7
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-def r1N(a, selection='atom_name == CA'):
+from simlib.geometry import distance
+
+
+# noinspection PyPep8Naming
+def r1N(a):
     """
 
     Parameters
     ----------
-    a
+    a : Trajectory
 
     Returns
     -------
 
     """
 
-    residues = a.topology['residue']
-    residue0 = residues.min()
-    residue1 = residues.max()
+    # Extract the first and last residue_id
+    residue_ids = a.topology['residue_id']
+    residue_id1 = residue_ids.min()
+    residue_idN = residue_ids.max()
 
-    a.query('atom_name == "CA"')
-    pass
+    # Compute the center of masses
+    com_id1 = residue_ids.select(residue_id=residue_id1).center()
+    com_idN = residue_ids.select(residue_id=residue_idN).center()
+
+    # Return the distances
+    return distance(com_id1, com_idN)
