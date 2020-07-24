@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>simlib.core.trajectory &#8212; simlib 0.0.63 documentation</title>
+    <title>simlib.core.trajectory &#8212; simlib 0.0.64 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -23,7 +23,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.63 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.64 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.core.trajectory</a></li> 
       </ul>
@@ -243,13 +243,14 @@
         <span class="n">topology</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
 
         <span class="c1"># Extract indices</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">topology</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
 
         <span class="c1">#</span>
         <span class="k">if</span> <span class="n">only_index</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">index</span>
 
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># TODO does this work for when multiple structures should be returned?</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_structures</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">),</span>
                                 <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
 
@@ -281,8 +282,8 @@
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">item</span><span class="p">)]</span>
 
         <span class="c1"># Extract indices and create a new topology</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">reindex</span><span class="p">())</span>
 
         <span class="c1"># Return</span>
         <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_structures</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span></div>
@@ -344,7 +345,7 @@
         <span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
 
         <span class="c1"># Merge trajectory and topology</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">topology</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">trajectory</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">topology</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
 
         <span class="c1"># Sort by structure_id and then atom_id</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;structure_id&#39;</span><span class="p">,</span> <span class="s1">&#39;atom_id&#39;</span><span class="p">])</span>
@@ -450,7 +451,6 @@
 
     <span class="c1"># Required columns</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;index&#39;</span><span class="p">,</span>
         <span class="s1">&#39;atom_id&#39;</span><span class="p">,</span>
         <span class="s1">&#39;atom&#39;</span><span class="p">,</span>
         <span class="s1">&#39;residue&#39;</span><span class="p">,</span>
@@ -469,8 +469,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Add index to data</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;index&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="c1"># TODO this is one option; another would just be to always reindex</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reindex</span><span class="p">()</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;index&#39;</span>
 
         <span class="c1"># TODO can this be protected?</span>
         <span class="c1"># Save data or create blank DataFrame</span>
@@ -686,7 +688,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.63 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.64 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.core.trajectory</a></li> 
       </ul>
