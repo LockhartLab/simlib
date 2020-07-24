@@ -243,7 +243,7 @@ class Trajectory(object):
                 item = [item]
             data = data[data[key].isin(item)]
 
-        # Extract indices
+        # Extract indices and create a new topology
         index = data['index'].values
         topology = Topology(data)
 
@@ -265,7 +265,7 @@ class Trajectory(object):
         return self._xyz.shape
 
     # Convert to pandas DataFrame
-    def to_dataframe(self):
+    def to_frame(self):
         """
         Convert `Trajectory` to pandas.DataFrame instance
 
@@ -303,8 +303,8 @@ class Trajectory(object):
         """
 
         # Convert topology and trajectory to DataFrame
-        topology = self.topology.to_dataframe()
-        trajectory = self.to_dataframe()
+        topology = self.topology.to_frame()
+        trajectory = self.to_frame()
 
         # Merge trajectory and topology
         data = trajectory.merge(topology, how='inner', on='index').drop(columns='index')
