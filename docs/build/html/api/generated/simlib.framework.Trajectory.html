@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>simlib.framework.Trajectory &#8212; simlib 0.0.56 documentation</title>
+    <title>simlib.framework.Trajectory &#8212; simlib 0.0.57 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -15,8 +15,7 @@
     <script src="../../_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="simlib.framework" href="../framework.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -24,12 +23,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../framework.html" title="simlib.framework"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.56 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../framework.html" accesskey="U">simlib.framework</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.57 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.framework.Trajectory</a></li> 
       </ul>
     </div>  
@@ -41,164 +35,6 @@
             
   <div class="section" id="simlib-framework-trajectory">
 <h1>simlib.framework.Trajectory<a class="headerlink" href="#simlib-framework-trajectory" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="simlib.framework.Trajectory">
-<em class="property">class </em><code class="sig-prename descclassname">simlib.framework.</code><code class="sig-name descname">Trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xyz</span></em>, <em class="sig-param"><span class="n">box</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topology</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p><cite>Trajectory</cite> stores instantaneous data for a <cite>Topology</cite>, i.e., atomic coordinates, box information, velocity, etc.</p>
-<p class="rubric">Methods:</p>
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xyz</span></em>, <em class="sig-param"><span class="n">box</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topology</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>xyz</strong> (<em>ArrayLike</em><em>, </em><em>three-dimensional</em>) – Cartesian coordinates for all atoms and all structures. First axis must represent the structure index,
-second axis must represent the atom, and the third index will represent x, y, or z.</p></li>
-<li><p><strong>topology</strong> (<em>Topology</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.copy">
-<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a copy of the Trajectory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Deep copy of the Trajectory.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>simlib.Trajectory</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.n_atoms">
-<em class="property">property </em><code class="sig-name descname">n_atoms</code><a class="headerlink" href="#simlib.framework.Trajectory.n_atoms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of atoms in the <cite>Trajectory</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Number of atoms</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.n_dim">
-<em class="property">property </em><code class="sig-name descname">n_dim</code><a class="headerlink" href="#simlib.framework.Trajectory.n_dim" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of dimensions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Number of dimensions</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.n_structures">
-<em class="property">property </em><code class="sig-name descname">n_structures</code><a class="headerlink" href="#simlib.framework.Trajectory.n_structures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of structures in the <cite>Trajectory</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Number of structures</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.query">
-<code class="sig-name descname">query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">only_index</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory.query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Query the set <cite>Topology</cite> and return matching indices</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – </p></li>
-<li><p><strong>only_index</strong> – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.shape">
-<em class="property">property </em><code class="sig-name descname">shape</code><a class="headerlink" href="#simlib.framework.Trajectory.shape" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shape of <cite>Trajectory</cite></p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(Number of structures, number of atoms, dimensionality)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory.to_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert <cite>Trajectory</cite> to pandas.DataFrame instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Trajectory represented as pandas DataFrame</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.5)">pandas.DataFrame</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.to_pdb">
-<code class="sig-name descname">to_pdb</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/framework/trajectory.html#Trajectory.to_pdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.framework.Trajectory.to_pdb" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert <cite>Trajectory</cite> to PDB.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of PDB to write.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.topology">
-<em class="property">property </em><code class="sig-name descname">topology</code><a class="headerlink" href="#simlib.framework.Trajectory.topology" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the <cite>Topology</cite> instance</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><cite>Topology</cite> instance associated with this <cite>Trajectory</cite>.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Topology</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simlib.framework.Trajectory.xyz">
-<em class="property">property </em><code class="sig-name descname">xyz</code><a class="headerlink" href="#simlib.framework.Trajectory.xyz" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get x, y, and z coordinates.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Cartesian coordinates.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -208,9 +44,6 @@ second axis must represent the atom, and the third index will represent x, y, or
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../framework.html"
-                        title="previous chapter">simlib.framework</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -238,12 +71,7 @@ second axis must represent the atom, and the third index will represent x, y, or
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../framework.html" title="simlib.framework"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.56 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="../framework.html" >simlib.framework</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.57 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.framework.Trajectory</a></li> 
       </ul>
     </div>
