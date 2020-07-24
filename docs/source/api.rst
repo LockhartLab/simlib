@@ -8,3 +8,4 @@ API Reference
    api/analysis
    api/core
    api/energy
+   api/io
