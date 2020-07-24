@@ -432,7 +432,8 @@ class Topology:
         """
 
         # Add index to data
-        if isinstance(data, pd.DataFrame) and 'index' not in data.index.name:
+        # TODO this is one option; another would just be to always reindex
+        if isinstance(data, pd.DataFrame) and data.index.name != 'index':
             data = data.reindex()
             data.index.name = 'index'
 

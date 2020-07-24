@@ -65,7 +65,7 @@ def _read_pdb(records):
         (8, 'z', 'float'),
         (6, 'alpha', 'float'),
         (6, 'beta', 'float'),
-        (9, 'segment', '<U9'),
+        (10, 'segment', '<U9'),
         (2, 'element', '<U2')
     ], dtype=[('width', 'i1'), ('column', '<U10'), ('type', '<U10')])
 
