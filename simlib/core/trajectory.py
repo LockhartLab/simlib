@@ -233,17 +233,19 @@ class Trajectory(object):
 
         """
 
-        topology = self.topology
+        # Save snapshot of topology data
+        data = self.topology.to_frame()
 
-        # Get the topology
+        # Continuously slice the topology data
         for key in kwargs:
             item = kwargs[key]
             if not isinstance(item, ArrayLike):
                 item = [item]
-            topology = topology[key].isin(item)
+            data = data[data[key].isin(item)]
 
         # Extract indices
-        index = topology['index']
+        index = data['index'].values
+        topology = Topology(data)
 
         # Return
         return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
@@ -585,7 +587,7 @@ class Topology:
         pass
 
     # Convert to pandas DataFrame
-    def to_dataframe(self):
+    def to_frame(self):
         """
         Convert to pandas.DataFrame
 

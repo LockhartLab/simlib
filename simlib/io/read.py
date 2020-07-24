@@ -202,6 +202,7 @@ def read_dcd(filename, topology=None):
         raise IOError('failed reading DCD file')
 
     # xyz
+    # TODO there might be a way to clean this up
     # noinspection PyShadowingNames
     def _xyz(off1, off2, off3):
         n_byte = np.ndarray((n_structures,), endian + 'i', buffer, offset=off1, strides=(80 + 12 * n_atoms))

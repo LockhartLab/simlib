@@ -28,8 +28,8 @@ def r1N(a):
     residue_idN = residue_ids.max()
 
     # Compute the center of masses
-    com_id1 = residue_ids.select(residue_id=residue_id1).center()
-    com_idN = residue_ids.select(residue_id=residue_idN).center()
+    com_id1 = a.select(residue_id=residue_id1).center()
+    com_idN = a.select(residue_id=residue_idN).center()
 
     # Return the distances
     return distance(com_id1, com_idN)
