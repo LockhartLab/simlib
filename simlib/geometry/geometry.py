@@ -424,6 +424,7 @@ def vangle_gradient(u, v):
 
 
 # Compute dihedral between 3 vectors
+# TODO remove this and blend it into `dihedral`
 def vdihedral(a, b, c):
     """
     Compute the dihedral angle between three vectors.

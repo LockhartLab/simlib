@@ -52,9 +52,9 @@ class TestGeometry(TestCase):
         np.testing.assert_almost_equal(u_norm.ravel(), norm(u).reshape(-1))
         np.testing.assert_almost_equal(v_norm.ravel(), norm(v).reshape(-1))
         np.testing.assert_almost_equal(w_norm.ravel(), norm(w).reshape(-1))
-        np.testing.assert_almost_equal(u / u_norm, vector(a, b, normalize=True))
-        np.testing.assert_almost_equal(v / v_norm, vector(b, c, normalize=True))
-        np.testing.assert_almost_equal(w / w_norm, vector(c, d, normalize=True))
+        np.testing.assert_almost_equal(u / u_norm, vector(a, b, normed=True))
+        np.testing.assert_almost_equal(v / v_norm, vector(b, c, normed=True))
+        np.testing.assert_almost_equal(w / w_norm, vector(c, d, normed=True))
 
         # Get unit vectors
         u_unit = u / u_norm
