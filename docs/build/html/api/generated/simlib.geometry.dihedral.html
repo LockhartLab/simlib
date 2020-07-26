@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>simlib.geometry.dihedral &#8212; simlib 0.0.68 documentation</title>
+    <title>simlib.geometry.dihedral &#8212; simlib 0.0.69 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -23,7 +23,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.68 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.69 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.geometry.dihedral</a></li> 
       </ul>
     </div>  
@@ -37,11 +37,13 @@
 <h1>simlib.geometry.dihedral<a class="headerlink" href="#simlib-geometry-dihedral" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="simlib.geometry.dihedral">
-<code class="sig-prename descclassname">simlib.geometry.</code><code class="sig-name descname">dihedral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/geometry/geometry.html#dihedral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.geometry.dihedral" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">simlib.geometry.</code><code class="sig-name descname">dihedral</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/geometry/geometry.html#dihedral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.geometry.dihedral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute dihedral angle between four points.</p>
+<p>TODO add equation for sanity checking</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>b</strong><strong>, </strong><strong>c</strong><strong>, </strong><strong>d</strong> (<em>a</em><em>,</em>) – Cartesian coordinates.</p>
+<dd class="field-odd"><p><strong>b</strong><strong>, </strong><strong>c</strong><strong>, </strong><strong>d</strong> (<em>a</em><em>,</em>) – Cartesian coordinates. If only <cite>a</cite>, <cite>b</cite>, and <cite>c</cite> are supplied, they are taken as vectors. If <cite>d</cite> is included,
+they are taken as vertices.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Dihedral angle</p>
@@ -88,7 +90,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.68 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.69 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.geometry.dihedral</a></li> 
       </ul>
     </div>

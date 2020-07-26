@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>simlib.geometry.geometry &#8212; simlib 0.0.68 documentation</title>
+    <title>simlib.geometry.geometry &#8212; simlib 0.0.69 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -23,7 +23,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.68 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.69 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.geometry.geometry</a></li> 
       </ul>
@@ -247,14 +247,17 @@
 
 
 <span class="c1"># Dihedral angle between 4 points</span>
-<div class="viewcode-block" id="dihedral"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.dihedral.html#simlib.geometry.dihedral">[docs]</a><span class="k">def</span> <span class="nf">dihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="dihedral"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.dihedral.html#simlib.geometry.dihedral">[docs]</a><span class="k">def</span> <span class="nf">dihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute dihedral angle between four points.</span>
+
+<span class="sd">    TODO add equation for sanity checking</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    a, b, c, d : ArrayLike</span>
-<span class="sd">        Cartesian coordinates.</span>
+<span class="sd">        Cartesian coordinates. If only `a`, `b`, and `c` are supplied, they are taken as vectors. If `d` is included,</span>
+<span class="sd">        they are taken as vertices.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -262,13 +265,15 @@
 <span class="sd">        Dihedral angle</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_check_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">vector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">vector</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
-    <span class="n">u</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="n">_check_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">vdihedral</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span></div>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">angle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;acos&#39;</span><span class="p">)</span></div>
 
 
 <span class="c1"># Compute the distance between two vectors</span>
@@ -460,31 +465,6 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">gradient_a</span><span class="p">)</span>
 
 
-<span class="c1"># Compute dihedral between 3 vectors</span>
-<span class="c1"># TODO remove this and blend it into `dihedral`</span>
-<span class="k">def</span> <span class="nf">vdihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute the dihedral angle between three vectors.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    a, b, c : ArrayLike</span>
-<span class="sd">        Vectors</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    float or numpy.ndarray</span>
-<span class="sd">        Dihedral angle</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">_check_dimensions</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n_dim</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-
-    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">angle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;acos&#39;</span><span class="p">)</span>
-
-
 <span class="c1"># Compute vector between 2 sets of points</span>
 <div class="viewcode-block" id="vector"><a class="viewcode-back" href="../../../api/generated/simlib.geometry.vector.html#simlib.geometry.vector">[docs]</a><span class="k">def</span> <span class="nf">vector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -603,7 +583,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.68 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.69 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.geometry.geometry</a></li> 
       </ul>
