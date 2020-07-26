@@ -210,14 +210,17 @@ def degrees_to_radians(a):
 
 
 # Dihedral angle between 4 points
-def dihedral(a, b, c, d):
+def dihedral(a, b, c, d=None):
     """
     Compute dihedral angle between four points.
+
+    TODO add equation for sanity checking
 
     Parameters
     ----------
     a, b, c, d : ArrayLike
-        Cartesian coordinates.
+        Cartesian coordinates. If only `a`, `b`, and `c` are supplied, they are taken as vectors. If `d` is included,
+        they are taken as vertices.
 
     Returns
     -------
@@ -225,13 +228,15 @@ def dihedral(a, b, c, d):
         Dihedral angle
     """
 
-    _check_dimensions(a, b, c, d, n_dim=3)
+    if d is not None:
+        a, b, c = vector(b, a), vector(c, b), vector(d, c)
 
-    u = vector(a, b)
-    v = vector(b, c)
-    w = vector(c, d)
+    _check_dimensions(a, b, c, n_dim=3)
 
-    return vdihedral(u, v, w)
+    u = cross(a, b)
+    v = cross(b, c)
+
+    return angle(u, v, method='acos')
 
 
 # Compute the distance between two vectors
@@ -421,31 +426,6 @@ def vangle_gradient(u, v):
     gradient_b = -1. * (gradient_a + gradient_c)
 
     print(gradient_a)
-
-
-# Compute dihedral between 3 vectors
-# TODO remove this and blend it into `dihedral`
-def vdihedral(a, b, c):
-    """
-    Compute the dihedral angle between three vectors.
-
-    Parameters
-    ----------
-    a, b, c : ArrayLike
-        Vectors
-
-    Returns
-    -------
-    float or numpy.ndarray
-        Dihedral angle
-    """
-
-    _check_dimensions(a, b, c, n_dim=3)
-
-    u = np.cross(a, b)
-    v = np.cross(b, c)
-
-    return angle(u, v, method='acos')
 
 
 # Compute vector between 2 sets of points
