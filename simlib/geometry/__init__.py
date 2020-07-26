@@ -19,7 +19,6 @@ __all__ = [
     'normal',
     'polar_to_cartesian',
     'unit_vector',
-    'vdihedral',
     'vector',
 ]
 
