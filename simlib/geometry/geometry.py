@@ -442,10 +442,10 @@ def vdihedral(a, b, c):
 
     _check_dimensions(a, b, c, n_dim=3)
 
-    u = vector(a, b, normed=True)
-    v = vector(b, c, normed=True)
+    u = np.cross(a, b)
+    v = np.cross(b, c)
 
-    return angle(u, v)
+    return angle(u, v, method='acos')
 
 
 # Compute vector between 2 sets of points
