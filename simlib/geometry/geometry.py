@@ -409,7 +409,7 @@ def vangle_gradient(u, v):
 
     """
 
-    cos_theta = cos_vangle(u, v)
+    cos_theta = cos_angle(u, v)
     inv_sin_theta = 1. / np.sqrt(1. - cos_theta * cos_theta)
     inv_u_norm = 1. / norm(u)
     inv_v_norm = 1. / norm(v)
@@ -441,14 +441,14 @@ def vdihedral(a, b, c):
 
     _check_dimensions(a, b, c, n_dim=3)
 
-    u = vnormal(a, b)
-    v = vnormal(b, c)
+    u = vector(a, b, normed=True)
+    v = vector(b, c, normed=True)
 
-    return vangle(u, v)
+    return angle(u, v)
 
 
 # Compute vector between 2 sets of points
-def vector(a, b, normalize=False):
+def vector(a, b, normed=False):
     """
     Compute vector between two sets of points.
 
@@ -458,7 +458,7 @@ def vector(a, b, normalize=False):
     ----------
     a, b : ArrayLike
         Cartesian coordinates.
-    normalize : bool
+    normed : bool
         Should the unit vector be computed? (Default: False)
 
     Returns
@@ -471,7 +471,7 @@ def vector(a, b, normalize=False):
     a, b, needs_ravel = _coerce_to_2d(a, b)
 
     v = np.subtract(a, b)
-    if normalize:
+    if normed:
         v /= norm(v).reshape(-1, 1)
 
     return _array_result(v, needs_ravel)
