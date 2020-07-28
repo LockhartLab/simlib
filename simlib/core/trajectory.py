@@ -588,6 +588,21 @@ class Topology:
     def rmsd(self, structure):
         pass
 
+    # Get residues
+    @property
+    def residues(self):
+        """
+        Get the residues of the Topology.
+
+        Returns
+        -------
+        numpy.ndarray
+            Array of residue names.
+        """
+
+        data = self._data[['residue_id', 'residue']].drop_duplicates()
+        return data['residue'].values
+
     # Write to CSV
     def to_csv(self, path, topology=False):
         pass
