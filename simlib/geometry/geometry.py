@@ -10,7 +10,7 @@ import numpy as np
 
 # Compute angle between three points
 # TODO introduce signed angles
-def angle(a, b, c=None, method='atan2', radians=True):
+def angle(a, b, c=None, method='atan2', degrees=False):
     r"""
     Compute the angle between two vectors or three vertices.
 
@@ -30,8 +30,8 @@ def angle(a, b, c=None, method='atan2', radians=True):
         vertices. Otherwise, `a` and `b` are assumed to be Euclidean vectors.
     method : str
         Method to compute angle, see :func:`~vangle` for options.
-    radians : bool
-        Should the output be in radians? (Default: True)
+    degrees : bool
+        Should the output be in degrees? (Default: False)
 
     Returns
     -------
@@ -40,6 +40,7 @@ def angle(a, b, c=None, method='atan2', radians=True):
     """
 
     # If c is provided, compute Euclidean vectors
+    # noinspection DuplicatedCode
     if c is not None:
         a = vector(a, b)
         b = vector(c, b)
@@ -72,8 +73,8 @@ def angle(a, b, c=None, method='atan2', radians=True):
         raise AttributeError('method %s unknown' % method)
 
     # Convert from radians to degrees?
-    if not radians:
-        result = degrees_to_radians(result)
+    if degrees:
+        result = np.rad2deg(result)
 
     # Return
     return _array_result(result, needs_ravel)
@@ -183,6 +184,7 @@ def cos_angle(a, b, c=None):
     a, b, needs_ravel = _coerce_to_2d(a, b)
 
     # Return
+    # TODO should cos_angle=np.clip(dot_prod/(len1*len2),-1.,1.)
     return _array_result(dot(a, b) / (norm(a) * norm(b)), needs_ravel)
 
 
@@ -203,10 +205,6 @@ def cross(a, b):
     """
 
     return np.cross(a, b)
-
-
-def degrees_to_radians(a):
-    return a * 180. / np.pi
 
 
 # Dihedral angle between 4 points
@@ -317,6 +315,7 @@ def norm(a):
 
 
 # Compute the normal between three points
+# FIXME is this confusing? normal = cross
 def normal(a, b, c=None):
     """
     Compute normal vector between three points.
