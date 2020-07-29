@@ -76,6 +76,14 @@ class Trajectory(object):
 
         return result
 
+    # Representation of the object
+    def __repr__(self):
+        return """
+            # structures: {}
+            # atoms: {}
+            # dimensions: {}
+        """.format(self.n_structures, self.n_atoms, self.n_dim)
+
     # Check topology
     def _check_topology(self):
         """
