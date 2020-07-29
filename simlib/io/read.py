@@ -10,6 +10,7 @@ import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
 import re
+from typelike import ArrayLike
 
 
 # Read PDB
@@ -44,6 +45,61 @@ def read_pdb(filename, backend='python'):
 
     # Return
     return _read_pdb(records)
+
+
+def read_peptide_sequence(residues):
+    """
+    Create trajectory from an amino acid sequence.
+
+    Parameters
+    ----------
+    residues : str or ArrayLike
+        List of amino acids.
+
+    Returns
+    -------
+    simlib.Trajectory
+        Instance of Trajectory.
+    """
+
+    # Convert to list if not already list
+    if not isinstance(residues, ArrayLike):
+        residues = list(residues)
+
+    # Make sure we're in the right format
+    letter_to_code = {
+        'A': 'ALA',
+        'R': 'ARG',
+        'N': 'ASN',
+        'D': 'ASP',
+        'C': 'CYS',
+        'Q': 'GLN',
+        'E': 'GLU',
+        'G': 'GLY',
+        'H': 'HIS',
+        'I': 'ILE',
+        'L': 'LEU',
+        'K': 'LYS',
+        'M': 'MET',
+        'F': 'PHE',
+        'P': 'PRO',
+        'S': 'SER',
+        'T': 'THR',
+        'W': 'TRP',
+        'Y': 'TYR',
+        'V': 'VAL'
+    }
+    residues = [letter_to_code.get(residue, residue) for residue in residues]
+
+    # Create Trajectory
+    topology = Topology()
+    topology._data = pd.DataFrame({'residue_id': np.arange(len(residues)), 'residue': residues})
+
+    # Create Trajectory
+    trajectory = Trajectory(xyz=np.zeros((1, len(residues), 3)), topology=topology)
+
+    # Return
+    return trajectory
 
 
 def _read_pdb(records):

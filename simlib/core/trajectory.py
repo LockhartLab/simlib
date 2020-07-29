@@ -79,9 +79,9 @@ class Trajectory(object):
     # Representation of the object
     def __repr__(self):
         return """
-            # structures: {}
-            # atoms: {}
-            # dimensions: {}
+            # structures: {0}
+            # atoms: {1}
+            # dimensions: {2}
         """.format(self.n_structures, self.n_atoms, self.n_dim)
 
     # Check topology

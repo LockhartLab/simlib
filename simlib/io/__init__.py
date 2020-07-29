@@ -3,5 +3,6 @@ from .read import *
 
 __all__ = [
     'read_dcd',
-    'read_pdb'
+    'read_peptide_sequence',
+    'read_pdb',
 ]

@@ -29,6 +29,9 @@ def shorten(a):
     return [d[x] for x in a]
 
 
+to_letter = shorten
+
+
 def sequence(a):
     """
 
