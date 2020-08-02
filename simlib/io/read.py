@@ -6,11 +6,22 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from simlib.core import Topology, Trajectory
 
+from fileinput import input as finput
+from glob import glob
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
 import re
 from typelike import ArrayLike
+
+
+
+def loadtxt(filename, glob=False):
+    if not glob:
+        result = np.loadtxt(filename)
+    else:
+        result = np.loadtxt(finput(sorted(glob(filename))))
+    return result
 
 
 # Read PDB

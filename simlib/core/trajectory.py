@@ -137,6 +137,13 @@ class Trajectory(object):
 
         pass
 
+    # Describe
+    def describe(self):
+        # print('protein sequence: %s' % self.topology.residues)
+        print('# structures: %s' % self.n_structures)
+        print('# atoms: %s' % self.n_atoms)
+        print('# dimensions: %s' % self.n_dim)
+
     # Get atoms
     def get_atoms(self, index):
         return self.xyz[:, index, :]
