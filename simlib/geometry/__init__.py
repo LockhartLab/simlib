@@ -10,6 +10,7 @@ __all__ = [
     'angle',
     'angle_gradient',
     'cartesian_to_polar',
+    'condensed_to_square',
     'cos_angle',
     'cross',
     'dihedral',

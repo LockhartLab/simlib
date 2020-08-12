@@ -6,8 +6,8 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from simlib.core import Topology, Trajectory
 
-from fileinput import input as finput
-from glob import glob
+from fileinput import input as input_
+from glob import glob as glob_
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
@@ -15,12 +15,11 @@ import re
 from typelike import ArrayLike
 
 
-
 def loadtxt(filename, glob=False):
     if not glob:
         result = np.loadtxt(filename)
     else:
-        result = np.loadtxt(finput(sorted(glob(filename))))
+        result = np.loadtxt(input_(sorted(glob_(filename))))
     return result
 
 
@@ -279,12 +278,10 @@ def read_dcd(filename, topology=None):
         if any(np.ndarray((n_structures,), endian + 'i', buffer, offset=off3, strides=(80 + 12 * n_atoms)) != n_byte):
             raise IOError('failed reading DCD file')
         return r
+
     x = _xyz(56 + 0 * n_atoms, 60 + 0 * n_atoms, 60 + 4 * n_atoms)
     y = _xyz(64 + 4 * n_atoms, 68 + 4 * n_atoms, 68 + 8 * n_atoms)
     z = _xyz(72 + 8 * n_atoms, 76 + 8 * n_atoms, 76 + 12 * n_atoms)
 
     # Create Trajectory and return
     return Trajectory(np.dstack([x, y, z]), box=np.vstack([box_x, box_y, box_z]).T, topology=topology)
-
-
-

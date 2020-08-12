@@ -6,6 +6,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 
 import numpy as np
+from scipy.spatial.distance import squareform
 
 
 # Compute angle between three points
@@ -159,6 +160,10 @@ def cartesian_to_polar(a):
         raise AttributeError('cannot compute for %s dimensions' % n_dim)
 
     return _array_result(np.array(result).T, needs_ravel)
+
+
+def condensed_to_square(a):
+    return squareform(a)
 
 
 # Compute angle between three points
