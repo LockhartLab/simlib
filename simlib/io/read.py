@@ -15,11 +15,11 @@ import re
 from typelike import ArrayLike
 
 
-def loadtxt(filename, glob=False):
+def loadtxt(filename, dtype=float, glob=False):
     if not glob:
-        result = np.loadtxt(filename)
+        result = np.loadtxt(filename, dtype=dtype)
     else:
-        result = np.loadtxt(input_(sorted(glob_(filename))))
+        result = np.loadtxt(input_(sorted(glob_(filename))), dtype=dtype)
     return result
 
 
