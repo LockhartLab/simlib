@@ -66,8 +66,12 @@ class Trajectory(object):
 
         """
 
+        # If item is a slice, convert it to an array
+        if isinstance(item, slice):
+            item = np.arange(item.start, item.stop, item.step)
+
         # TODO create an IntLike object for typelike
-        if isinstance(item, (int, np.int, np.int64)):
+        if isinstance(item, (int, np.int, np.int64, ArrayLike)):
             result = self.get_structure(item)
 
         # If we still don't know what to do, try to get from topology
