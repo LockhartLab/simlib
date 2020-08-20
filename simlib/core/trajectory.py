@@ -221,7 +221,8 @@ class Trajectory(object):
         topology = self.topology.query(expr)
 
         # Extract indices
-        index = topology.index.values
+        # noinspection PyProtectedMember
+        index = topology._data.index.values
 
         #
         if only_index:

@@ -15,12 +15,30 @@ import re
 from typelike import ArrayLike
 
 
-def loadtxt(filename, dtype=float, glob=False):
-    if not glob:
-        result = np.loadtxt(filename, dtype=dtype)
-    else:
-        result = np.loadtxt(input_(sorted(glob_(filename))), dtype=dtype)
-    return result
+# Globular loadtxt
+def loadtxt(fname, dtype=float, glob=False):
+    """
+    A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.
+
+    Parameters
+    ----------
+    fname : file, str, or pathlib.Path
+        Name of file.
+    dtype : str or object
+
+    glob : bool
+        Does `fname` need to be globbed?
+
+    Returns
+    -------
+    numpy.ndarray
+        Read file
+    """
+
+    if glob:
+        fname = input_(sorted(glob_(fname)))
+
+    return np.loadtxt(fname, dtype=dtype)
 
 
 # Read PDB

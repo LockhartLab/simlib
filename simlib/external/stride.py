@@ -57,7 +57,7 @@ def stride(pdb, executable='stride'):
     
     # Error check; make sure STRIDE finishes successfully
     if process.wait() != 0:
-        raise SystemError('STRIDE failed')
+        raise SystemError('stride failed')
 
     # Filter for pertinent records in output
     records = re.sub(r'^(?!ASG).*$', '', output.decode('ASCII'), flags=re.MULTILINE).replace('\n\n', '\n').lstrip()
