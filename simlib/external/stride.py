@@ -12,9 +12,70 @@ import shutil
 import subprocess
 
 
+class Stride:
+    def __init__(self, raw):
+        # Initialize hidden variables
+        self._raw = None
+        self._data = None
+
+        # Set
+        self.raw = raw
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+    # Override __repr__
+    def __repr__(self):
+        return self._raw
+
+    @property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        raise NotImplemented
+
+    @property
+    def raw(self):
+        return self._raw
+
+    @raw.setter
+    def raw(self, raw):
+        self._raw = raw
+
+        # Filter for pertinent records in output
+        records = re.sub(r'^(?!ASG).*$', '', raw, flags=re.MULTILINE).replace('\n\n', '\n').lstrip()
+
+        # Sections of output
+        sections = np.array([
+            (3, 'record', '<U3'),
+            (5, 'residue', '<U5'),
+            (2, 'chain', '<U2'),
+            (5, 'residue_id', 'int'),
+            (5, 'residue_id2', 'int'),
+            (5, 'secondary_structure', '<U4'),
+            (14, 'secondary_structure_text', '<U14'),
+            (10, 'phi', 'float'),
+            (10, 'psi', 'float'),
+            (10, 'area', 'float'),
+            (10, 'extra', '<U10')
+        ], dtype=[('width', 'i1'), ('column', '<U24'), ('type', '<U10')])
+
+        # Parse records and return as DataFrame
+        data = np.genfromtxt(records.split('\n'), delimiter=sections['width'], dtype=sections['type'], autostrip=True)
+        data = pd.DataFrame(data.tolist(), columns=sections['column'])
+
+        # Drop extraneous columns
+        data = data.drop(columns=['record', 'residue_id2', 'extra'])
+
+        # Return data
+        self._data = data
+
+
 # TODO it would be great to eventually bind stride to Python directly (as opposed to going through subprocess)
 # Compute secondary structure with stride
-def stride(pdb, executable='stride'):
+def stride(fname, executable='stride'):
     """
     Compute the secondary structure using STRIDE
 
@@ -23,7 +84,7 @@ def stride(pdb, executable='stride'):
 
     Parameters
     ----------
-    pdb : str
+    fname : str
         Path to PDB file.
     executable : str
         Location of stride executable (Default: stride).
@@ -53,37 +114,12 @@ def stride(pdb, executable='stride'):
         raise AttributeError('executable %s not found. Download at http://webclu.bio.wzw.tum.de/stride/' % executable)
     
     # Run STRIDE and capture output
-    process = subprocess.Popen([executable, pdb], stdout=subprocess.PIPE)
+    process = subprocess.Popen([executable, fname], stdout=subprocess.PIPE)
     output, error = process.communicate()
     
     # Error check; make sure STRIDE finishes successfully
     if process.wait() != 0:
         raise SystemError('stride failed')
 
-    # Filter for pertinent records in output
-    records = re.sub(r'^(?!ASG).*$', '', output.decode('ASCII'), flags=re.MULTILINE).replace('\n\n', '\n').lstrip()
-
-    # Sections of output
-    sections = np.array([
-        (3, 'record', '<U3'),
-        (5, 'residue', '<U5'),
-        (2, 'chain', '<U2'),
-        (5, 'residue_id', 'int'),
-        (5, 'residue_id2', 'int'),
-        (5, 'secondary_structure', '<U4'),
-        (14, 'secondary_structure_text', '<U14'),
-        (10, 'phi', 'float'),
-        (10, 'psi', 'float'),
-        (10, 'area', 'float'),
-        (10, 'extra', '<U10')
-    ], dtype=[('width', 'i1'), ('column', '<U24'), ('type', '<U10')])
-
-    # Parse records and return as DataFrame
-    data = np.genfromtxt(records.split('\n'), delimiter=sections['width'], dtype=sections['type'], autostrip=True)
-    data = pd.DataFrame(data.tolist(), columns=sections['column'])
-
-    # Drop extraneous columns
-    data = data.drop(columns=['record', 'residue_id2', 'extra'])
-
-    # Return data
-    return data
+    # Return raw output
+    return Stride(output.decode('ASCII'))
