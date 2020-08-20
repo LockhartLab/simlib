@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import os
 import re
+import shutil
 import subprocess
 
 
@@ -25,7 +26,7 @@ def stride(pdb, executable='stride'):
     pdb : str
         Path to PDB file.
     executable : str
-        Location of STRIDE executable (Default: stride).
+        Location of stride executable (Default: stride).
 
     Returns
     -------
@@ -48,7 +49,7 @@ def stride(pdb, executable='stride'):
     """
 
     # Make sure executable exists
-    if not os.path.exists(executable):
+    if shutil.which('stride') is None and not os.path.exists(executable):
         raise AttributeError('executable %s not found. Download at http://webclu.bio.wzw.tum.de/stride/' % executable)
     
     # Run STRIDE and capture output
