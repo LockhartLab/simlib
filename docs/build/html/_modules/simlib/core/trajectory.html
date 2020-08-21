@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>simlib.core.trajectory &#8212; simlib 0.0.80 documentation</title>
+    <title>simlib.core.trajectory &#8212; simlib 0.0.81 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -23,7 +23,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.80 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.81 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.core.trajectory</a></li> 
       </ul>
@@ -46,6 +46,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">typelike</span> <span class="kn">import</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NumberLike</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
 <span class="c1"># Trajectory class</span>
@@ -142,9 +143,12 @@
 
     <span class="c1"># Apply</span>
     <span class="c1"># TODO please optimize this. Use vectorize, map, parallelization</span>
-    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">progress_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_structures</span><span class="p">):</span>
+        <span class="n">structure_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_structures</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="n">structure_ids</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">structure_ids</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">structure_ids</span><span class="p">:</span>
             <span class="n">structure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">structure</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -727,7 +731,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.80 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.81 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.core.trajectory</a></li> 
       </ul>
