@@ -13,14 +13,29 @@ import subprocess
 
 
 class Stride:
+    """
+    Store the results from stride.
+    """
+
+    # Initialize class instance
     def __init__(self, raw):
+        """
+        Initialize Stride instance.
+
+        Parameters
+        ----------
+        raw : str
+            Raw stride output.
+        """
+
         # Initialize hidden variables
         self._raw = None
         self._data = None
 
-        # Set
+        # Sets raw and creates processed data
         self.raw = raw
 
+    # Slice data
     def __getitem__(self, item):
         return self._data[item]
 
@@ -28,8 +43,18 @@ class Stride:
     def __repr__(self):
         return self._raw
 
+    # Returns processed pandas DataFrame
     @property
     def data(self):
+        """
+        Raw data processed into pandas.DataFrame
+
+        Returns
+        -------
+        pandas.DataFrame
+            Processed data.
+        """
+
         return self._data
 
     @data.setter
@@ -99,14 +124,12 @@ def stride(fname, executable='stride'):
     --------
     Computing the secondary structure as you would on the command line with STRIDE.
     >>> from simlib.external import stride
-    >>> secondary_structure = stride('my.pdb')['secondary_structure'].values
-    >>> print('% random coil = %s' % (secondary_structure == 'C').mean())
+    >>> ss = stride('my.pdb')['secondary_structure'].values
 
     Computing the secondary structure on a Structure (or Trajectory)
-    >>> from simlib.analysis.amino import compute_secondary_structure
+    >>> from simlib.analysis import secondary_structure
     >>> from simlib.io import read_pdb
-    >>> secondary_structure = compute_secondary_structure(read_pdb('my.pdb'))
-    >>> print('% random coil = %s' % (secondary_structure == 'C').mean())
+    >>> ss = secondary_structure(read_pdb('my.pdb'))
     """
 
     # Make sure executable exists

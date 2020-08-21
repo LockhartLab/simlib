@@ -150,7 +150,7 @@ class SecondaryStructure:
         return Quantity(self._data[residue_id].isin(code))
 
 
-# Compute secondary structure using STRIDE for a trajectory
+# Compute secondary structure using stride for a trajectory
 def secondary_structure(trajectory, executable='stride'):
     """
     Compute the secondary structure for :class:`simlib.Trajectory`.
@@ -160,7 +160,7 @@ def secondary_structure(trajectory, executable='stride'):
     trajectory : Trajectory
         An instance of Structure or Trajectory
     executable : str
-        Path to STRIDE executable.
+        Path to stride executable.
 
     Returns
     -------

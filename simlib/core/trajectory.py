@@ -9,6 +9,7 @@ from .errata import pivot
 import numpy as np
 import pandas as pd
 from typelike import ArrayLike, NumberLike
+from tqdm import tqdm
 
 
 # Trajectory class
@@ -105,9 +106,12 @@ class Trajectory(object):
 
     # Apply
     # TODO please optimize this. Use vectorize, map, parallelization
-    def apply(self, function):
+    def apply(self, function, progress_bar=False):
         result = []
-        for i in np.arange(self.n_structures):
+        structure_ids = np.arange(self.n_structures)
+        if progress_bar:
+            structure_ids = tqdm(structure_ids)
+        for i in structure_ids:
             structure = self.get_structure(i)
             result.append(function(structure))
         return result
