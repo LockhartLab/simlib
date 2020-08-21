@@ -11,3 +11,4 @@ privatize
 pyyaml
 scipy
 sphinx
+tqdm
