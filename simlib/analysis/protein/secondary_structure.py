@@ -151,7 +151,7 @@ class SecondaryStructure:
 
 
 # Compute secondary structure using stride for a trajectory
-def secondary_structure(trajectory, executable='stride'):
+def secondary_structure(trajectory, executable='stride', progress_bar=False):
     """
     Compute the secondary structure for :class:`simlib.Trajectory`.
 
@@ -176,7 +176,8 @@ def secondary_structure(trajectory, executable='stride'):
     peptide_trajectory = trajectory.query('peptide', only_index=False)
 
     # Return the result applied to the peptide as SecondaryStructure instance
-    result = pd.DataFrame(peptide_trajectory.apply(partial(_compute_secondary_structure, executable=executable)))
+    result = pd.DataFrame(peptide_trajectory.apply(partial(_compute_secondary_structure, executable=executable),
+                                                   progress_bar=progress_bar))
     result['structure_id'] = np.arange(peptide_trajectory.n_structures)
     return SecondaryStructure(result.set_index('structure_id'))
 
