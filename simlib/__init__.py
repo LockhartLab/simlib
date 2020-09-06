@@ -10,8 +10,8 @@ from .core import *
 # from . import external
 # from .external import *
 
-from . import geometry
-from .geometry import *
+# from . import geometry
+# from .geometry import *
 
 # from . import viz
 # from .viz import *
@@ -32,7 +32,7 @@ __all__ = [
 __all__.extend(analysis.__all__)
 __all__.extend(core.__all__)
 # __all__.extend(external.__all__)
-__all__.extend(geometry.__all__)
+# __all__.extend(geometry.__all__)
 # __all__.extend(viz.__all__)
 
 # Add include path

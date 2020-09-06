@@ -164,8 +164,8 @@ def _read_pdb(records):
 
     # TODO this should also be done for residue_id probably
     # If the PDB starts at atom_id = 1, change to 0-index
-    if data['atom_id'].min() == 1:
-        data['atom_id'] -= 1
+    # if data['atom_id'].min() == 1:
+    #     data['atom_id'] -= 1
 
     # Determine number of structures in PDB
     n_structures = np.unique(np.bincount(data['atom_id'].values))

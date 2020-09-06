@@ -46,10 +46,21 @@ class SecondaryStructure:
 
         # Set instance value
         self._data = data
+        self._data_condensed = None
+
+    def __getitem__(self, item):
+        data = self._data.iloc[item, :].to_frame().T
+        return SecondaryStructure(data)
 
     # Override __repr__
     def __repr__(self):
-        return str(self._data.agg(''.join, axis=1).values)
+        # return str(self._data.agg(''.join, axis=1).values)
+        return self._condense_data()
+
+    def _condense_data(self):
+        if self._data_condensed is None:
+            self._data_condensed = self._data.agg(''.join, axis=1)
+        return self._data_condensed
 
     # Handle codes
     @staticmethod
@@ -148,6 +159,9 @@ class SecondaryStructure:
 
         # Return as Quantity
         return Quantity(self._data[residue_id].isin(code))
+
+    def to_csv(self, fname):
+        self._data.to_csv(fname)
 
 
 # Compute secondary structure using stride for a trajectory
