@@ -67,8 +67,8 @@ def read_pdb(filename, backend='python'):
         raise AttributeError('only python backend presently supported')
 
     # Open file, read in all records
-    with open(filename, 'r') as buffer:
-        records = buffer.read()
+    with open(filename, 'r') as stream:
+        records = stream.read()
         # records = _atom_reader(buffer)
 
     # Return
@@ -168,10 +168,11 @@ def _read_pdb(records):
     #     data['atom_id'] -= 1
 
     # Determine number of structures in PDB
-    n_structures = np.unique(np.bincount(data['atom_id'].values))
+    _, atom_counts = np.unique(data['atom_id'].values, return_counts=True)
+    n_structures = np.unique(atom_counts)
     # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
     if len(n_structures) != 1:
-        raise AttributeError('inconsistent record counts in PDB')
+        raise AttributeError('inconsistent record counts in PDB, %s' % np.bincount(data['atom_id'].values))
     n_structures = n_structures[0]
 
     # Separate out dynamic columns for Trajectory and static Topology data
