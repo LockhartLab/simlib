@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>simlib.core.Trajectory &#8212; simlib 0.0.84 documentation</title>
+    <title>simlib.core.Trajectory &#8212; simlib 0.0.85 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../core.html" title="simlib.core"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.84 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.85 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" accesskey="U">simlib.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.core.Trajectory</a></li> 
@@ -101,7 +101,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p>Number of atoms</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -115,7 +115,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p>Number of dimensions</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -129,7 +129,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p>Number of structures</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -141,8 +141,8 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>expr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Selection text. See <span class="xref std std-ref">pandas.DataFrame.query</span></p></li>
-<li><p><strong>only_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Should the entire Trajectory be returned, or only the array of indices?</p></li>
+<li><p><strong>expr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Selection text. See <span class="xref std std-ref">pandas.DataFrame.query</span></p></li>
+<li><p><strong>only_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Should the entire Trajectory be returned, or only the array of indices?</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -150,6 +150,17 @@ second axis must represent the atom, and the third index will represent x, y, or
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a> or <a class="reference internal" href="#simlib.core.Trajectory" title="simlib.core.Trajectory">Trajectory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="simlib.core.Trajectory.recenter">
+<code class="sig-name descname">recenter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/simlib/core/trajectory.html#Trajectory.recenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#simlib.core.Trajectory.recenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recenter all structures in the trajectory around the origin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Make the change in place? (Default: False)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -168,7 +179,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p>(Number of structures, number of atoms, dimensionality)</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,7 +193,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p>Trajectory represented as pandas DataFrame</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.1)">pandas.DataFrame</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.3)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -193,7 +204,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd><p>Convert <cite>Trajectory</cite> to PDB.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of PDB to write.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of PDB to write.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -276,7 +287,7 @@ second axis must represent the atom, and the third index will represent x, y, or
         <li class="right" >
           <a href="../core.html" title="simlib.core"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.84 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">simlib 0.0.85 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" >simlib.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">simlib.core.Trajectory</a></li> 
