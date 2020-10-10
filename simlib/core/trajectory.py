@@ -244,6 +244,26 @@ class Trajectory(object):
         # Return result
         return result
 
+    # Recenter the trjaectory
+    def recenter(self, inplace=False):
+        """
+        Recenter all structures in the trajectory around the origin.
+
+        Parameters
+        ----------
+        inplace : bool
+            Make the change in place? (Default: False)
+        """
+
+        xyz = self._xyz - self.center()
+
+        if inplace:
+            self._xyz = xyz
+        else:
+            trajectory = Trajectory.copy()
+            trajectory._xyz = xyz
+            return trajectry
+
     # Select
     # TODO compare the efficiency of this vs query
     def select(self, **kwargs):
@@ -342,8 +362,8 @@ class Trajectory(object):
 
         # TODO this should also be done for residue id probably
         # Change base-0 to base-1 for atom_id
-        if data['atom_id'].min() == 0:
-            data['atom_id'] += 1
+        # if data['atom_id'].min() == 0:
+        #     data['atom_id'] += 1
 
         # Format atom names
         i = data['atom'].str.len() == 1

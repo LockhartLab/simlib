@@ -7,6 +7,9 @@ from .analysis import *
 from . import core
 from .core import *
 
+from . import simulation
+from .simulation import *
+
 # from . import external
 # from .external import *
 
@@ -26,6 +29,7 @@ __all__ = [
     'io',
     'include_dir',
     'misc',
+    'simulation',
     '__version__'
 ]
 

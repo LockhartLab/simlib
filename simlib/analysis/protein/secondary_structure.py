@@ -160,6 +160,10 @@ class SecondaryStructure:
         # Return as Quantity
         return Quantity(self._data[residue_id].isin(code))
 
+    @property
+    def sequence(self):
+        return self._condense_data().values
+
     def to_csv(self, fname):
         self._data.to_csv(fname)
 
@@ -174,7 +178,9 @@ def secondary_structure(trajectory, executable='stride', progress_bar=False):
     trajectory : Trajectory
         An instance of Structure or Trajectory
     executable : str
-        Path to stride executable.
+        Path to stride executable. (Default: stride)
+    progress_bar : bool
+        Should we show a progress bar? (Default: False)
 
     Returns
     -------
