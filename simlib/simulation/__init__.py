@@ -1,3 +1,4 @@
+
 import numpy as np
 from sympy.ntheory import factorint
 
@@ -7,6 +8,7 @@ __all__ = [
 
 
 # TODO move this to a better location
+# TODO does this actually belong in the package namdtools?
 def get_pme_size(a):
     """
     Given a box length, figure out the grid size for PME. We are looking for the PME size that's ~1 grid spacing, while
@@ -43,4 +45,4 @@ def get_pme_size(a):
 
 
 if __name__ == '__main__':
-    print(get_pme_size(139.))
+    print(get_pme_size(125.))
