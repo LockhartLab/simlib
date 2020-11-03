@@ -36,7 +36,12 @@ def loadtxt(fname, dtype=float, glob=False):
     """
 
     if glob:
-        fname = input_(sorted(glob_(fname)))
+        # Glob first; if glob is empty, throw an error
+        fname_glob = glob_(fname)
+        if not fname_glob:
+            raise FileNotFoundError(fname)
+
+        fname = input_(sorted(fname_glob))
 
     return np.loadtxt(fname, dtype=dtype)
 
@@ -211,6 +216,8 @@ def read_dcd(filename, topology=None):
     """
     Read in DCD file with `filename`. This function is partially based off James Phillips' code MDTools that is no 
     longer in development. See http://www.ks.uiuc.edu/Development/MDTools/Python/
+
+    https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?ReadingDCDinFortran
     
     Parameters
     ----------
