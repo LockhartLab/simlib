@@ -1,5 +1,5 @@
-simlib.energy
-=============
+simlib.geometry
+===============
 
 Functions
 ~~~~~~~~~

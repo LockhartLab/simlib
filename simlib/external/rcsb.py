@@ -41,4 +41,3 @@ def RCSB(pdb_id, most_common=False):
 
     # Return
     return result
-

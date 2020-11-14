@@ -9,5 +9,4 @@ Classes
 .. autosummary::
    :toctree: generated
 
-   Structure
    Trajectory
