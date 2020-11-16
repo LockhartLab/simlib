@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>simlib.io.read &#8212; simlib 0.0.90 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.90 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">simlib.io.read</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for simlib.io.read</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">read.py</span>
+<span class="sd">written in Python3</span>
+<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">simlib.core</span> <span class="kn">import</span> <span class="n">Topology</span><span class="p">,</span> <span class="n">Trajectory</span>
+
+<span class="kn">from</span> <span class="nn">fileinput</span> <span class="kn">import</span> <span class="nb">input</span> <span class="k">as</span> <span class="n">input_</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span> <span class="k">as</span> <span class="n">glob_</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># from numpy.lib.recfunctions import drop_fields, structured_to_unstructured</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typelike</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+
+
+<span class="c1"># Globular loadtxt</span>
+<span class="k">def</span> <span class="nf">loadtxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fname : file, str, or pathlib.Path</span>
+<span class="sd">        Name of file.</span>
+<span class="sd">    dtype : str or object</span>
+
+<span class="sd">    glob : bool</span>
+<span class="sd">        Does `fname` need to be globbed?</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Read file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">glob</span><span class="p">:</span>
+        <span class="c1"># Glob first; if glob is empty, throw an error</span>
+        <span class="n">fname_glob</span> <span class="o">=</span> <span class="n">glob_</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fname_glob</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">input_</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">fname_glob</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+
+<span class="c1"># Read PDB</span>
+<span class="c1"># TODO currently the only backend will by pandas; in future, expand to Cython or C or Fortran backend</span>
+<div class="viewcode-block" id="read_pdb"><a class="viewcode-back" href="../../../api/generated/simlib.io.read_pdb.html#simlib.io.read_pdb">[docs]</a><span class="k">def</span> <span class="nf">read_pdb</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read PDB file and return Trajectory</span>
+
+<span class="sd">    PDB format can be described in depth at `&lt;http://www.wwpdb.org/documentation/file-format&gt;`_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        Name of PDB file to be read</span>
+<span class="sd">    backend : str</span>
+<span class="sd">        (Default: &#39;pandas&#39;).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    simlib.Trajectory</span>
+<span class="sd">        Trajectory of PDB</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Make sure we know we&#39;re using the pandas backend</span>
+    <span class="k">if</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;only python backend presently supported&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Open file, read in all records</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="c1"># records = _atom_reader(buffer)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">_read_pdb</span><span class="p">(</span><span class="n">records</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">read_peptide_sequence</span><span class="p">(</span><span class="n">residues</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create trajectory from an amino acid sequence.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    residues : str or ArrayLike</span>
+<span class="sd">        List of amino acids.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    simlib.Trajectory</span>
+<span class="sd">        Instance of Trajectory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Convert to list if not already list</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">residues</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">):</span>
+        <span class="n">residues</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">residues</span><span class="p">)</span>
+
+    <span class="c1"># Make sure we&#39;re in the right format</span>
+    <span class="n">letter_to_code</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="s1">&#39;ALA&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="s1">&#39;ARG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="s1">&#39;ASN&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="s1">&#39;ASP&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="s1">&#39;CYS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Q&#39;</span><span class="p">:</span> <span class="s1">&#39;GLN&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="s1">&#39;GLU&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="s1">&#39;GLY&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;H&#39;</span><span class="p">:</span> <span class="s1">&#39;HIS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="s1">&#39;ILE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="s1">&#39;LEU&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;K&#39;</span><span class="p">:</span> <span class="s1">&#39;LYS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="s1">&#39;MET&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;F&#39;</span><span class="p">:</span> <span class="s1">&#39;PHE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="s1">&#39;PRO&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="s1">&#39;SER&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="s1">&#39;THR&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="s1">&#39;TRP&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="s1">&#39;TYR&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="s1">&#39;VAL&#39;</span>
+    <span class="p">}</span>
+    <span class="n">residues</span> <span class="o">=</span> <span class="p">[</span><span class="n">letter_to_code</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">residue</span><span class="p">,</span> <span class="n">residue</span><span class="p">)</span> <span class="k">for</span> <span class="n">residue</span> <span class="ow">in</span> <span class="n">residues</span><span class="p">]</span>
+
+    <span class="c1"># Create Trajectory</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">()</span>
+    <span class="n">topology</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;residue_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">residues</span><span class="p">)),</span> <span class="s1">&#39;residue&#39;</span><span class="p">:</span> <span class="n">residues</span><span class="p">})</span>
+
+    <span class="c1"># Create Trajectory</span>
+    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">residues</span><span class="p">),</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">trajectory</span>
+
+
+<span class="k">def</span> <span class="nf">_read_pdb</span><span class="p">(</span><span class="n">records</span><span class="p">):</span>
+    <span class="c1"># Filter out atom records</span>
+    <span class="c1"># TODO this will be slow for large PDB files; perhaps move to Cython or C backend</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?!ATOM).*$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
+
+    <span class="c1"># Sections of PDB</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;record&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U6&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;atom_id&#39;</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;atom&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U5&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;residue&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U5&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U1&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;residue_id&#39;</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;blank&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U1&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;segment&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U9&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U2&#39;</span><span class="p">)</span>
+    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U10&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U10&#39;</span><span class="p">)])</span>
+
+    <span class="c1"># Read in</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">autostrip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># data.dtype.names = sections[&#39;column&#39;]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Drop extraneous columns</span>
+    <span class="c1"># data = drop_fields(data, &#39;blank&#39;)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;blank&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO this should also be done for residue_id probably</span>
+    <span class="c1"># If the PDB starts at atom_id = 1, change to 0-index</span>
+    <span class="c1"># if data[&#39;atom_id&#39;].min() == 1:</span>
+    <span class="c1">#     data[&#39;atom_id&#39;] -= 1</span>
+
+    <span class="c1"># Determine number of structures in PDB</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">atom_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_structures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">atom_counts</span><span class="p">)</span>
+    <span class="c1"># n_structures = data.pivot_table(index=&#39;atom_id&#39;, values=&#39;record&#39;, aggfunc=&#39;count&#39;)[&#39;record&#39;].unique()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_structures</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;inconsistent record counts in PDB, </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+    <span class="n">n_structures</span> <span class="o">=</span> <span class="n">n_structures</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Separate out dynamic columns for Trajectory and static Topology data</span>
+    <span class="n">dynamical_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
+    <span class="c1"># static_columns = [column for column in data.dtype.names if column not in dynamical_columns]</span>
+    <span class="n">static_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dynamical_columns</span><span class="p">]</span>
+
+    <span class="c1"># Create Topology first</span>
+    <span class="c1"># TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="c1"># topology = Topology(np.unique(data[static_columns]))</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">static_columns</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">())</span>
+
+    <span class="c1"># Next create Trajectory (the result)</span>
+    <span class="c1"># n_atoms = len(np.unique(data[&#39;atom_id&#39;].values))</span>
+    <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="c1"># result = Trajectory(structured_to_unstructured(data[dynamical_columns]).reshape(n_structures, n_atoms, 3),</span>
+    <span class="c1">#                     topology=topology)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">dynamical_columns</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="c1"># @jit(nopython=False)</span>
+<span class="c1"># def _atom_reader(buffer):</span>
+<span class="c1">#     result = &#39;&#39;</span>
+<span class="c1">#     for line in buffer.readlines():</span>
+<span class="c1">#         if line[:4] == &#39;ATOM&#39;:</span>
+<span class="c1">#             result += line</span>
+<span class="c1">#     return result</span>
+
+<span class="c1"># Read DCD</span>
+<div class="viewcode-block" id="read_dcd"><a class="viewcode-back" href="../../../api/generated/simlib.io.read_dcd.html#simlib.io.read_dcd">[docs]</a><span class="k">def</span> <span class="nf">read_dcd</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read in DCD file with `filename`. This function is partially based off James Phillips&#39; code MDTools that is no </span>
+<span class="sd">    longer in development. See http://www.ks.uiuc.edu/Development/MDTools/Python/</span>
+
+<span class="sd">    https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?ReadingDCDinFortran</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        Name of DCD file.</span>
+<span class="sd">    topology : simlib.Topology</span>
+<span class="sd">        (Optional) Topology file to load for coordinates.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    simlib.Trajectory</span>
+<span class="sd">        Instance of Trajectory object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Open binary DCD file for reading</span>
+    <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Read first part of header and choose endianness</span>
+    <span class="c1"># File is Fortran unformatted, which tells us the number of bytes</span>
+    <span class="c1"># in each part. This first section should contain 84 bytes.</span>
+    <span class="n">endian</span> <span class="o">=</span> <span class="s1">&#39;&gt;&#39;</span>
+    <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">4</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ASCII&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">84</span> <span class="ow">or</span> <span class="n">title</span> <span class="o">!=</span> <span class="s1">&#39;CORD&#39;</span><span class="p">:</span>
+        <span class="n">endian</span> <span class="o">=</span> <span class="s1">&#39;&lt;&#39;</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">4</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ASCII&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">84</span> <span class="ow">or</span> <span class="n">title</span> <span class="o">!=</span> <span class="s1">&#39;CORD&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;cannot read DCD header&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Continue reading rest of header</span>
+    <span class="n">n_structures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">fixed</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+    <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_byte</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Read next section, which contains 164 bytes</span>
+    <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">164</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+    <span class="n">n_titles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_titles</span><span class="p">):</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">80</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">80</span><span class="p">))</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ASCII&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_byte</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Read next section, which contains 4 bytes</span>
+    <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+    <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n_atoms</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;structure empty&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">n_byte</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get information from structures</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+    <span class="c1"># Box information</span>
+    <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">48</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+    <span class="n">box_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+    <span class="n">box_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+    <span class="n">box_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;f8&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">44</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">52</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span> <span class="o">!=</span> <span class="n">n_byte</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># xyz</span>
+    <span class="c1"># TODO there might be a way to clean this up</span>
+    <span class="c1"># noinspection PyShadowingNames</span>
+    <span class="k">def</span> <span class="nf">_xyz</span><span class="p">(</span><span class="n">off1</span><span class="p">,</span> <span class="n">off2</span><span class="p">,</span> <span class="n">off3</span><span class="p">):</span>
+        <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">off1</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">off2</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">n_structures</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">off3</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">))</span> <span class="o">!=</span> <span class="n">n_byte</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;failed reading DCD file&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">_xyz</span><span class="p">(</span><span class="mi">56</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">60</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">60</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">_xyz</span><span class="p">(</span><span class="mi">64</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">68</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">68</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">_xyz</span><span class="p">(</span><span class="mi">72</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">76</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">76</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">n_atoms</span><span class="p">)</span>
+
+    <span class="c1"># Create Trajectory and return</span>
+    <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]),</span> <span class="n">box</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">box_x</span><span class="p">,</span> <span class="n">box_y</span><span class="p">,</span> <span class="n">box_z</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">simlib 0.0.90 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">simlib.io.read</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+    </div>
+  </body>
+</html>
