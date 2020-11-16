@@ -165,6 +165,18 @@ class SecondaryStructure:
         return self._condense_data().values
 
     def to_csv(self, fname):
+        """
+        Write secondary structure object to comma-separated file.
+
+        Parameters
+        ----------
+        fname
+
+        Returns
+        -------
+
+        """
+
         self._data.to_csv(fname)
 
 

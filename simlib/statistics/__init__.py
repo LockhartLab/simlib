@@ -1,6 +1,10 @@
 
 from .block import *
+from .time_series import *
 
 __all__ = [
-    'block_error'
+    'acorr',
+    'sem_block',
+    'sem_tcorr',
+    'tcorr'
 ]

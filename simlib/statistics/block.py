@@ -9,7 +9,8 @@ import numpy as np
 from warnings import warn
 
 
-def block_error(a, indices_or_sections=10, errors='ignore'):
+# noinspection PyShadowingNames
+def sem_block(a, indices_or_sections=10, errors='ignore'):
     r"""
     Compute the block error around the mean for a 1 or 2D array. If 2D array, the second dimension is taken as a
     collection of independent measurements.
@@ -91,7 +92,7 @@ def block_error(a, indices_or_sections=10, errors='ignore'):
 if __name__ == '__main__':
     # 1D, equal
     a = np.random.rand(10000)
-    print(block_error(a, 10))
+    print(sem_block(a, 10))
 
     # 1D, unequal
     # a = np.random.rand(10000)
