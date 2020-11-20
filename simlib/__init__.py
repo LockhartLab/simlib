@@ -2,7 +2,7 @@
 from . import analysis
 from . import core
 from . import io
-# from . import statistics
+from . import statistics
 
 from .analysis import *
 from .core import *

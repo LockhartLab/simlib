@@ -42,6 +42,7 @@ setup(
         'simlib.geometry',
         'simlib.io',
         'simlib.misc',
+        'simlib.statistics',
         'simlib.transform',
         'simlib.viz'
     ],
