@@ -62,6 +62,51 @@ def _acorr_test(a, decimal=7):
 
 
 # noinspection PyShadowingNames
+def inefficiency(a):
+    """
+    Compute the statistical inefficiency :math:`g` from the equilibration time \tau_{eq}.
+
+    .. math :: g = 1 + 2\tau_{eq}.
+
+    Parameters
+    ----------
+    a : numpy.ndarray
+
+    Returns
+    -------
+    float
+        Statistical inefficiency.
+    """
+
+    return 1. + 2. * teq(a)
+
+
+# Estimate the standard error from the correlation time
+# noinspection PyShadowingNames
+def sem_tcorr(a, tol=1e-3):
+    """
+    Estimate of standard error of the mean derived from the correlation time.
+
+    The main assumption is that sqrt(N) ~ sqrt(len(a) / tcorr(a))
+
+    Should only be used for continuous time series data, e.g., from molecular dynamics. Discontinuous trajectories as
+    produced by replica exchange or Monte Carlo are not applicable.
+
+    Parameters
+    ----------
+    a : numpy.ndarray
+    tol : float
+
+    Returns
+    -------
+
+    """
+
+    return np.std(a) * np.sqrt(tcorr(a, tol=tol) / len(a))
+
+
+# TODO how is this different than teq?
+# noinspection PyShadowingNames
 def tcorr(a, tol=1e-3):
     """
     Compute correlation time from the autocorrelation function.
@@ -126,35 +171,37 @@ def _tcorr_test(a, tol=1e-3):
     np.testing.assert_equal(tau0, tau1)
 
 
-# Estimate the standard error from the correlation time
 # noinspection PyShadowingNames
-def sem_tcorr(a, tol=1e-3):
-    """
-    Estimate of standard error of the mean derived from the correlation time.
+def teq(a):
+    r"""
+    Compute equilibration time :math:`\tau_{eq}` based on the autocorrelation function :math:`\rho(t)`.
 
-    The main assumption is that sqrt(N) ~ sqrt(len(a) / tcorr(a))
-
-    Should only be used for continuous time series data, e.g., from molecular dynamics. Discontinuous trajectories as
-    produced by replica exchange or Monte Carlo are not applicable.
+    .. math :: \tau_{eq} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}
 
     Parameters
     ----------
     a : numpy.ndarray
-    tol : float
 
     Returns
     -------
-
+    float
+        Equilibration time.
     """
 
-    return np.std(a) * np.sqrt(tcorr(a, tol=tol) / len(a))
+    rho = acorr(a)[1:]
+    t_max = len(a)
+    t = np.arange(1, t_max)
+
+    return np.sum((1. - t / t_max) * np.abs(rho))
+
 
 
 if __name__ == '__main__':
     n = 100000
     a = np.random.normal(loc=0, scale=10, size=n)
-    _acorr_test(a, decimal=3)
-    _tcorr_test(a)
+    print(teq(a))
+    # _acorr_test(a, decimal=3)
+    # _tcorr_test(a)
 
     # print(np.std(a))
     # print(np.sqrt(np.cov(a)))

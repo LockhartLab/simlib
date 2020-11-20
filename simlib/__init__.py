@@ -16,30 +16,33 @@ from .core import *
 # from . import geometry
 # from .geometry import *
 
+from . import io
+from .io import *
+
 # from . import viz
 # from .viz import *
 
 from . import statistics
 from .statistics import *
 
-from .io import *
 from .misc import *
 from .version import __version__
 
 
 # Contents
-__all__ = [
-    'io',
-    'include_dir',
-    'misc',
-    # 'simulation',
-    '__version__'
-]
-
+# __all__ = [
+#     'io',
+#     'include_dir',
+#     'misc',
+#     # 'simulation',
+#     '__version__'
+# ]
+__all__ = ['__version__']
 __all__.extend(analysis.__all__)
 __all__.extend(core.__all__)
 # __all__.extend(external.__all__)
 # __all__.extend(geometry.__all__)
+__all__.extend(io.__all__)
 __all__.extend(statistics.__all__)
 # __all__.extend(viz.__all__)
 
