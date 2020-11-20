@@ -34,7 +34,10 @@ def acorr(a):
     # numpy.correlate with mode='full' computes the un-normalized correlation from -len(a) to len(a)
     # To normalize this, we must divide by np.sqrt(np.dot(a, a) * np.dot(a, a)) = np.dot(a, a)
     # Then, we are only interested in the data from lag = 0:len(a), so we subset the resulting array
-    rho = (np.correlate(a, a, mode='full') / np.dot(a, a))[(len(a) - 1):]
+    # rho = (np.correlate(a, a, mode='full') / np.dot(a, a))[(len(a) - 1):]
+    # See https://github.com/numpy/numpy/issues/2310 on normalization
+    a = (a - np.mean(a)) / np.std(a)
+    rho = np.correlate(a / len(a), a, mode='full')[(len(a) - 1):]
 
     # As a sanity check, index 0 must be 1.
     if not np.allclose(rho[0], 1.):

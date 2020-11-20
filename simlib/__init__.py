@@ -21,13 +21,8 @@ from .statistics import *
 # from . import geometry
 # from .geometry import *
 
-
-
-
 # from . import viz
 # from .viz import *
-
-
 
 from .misc import *
 from .version import __version__

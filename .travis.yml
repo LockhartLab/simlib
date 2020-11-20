@@ -29,8 +29,7 @@ jobs:
           git checkout master
           git add -A
           git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
-          git tag $version
-          git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master:master --tags
+          git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master:master
 
     - if: commit_message =~ /\[deploy\]/
       #

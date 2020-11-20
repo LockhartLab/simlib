@@ -18,6 +18,7 @@ version['patch'] += 1
 with open('version.yml', 'w') as f:
     yaml.safe_dump(version, f)
 
+# TODO I want to change patch to devPATCH
 # Transform version dict to string
 version = '.'.join([str(version[key]) for key in ['major', 'minor', 'patch']])
 
