@@ -88,20 +88,20 @@ def sem_block(a, indices_or_sections=10, errors='ignore'):
     # Compute error around average
     return np.std(blocks_avg, ddof=1, axis=0) / np.sqrt(len(blocks))
 
-
-if __name__ == '__main__':
-    # 1D, equal
-    a = np.random.rand(10000)
-    print(sem_block(a, 10))
-
-    # 1D, unequal
-    # a = np.random.rand(10000)
-    # print(block_error(a, 3, errors='warn'))
-
-    # 2D, equal
-    # a = np.random.rand(10000, 31)
-    # print(block_error(a))
-
-    # 2D, unequal
-    # a = np.random.rand(10000, 31)
-    # print(block_error(a, 3))
+#
+# if __name__ == '__main__':
+#     # 1D, equal
+#     a = np.random.rand(10000)
+#     print(sem_block(a, 10))
+#
+#     # 1D, unequal
+#     # a = np.random.rand(10000)
+#     # print(block_error(a, 3, errors='warn'))
+#
+#     # 2D, equal
+#     # a = np.random.rand(10000, 31)
+#     # print(block_error(a))
+#
+#     # 2D, unequal
+#     # a = np.random.rand(10000, 31)
+#     # print(block_error(a, 3))
