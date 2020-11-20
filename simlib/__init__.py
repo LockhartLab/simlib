@@ -1,12 +1,14 @@
 
 from . import analysis
-from . import core
-from . import io
-from . import statistics
-
 from .analysis import *
+
+from . import core
 from .core import *
+
+from . import io
 from .io import *
+
+from . import statistics
 from .statistics import *
 
 
