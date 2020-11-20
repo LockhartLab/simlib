@@ -1,8 +1,8 @@
 
 from .distance import *
 
-from .protein import *
 from . import protein
+from .protein import *
 
 from .rmsd import *
 

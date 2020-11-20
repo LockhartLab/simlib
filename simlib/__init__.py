@@ -1,11 +1,14 @@
 
-import os
-
 from . import analysis
-from .analysis import *
-
 from . import core
+from . import io
+from . import statistics
+
+from .analysis import *
 from .core import *
+from .io import *
+from .statistics import *
+
 
 # from . import simulation
 # from .simulation import *
@@ -16,18 +19,16 @@ from .core import *
 # from . import geometry
 # from .geometry import *
 
-from . import io
-from .io import *
+
+
 
 # from . import viz
 # from .viz import *
 
-from . import statistics
-from .statistics import *
+
 
 from .misc import *
 from .version import __version__
-
 
 # Contents
 # __all__ = [
@@ -47,4 +48,6 @@ __all__.extend(statistics.__all__)
 # __all__.extend(viz.__all__)
 
 # Add include path
+import os
+
 include_dir = os.path.abspath(__file__ + '/../../include')
