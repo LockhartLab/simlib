@@ -16,6 +16,7 @@ version_dict = dict([element.split(': ') for element in data])
 version = '.'.join([str(version_dict[key]) for key in ['major', 'minor']])
 if version_dict['micro'] != 0:
     version += '.' + version_dict['micro']
+print(version)
 
 # Read in requirements.txt
 with open('requirements.txt', 'r') as stream:

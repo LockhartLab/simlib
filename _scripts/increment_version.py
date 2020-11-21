@@ -19,7 +19,7 @@ version['micro'] += 1
 
 # Add "dev" back to patch
 if version['micro'] != 0:
-    version['micro'] = 'dev' + version['micro']
+    version['micro'] = 'dev' + str(version['micro'])
 
 # Output version
 with open('version.yml', 'w') as f:
