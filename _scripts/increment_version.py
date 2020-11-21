@@ -11,16 +11,22 @@ import yaml
 with open('version.yml', 'r') as f:
     version = yaml.safe_load(f.read())
 
+# Strip "dev" out of micro
+version['micro'] = int(str(version['micro']).replace('dev', ''))
+
 # Update patch
-version['patch'] += 1
+version['micro'] += 1
+
+# Add "dev" back to patch
+if version['micro'] != 0:
+    version['micro'] = 'dev' + version['micro']
 
 # Output version
 with open('version.yml', 'w') as f:
     yaml.safe_dump(version, f)
 
-# TODO I want to change patch to devPATCH
 # Transform version dict to string
-version = '.'.join([str(version[key]) for key in ['major', 'minor', 'patch']])
+version = '.'.join([str(version[key]) for key in ['major', 'minor', 'micro']])
 
 # Write version string to simlib/_version.py
 with open('simlib/version.py', 'w') as f:

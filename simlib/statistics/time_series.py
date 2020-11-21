@@ -35,6 +35,7 @@ def acorr(a):
     # To normalize this, we must divide by np.sqrt(np.dot(a, a) * np.dot(a, a)) = np.dot(a, a)
     # Then, we are only interested in the data from lag = 0:len(a), so we subset the resulting array
     # rho = (np.correlate(a, a, mode='full') / np.dot(a, a))[(len(a) - 1):]
+    # https://stackoverflow.com/questions/5639280/why-numpy-correlate-and-corrcoef-return-different-values-and-how-to-normalize
     # See https://github.com/numpy/numpy/issues/2310 on normalization
     a = (a - np.mean(a)) / np.std(a)
     rho = np.correlate(a / len(a), a, mode='full')[(len(a) - 1):]
@@ -198,12 +199,11 @@ def teq(a):
     return np.sum((1. - t / t_max) * np.abs(rho))
 
 
-
 if __name__ == '__main__':
     n = 100000
     a = np.random.normal(loc=0, scale=10, size=n)
     print(teq(a))
-    # _acorr_test(a, decimal=3)
+    _acorr_test(a, decimal=3)
     # _tcorr_test(a)
 
     # print(np.std(a))

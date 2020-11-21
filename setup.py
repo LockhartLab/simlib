@@ -13,7 +13,9 @@ with open('version.yml', 'r') as f:
 version_dict = dict([element.split(': ') for element in data])
 
 # Convert the version_data to a string
-version = '.'.join([str(version_dict[key]) for key in ['major', 'minor', 'patch']])
+version = '.'.join([str(version_dict[key]) for key in ['major', 'minor']])
+if version_dict['micro'] != 0:
+    version += '.' + version_dict['micro']
 
 # Read in requirements.txt
 with open('requirements.txt', 'r') as stream:
